@@ -8,19 +8,20 @@ import * as THREE from "three";
 const CLUSTER_CENTER = new THREE.Vector3(4.5, 0, 0);
 
 /* ── Orbiting Props (Web Design Themed) ── */
-function OrbitingProps({ radius = 4.2, speed = 0.12, count = 11 }) {
+function OrbitingProps({ radius = 4.2, speed = 0.12, count = 14 }) {
     const groupRef = useRef<THREE.Group>(null!);
     const props = useMemo(() => {
-        const types = ["octahedron", "dodecahedron", "tetrahedron", "octahedron", "dodecahedron", "tetrahedron", "octahedron", "dodecahedron", "tetrahedron", "octahedron", "dodecahedron"];
-        const colors = ["#06b6d4", "#3b82f6", "#a855f7", "#0ea5e9", "#8b5cf6", "#06b6d4", "#3b82f6", "#a855f7", "#0ea5e9", "#8b5cf6", "#22d3ee"];
+        const types = ["octahedron", "dodecahedron", "tetrahedron"];
+        const colors = ["#06b6d4", "#3b82f6", "#a855f7", "#0ea5e9", "#8b5cf6", "#22d3ee"];
         return [...Array(count)].map((_, i) => ({
-            phase: (i / count) * Math.PI * 2,
-            offset: Math.random() * Math.PI,
+            phase: (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 1.2,
+            offset: Math.random() * Math.PI * 2,
             size: 0.12 + Math.random() * 0.14,
             type: types[i % types.length],
             color: colors[i % colors.length],
-            speedMult: 0.6 + Math.random() * 0.6,
-            wobble: Math.random() * 0.5
+            speedMult: 0.4 + Math.random() * 0.8,
+            wobble: Math.random() * 1.5,
+            orbitRadius: radius * (0.7 + Math.random() * 0.6)
         }));
     }, [count]);
 
@@ -30,9 +31,9 @@ function OrbitingProps({ radius = 4.2, speed = 0.12, count = 11 }) {
         groupRef.current.children.forEach((child, i) => {
             const p = props[i];
             const angle = t * p.speedMult + p.phase;
-            child.position.x = CLUSTER_CENTER.x + Math.cos(angle) * (radius + Math.sin(t * 0.3 + p.wobble) * 0.8);
-            child.position.z = CLUSTER_CENTER.z + Math.sin(angle) * radius * 0.7;
-            child.position.y = CLUSTER_CENTER.y + Math.sin(t * 0.5 + p.offset) * 2.0;
+            child.position.x = CLUSTER_CENTER.x + Math.cos(angle) * (p.orbitRadius + Math.sin(t * 0.3 + p.wobble) * 0.8);
+            child.position.z = CLUSTER_CENTER.z + Math.sin(angle) * p.orbitRadius * 0.7;
+            child.position.y = CLUSTER_CENTER.y + Math.sin(t * 0.5 + p.offset) * 2.5;
             child.rotation.x += 0.015;
             child.rotation.y += 0.012;
             child.rotation.z += 0.008;
@@ -59,8 +60,8 @@ function OrbitalRings({ radius = 4.1 }) {
         return [
             // Horizontal ring (tilted up 8deg)
             { rotation: [Math.PI / 2 + (8 * Math.PI / 180), 0, 0] as [number, number, number], speed: 0.1, color: "#06b6d4", key: "horizontal", customRadius: 4.5 },
-            // Vertical ring (shifted slightly left)
-            { rotation: [0, Math.PI / 2, 0] as [number, number, number], speed: 0.15, color: "#3b82f6", key: "vertical", customRadius: 3.5, offsetX: -0.8 }
+            // Vertical ring (centered on horizontal)
+            { rotation: [0, Math.PI / 2, 0] as [number, number, number], speed: 0.15, color: "#3b82f6", key: "vertical", customRadius: 3.5, offsetX: 0 }
         ];
     }, []);
 
@@ -123,32 +124,38 @@ const UICard = ({ position, initialRotation, color = "#06b6d4", type = "code", d
 
     return (
         <group ref={(ref) => { localRef.current = ref!; if (ref) onRef(ref); }} position={position} rotation={initialRotation}>
-            {/* Main Card Body (Premium Glass - Original Metallic Reference) */}
-            <RoundedBox args={[3.8, 2.4, 0.1]} radius={0.12} smoothness={10}>
+            {/* Main Card Body (Dark glass interior) */}
+            <RoundedBox args={[3.8, 2.4, 0.12]} radius={0.12} smoothness={10}>
                 <meshPhysicalMaterial
-                    color="#0a1020"
+                    color="#020617"
                     metalness={0.9}
-                    roughness={0.05}
+                    roughness={0.1}
                     transparent
-                    opacity={0.9}
+                    opacity={0.97}
                     reflectivity={1}
                     clearcoat={1}
-                    clearcoatRoughness={0.1}
                 />
             </RoundedBox>
 
-            {/* Border Beam Logic (Wireframe glow + Clean Edges) */}
-            <RoundedBox args={[3.84, 2.44, 0.11]} radius={0.13} smoothness={10}>
-                <meshStandardMaterial
-                    color={color}
-                    wireframe
-                    transparent
-                    opacity={0.15}
-                    emissive={color}
-                    emissiveIntensity={0.8}
-                />
-                <Edges color={color} threshold={15} />
-            </RoundedBox>
+            {/* Thick Tech Border Frame (Fusion of solid + multi-line) */}
+            <group scale={1.002}>
+                <RoundedBox args={[3.94, 2.54, 0.11]} radius={0.14} smoothness={10}>
+                    <meshStandardMaterial
+                        color={color}
+                        transparent
+                        opacity={0.35}
+                        emissive={color}
+                        emissiveIntensity={0.6}
+                        metalness={0.8}
+                        roughness={0.1}
+                    />
+                    <Edges color={color} threshold={15} />
+                    {/* Secondary edge for the "multi-line" look */}
+                    <group scale={1.01}>
+                        <Edges color={color} threshold={15} />
+                    </group>
+                </RoundedBox>
+            </group>
 
             {/* Header Bar - High Contrast Bright Frosted Glass */}
             <mesh position={[0, 0.95, 0.051]}>
@@ -224,7 +231,7 @@ const UICard = ({ position, initialRotation, color = "#06b6d4", type = "code", d
                         <meshPhysicalMaterial color="#475569" metalness={0.3} roughness={0.3} />
                     </mesh>
                     {/* URL dot */}
-                    <mesh position={[-1.1, 0.55, 0.02]}>
+                    <mesh position={[-1.1, 0.55, 0.025]}>
                         <circleGeometry args={[0.03, 16]} />
                         <meshStandardMaterial color="#34d399" emissive="#34d399" emissiveIntensity={2} />
                     </mesh>
@@ -236,7 +243,7 @@ const UICard = ({ position, initialRotation, color = "#06b6d4", type = "code", d
                     </mesh>
                     {/* Sidebar nav items */}
                     {[0.25, 0.05, -0.15, -0.35].map((y, i) => (
-                        <mesh key={i} position={[-1.45, y, 0.02]}>
+                        <mesh key={i} position={[-1.45, y, 0.025]}>
                             <boxGeometry args={[0.18, 0.06, 0.04]} />
                             <meshStandardMaterial color={i === 0 ? "#22d3ee" : "#cbd5e1"} emissive={i === 0 ? "#22d3ee" : "#cbd5e1"} emissiveIntensity={i === 0 ? 2 : 0.8} />
                         </mesh>
@@ -248,12 +255,12 @@ const UICard = ({ position, initialRotation, color = "#06b6d4", type = "code", d
                         <meshPhysicalMaterial color="#334155" metalness={0.4} roughness={0.3} transparent opacity={0.7} />
                     </mesh>
                     {/* Play button on hero */}
-                    <mesh position={[0.15, 0.2, 0.03]}>
+                    <mesh position={[0.15, 0.2, 0.04]}>
                         <circleGeometry args={[0.14, 32]} />
                         <meshStandardMaterial color="#e2e8f0" transparent opacity={0.4} emissive="#e2e8f0" emissiveIntensity={0.8} />
                     </mesh>
-                    <mesh position={[0.17, 0.2, 0.04]} rotation={[0, 0, -Math.PI / 2]}>
-                        <cylinderGeometry args={[0.07, 0.07, 0.02, 3]} />
+                    <mesh position={[0.17, 0.2, 0.055]} rotation={[0, 0, -Math.PI / 2]}>
+                        <cylinderGeometry args={[0.07, 0.07, 0.015, 3]} />
                         <meshStandardMaterial color="#ffffff" emissive="#ffffff" emissiveIntensity={2.5} />
                     </mesh>
 

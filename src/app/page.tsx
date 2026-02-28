@@ -11,6 +11,7 @@ import Footer from "@/components/Footer";
 import Squares from "@/components/Squares";
 import Hero3DWrapper from "@/components/Hero3DWrapper";
 import { motion } from "framer-motion";
+import { Globe, Robot, Lightning } from "@phosphor-icons/react";
 
 export default function Home() {
   return (
@@ -45,29 +46,43 @@ export default function Home() {
         </div>
 
         {/* Content Overlay */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 flex flex-col items-center lg:items-start text-center lg:text-left gap-7 mt-8 sm:mt-16">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 flex flex-col items-center lg:items-start text-center lg:text-left gap-6 mt-8 sm:mt-16">
           {/* Subtle glow behind the content */}
           <div className="absolute -inset-10 bg-gradient-to-r from-cyan-500/5 to-blue-500/5 blur-[120px] -z-10 rounded-full opacity-30"></div>
 
-          {/* Logo */}
-          <motion.img
+          {/* Logo with glow ring */}
+          <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            src="/AionLogo.png"
-            alt="Aion Digital"
-            className="h-10 sm:h-12 w-auto object-contain drop-shadow-[0_0_15px_rgba(6,182,212,0.4)] relative z-20"
-          />
+            className="relative z-20"
+          >
+            <div className="absolute -inset-2 bg-cyan-500/10 rounded-full blur-xl"></div>
+            <img
+              src="/AionLogo.png"
+              alt="Aion Digital"
+              className="h-12 sm:h-14 w-auto object-contain drop-shadow-[0_0_20px_rgba(6,182,212,0.5)] relative"
+            />
+          </motion.div>
 
-          {/* Sub-label */}
+          {/* Service badges with Phosphor Icons */}
           <motion.div
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex items-center gap-2 text-[11px] font-bold tracking-[0.2em] text-cyan-400/80 uppercase"
+            className="flex items-center gap-4 flex-wrap"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#06b6d4] animate-pulse"></span>
-            Web Design &middot; Chatbots &middot; Automação
+            {[
+              { icon: Globe, label: "Web Design" },
+              { icon: Robot, label: "Chatbots" },
+              { icon: Lightning, label: "Automação" },
+            ].map((item, i) => (
+              <span key={i} className="flex items-center gap-1.5 text-[11px] font-bold tracking-[0.15em] text-cyan-400/90 uppercase">
+                <item.icon size={14} weight="duotone" className="text-cyan-400" />
+                {item.label}
+                {i < 2 && <span className="ml-3 text-white/20">|</span>}
+              </span>
+            ))}
           </motion.div>
 
           <motion.h1
@@ -76,11 +91,11 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tighter text-white leading-[0.9] pb-2 overflow-visible relative z-10 flex flex-col gap-1"
           >
-            <span className="block italic font-light opacity-90">Criamos site que</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-[0_0_20px_rgba(6,182,212,0.3)] pr-4">
+            <span className="block italic font-light opacity-90">Criamos sites que</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-300 drop-shadow-[0_0_25px_rgba(6,182,212,0.4)] pr-4">
               Convertem e bots
             </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400 drop-shadow-[0_0_20px_rgba(6,182,212,0.3)]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-300 drop-shadow-[0_0_25px_rgba(6,182,212,0.4)]">
               Que vendem
             </span>
           </motion.h1>
@@ -89,7 +104,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-white/60 text-base sm:text-lg max-w-lg leading-relaxed"
+            className="text-white/55 text-base sm:text-lg max-w-lg leading-relaxed"
           >
             Web design de alto impacto, chatbots de WhatsApp e automação de processos — tudo integrado para escalar seu negócio.
           </motion.p>
