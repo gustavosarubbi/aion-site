@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  --color-aionNavy: #111827;
+  --color-aionBlue: #06b6d4;
+  /* Cyan Neon */
+  --color-aionWhite: #FFFFFF;
+  --color-aionGray: #9ca3af;
+}
+
+@layer base {
+  :root {
+    --background: #000000;
+    --foreground: #FFFFFF;
+  }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: theme('colors.aionBlue');
+  color: theme('colors.aionNavy');
+}
+
+/* Custom Scrollbar for a premium feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272A;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3F3F46;
+}
