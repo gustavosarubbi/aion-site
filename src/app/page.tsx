@@ -1,3 +1,5 @@
+"use client";
+
 import ActionNode from "@/components/ActionNode";
 import PortfolioShowcase from "@/components/PortfolioShowcase";
 import ServiceStack from "@/components/ServiceStack";
@@ -8,6 +10,7 @@ import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 import Squares from "@/components/Squares";
 import Hero3DWrapper from "@/components/Hero3DWrapper";
+import { motion } from "framer-motion";
 
 export default function Home() {
   return (
@@ -35,39 +38,68 @@ export default function Home() {
         {/* Left: Brand + Typography & CTA */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-7 max-w-2xl relative mt-8 lg:mt-16 w-full lg:w-1/2">
           {/* Subtle glow behind the content */}
-          <div className="absolute -inset-10 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 blur-[80px] -z-10 rounded-full opacity-60"></div>
+          <div className="absolute -inset-10 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 blur-[100px] -z-10 rounded-full opacity-40"></div>
 
           {/* Logo */}
-          <img src="/AionLogo.png" alt="AION Digital" className="h-12 sm:h-14 w-auto object-contain drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]" />
+          <motion.img
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            src="/AionLogo.png"
+            alt="AION Digital"
+            className="h-12 sm:h-14 w-auto object-contain drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]"
+          />
 
           {/* Sub-label */}
-          <div className="flex items-center gap-2 text-[11px] font-bold tracking-[0.2em] text-cyan-400/70 uppercase">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_#06b6d4] animate-pulse"></span>
+          <motion.div
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex items-center gap-2 text-[11px] font-bold tracking-[0.2em] text-cyan-400/80 uppercase"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#06b6d4] animate-pulse"></span>
             Web Design &middot; Chatbots &middot; Automação
-          </div>
+          </motion.div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tighter text-white leading-[1.1]">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tighter text-white leading-[1.05] pb-2"
+          >
             Criamos sites que<br />convertem e{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-[0_0_25px_rgba(6,182,212,0.4)]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-[0_0_30px_rgba(6,182,212,0.4)] pr-2">
               bots que vendem.
             </span>
-          </h1>
+          </motion.h1>
 
-          <p className="text-white/60 text-base sm:text-lg max-w-lg leading-relaxed">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-white/60 text-base sm:text-lg max-w-lg leading-relaxed"
+          >
             Web design de alto impacto, chatbots de WhatsApp e automação de processos — tudo integrado para escalar seu negócio.
-          </p>
+          </motion.p>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4 pt-2 w-full sm:w-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full sm:w-auto"
+          >
             <ActionNode />
-            <a href="#services" className="px-6 py-3 text-sm font-semibold text-white/50 hover:text-white bg-white/[0.04] border border-white/10 hover:border-cyan-500/30 hover:bg-white/[0.06] rounded-full transition-all duration-300">
+            <a href="#services" className="px-8 py-3.5 text-sm font-bold text-white/50 hover:text-cyan-400 bg-white/[0.03] border border-white/10 hover:border-cyan-500/40 hover:bg-cyan-500/[0.05] rounded-full transition-all duration-300">
               Ver Serviços
             </a>
-          </div>
+          </motion.div>
         </div>
 
         {/* Right: Floating 3D Visualization */}
-        <div className="hidden lg:flex w-full lg:w-1/2 items-center justify-center mt-8 lg:mt-0">
-          <Hero3DWrapper />
+        <div className="hidden lg:flex w-full lg:w-1/2 items-center justify-center mt-8 lg:mt-0 relative overflow-visible h-[600px]">
+          <div className="absolute inset-0 flex items-center justify-center scale-110">
+            <Hero3DWrapper />
+          </div>
         </div>
 
       </section>
