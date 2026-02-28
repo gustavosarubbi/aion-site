@@ -32,13 +32,22 @@ export default function Home() {
       <div className="fixed bottom-[10%] right-[10%] w-[35vw] h-[35vw] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none mix-blend-screen z-0"></div>
       <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,transparent_0%,#000000_100%)]"></div>
 
-      {/* Hero Content - Asymmetrical Modern Layout */}
-      <section className="relative z-10 w-full max-w-7xl mx-auto px-6 pt-28 pb-24 sm:pt-40 sm:pb-40 flex flex-col lg:flex-row items-center justify-between gap-10 min-h-[85vh]">
+      {/* Hero Section - Full Interactive Depth */}
+      <section className="relative w-full min-h-[95vh] flex flex-col items-center justify-start overflow-visible pt-16 sm:pt-24 pb-20">
 
-        {/* Left: Brand + Typography & CTA */}
-        <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-7 max-w-2xl relative mt-8 lg:mt-16 w-full lg:w-1/2">
+        {/* Full-Section 3D Background */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-visible">
+          <div className="w-full h-full relative overflow-visible">
+            <Hero3DWrapper />
+          </div>
+          {/* Bottom fade transition */}
+          <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#000000] to-transparent z-10"></div>
+        </div>
+
+        {/* Content Overlay */}
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 flex flex-col items-center lg:items-start text-center lg:text-left gap-7 mt-8 sm:mt-16">
           {/* Subtle glow behind the content */}
-          <div className="absolute -inset-10 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 blur-[100px] -z-10 rounded-full opacity-40"></div>
+          <div className="absolute -inset-10 bg-gradient-to-r from-cyan-500/5 to-blue-500/5 blur-[120px] -z-10 rounded-full opacity-30"></div>
 
           {/* Logo */}
           <motion.img
@@ -46,8 +55,8 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             src="/AionLogo.png"
-            alt="AION Digital"
-            className="h-12 sm:h-14 w-auto object-contain drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]"
+            alt="Aion Digital"
+            className="h-10 sm:h-12 w-auto object-contain drop-shadow-[0_0_15px_rgba(6,182,212,0.4)] relative z-20"
           />
 
           {/* Sub-label */}
@@ -65,11 +74,14 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tighter text-white leading-[1.05] pb-2"
+            className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tighter text-white leading-[0.9] pb-2 overflow-visible relative z-10 flex flex-col gap-1"
           >
-            Criamos sites que<br />convertem e{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-[0_0_30px_rgba(6,182,212,0.4)] pr-2">
-              bots que vendem.
+            <span className="block italic font-light opacity-90">Criamos site que</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 drop-shadow-[0_0_20px_rgba(6,182,212,0.3)] pr-4">
+              Convertem e bots
+            </span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-400 drop-shadow-[0_0_20px_rgba(6,182,212,0.3)]">
+              Que vendem
             </span>
           </motion.h1>
 
@@ -93,13 +105,6 @@ export default function Home() {
               Ver Serviços
             </a>
           </motion.div>
-        </div>
-
-        {/* Right: Floating 3D Visualization */}
-        <div className="hidden lg:flex w-full lg:w-1/2 items-center justify-center mt-8 lg:mt-0 relative overflow-visible h-[600px]">
-          <div className="absolute inset-0 flex items-center justify-center scale-110">
-            <Hero3DWrapper />
-          </div>
         </div>
 
       </section>
