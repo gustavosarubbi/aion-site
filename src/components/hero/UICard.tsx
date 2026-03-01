@@ -1,0 +1,341 @@
+"use client";
+
+import { useRef, useMemo, useState, useEffect, useCallback } from "react";
+import { useFrame } from "@react-three/fiber";
+import { RoundedBox, Html } from "@react-three/drei";
+import * as THREE from "three";
+import { Code2, Bot, Monitor } from "lucide-react";
+import { useSignal } from "./SignalContext";
+import { CardFrame } from "./CardFrame";
+import { CodeCardContent, PreviewCardContent, FlowCardContent } from "./CardContents";
+
+export type CardType = "code" | "flow" | "preview";
+
+export type UICardProps = {
+    id: string;
+    position: [number, number, number];
+    initialRotation: [number, number, number];
+    color?: string;
+    type?: CardType;
+    delay?: number;
+    onRef: (ref: THREE.Group) => void;
+    speed?: number;
+    title?: string;
+    activeCardId: string | null;
+    onActiveCardChange: (id: string | null) => void;
+    reducedMotion: boolean;
+    labelPosition?: "top" | "right";
+    baseScale?: number;
+};
+
+export const UICard = ({
+    id,
+    position,
+    initialRotation,
+    color = "#06b6d4",
+    type = "code",
+    delay = 0,
+    onRef,
+    speed = 0.1,
+    title,
+    activeCardId,
+    onActiveCardChange,
+    reducedMotion,
+    labelPosition = "top",
+    baseScale = 1,
+}: UICardProps) => {
+    const outerRef = useRef<THREE.Group>(null!);
+    const innerRef = useRef<THREE.Group>(null!);
+    const bodyMaterialRef = useRef<THREE.MeshPhysicalMaterial>(null);
+    const dimmerMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
+    const flashMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
+
+    const scaleVector = useRef(new THREE.Vector3(1, 1, 1));
+    const clickTimelineRef = useRef(0);
+    const signal = useSignal();
+
+    const floatOffset = useMemo(() => Math.random() * Math.PI * 2, []);
+    const wobbleX = useMemo(() => 0.5 + Math.random() * 0.7, []);
+    const wobbleZ = useMemo(() => 0.3 + Math.random() * 0.5, []);
+
+    const [hovered, setHovered] = useState(false);
+    const [showTooltip, setShowTooltip] = useState(false);
+
+    const isDragging = useRef(false);
+    const dragDistance = useRef(0);
+    const prevPointer = useRef({ x: 0, y: 0 });
+    const velocity = useRef({ x: 0, y: 0 });
+    const dragRot = useRef({ x: 0, y: 0 });
+    const pointerTilt = useRef({ x: 0, y: 0 });
+    const pointerTiltTarget = useRef({ x: 0, y: 0 });
+
+    const isSecondary = activeCardId !== null && activeCardId !== id;
+
+    useEffect(() => {
+        if (hovered) {
+            const timer = window.setTimeout(() => setShowTooltip(true), 140);
+            return () => window.clearTimeout(timer);
+        }
+        setShowTooltip(false);
+    }, [hovered]);
+
+    useEffect(() => {
+        return () => {
+            if (typeof document !== "undefined") document.body.style.cursor = "auto";
+        };
+    }, []);
+
+    const setCursor = useCallback((cursor: string) => {
+        if (typeof document !== "undefined") document.body.style.cursor = cursor;
+    }, []);
+
+    const onPointerDown = useCallback((e: any) => {
+        e.stopPropagation();
+        isDragging.current = true;
+        dragDistance.current = 0;
+        prevPointer.current = { x: e.clientX, y: e.clientY };
+        velocity.current = { x: 0, y: 0 };
+        try { e.target.setPointerCapture(e.pointerId); } catch (err) { }
+        onActiveCardChange(id);
+        setCursor("grabbing");
+    }, [id, onActiveCardChange, setCursor]);
+
+    const onPointerUp = useCallback((e: any) => {
+        e.stopPropagation();
+        isDragging.current = false;
+        try { e.target.releasePointerCapture(e.pointerId); } catch (err) { }
+        onActiveCardChange(null);
+        if (hovered) {
+            setCursor("grab");
+            return;
+        }
+        setCursor("auto");
+    }, [hovered, onActiveCardChange, setCursor]);
+
+    const onPointerMove = useCallback((e: any) => {
+        if (isDragging.current) {
+            e.stopPropagation();
+            const dx = e.clientX - prevPointer.current.x;
+            const dy = e.clientY - prevPointer.current.y;
+            dragDistance.current += Math.sqrt(dx * dx + dy * dy);
+
+            velocity.current.x = dy * 0.01;
+            velocity.current.y = dx * 0.01;
+            prevPointer.current = { x: e.clientX, y: e.clientY };
+            return;
+        }
+
+        if (e.uv) {
+            pointerTiltTarget.current.x = (0.5 - e.uv.y) * 0.09;
+            pointerTiltTarget.current.y = (e.uv.x - 0.5) * 0.09;
+        }
+    }, []);
+
+    const onClick = useCallback((e: any) => {
+        e.stopPropagation();
+        if (dragDistance.current >= 8) return;
+        clickTimelineRef.current = 1;
+        signal.pulseAll();
+    }, [signal]);
+
+    useFrame((state, delta) => {
+        if (!outerRef.current || !innerRef.current) return;
+        const t = state.clock.getElapsedTime() * speed * (reducedMotion ? 0.9 : 1) + delay;
+
+        const targetX = position[0] + Math.cos(t * wobbleX + floatOffset) * (reducedMotion ? 0.13 : 0.18);
+        const targetY = position[1] + Math.sin(t * 1.3 + floatOffset) * (reducedMotion ? 0.16 : 0.22) + Math.sin(t * 0.9) * (reducedMotion ? 0.06 : 0.1);
+        const targetZ = (position[2] || 0) + Math.sin(t * wobbleZ) * (reducedMotion ? 0.08 : 0.12) + (isSecondary ? -0.55 : 0);
+
+        outerRef.current.position.x = THREE.MathUtils.damp(outerRef.current.position.x, targetX, 12, delta);
+        outerRef.current.position.y = THREE.MathUtils.damp(outerRef.current.position.y, targetY, 12, delta);
+        outerRef.current.position.z = THREE.MathUtils.damp(outerRef.current.position.z, targetZ, 15, delta);
+
+        pointerTilt.current.x = THREE.MathUtils.damp(pointerTilt.current.x, pointerTiltTarget.current.x, 18, delta);
+        pointerTilt.current.y = THREE.MathUtils.damp(pointerTilt.current.y, pointerTiltTarget.current.y, 18, delta);
+
+        const targetRotX = initialRotation[0] + Math.sin(t * 0.5 + floatOffset) * 0.04 + pointerTilt.current.x;
+        const targetRotY = initialRotation[1] + Math.cos(t * 0.45) * 0.04 + pointerTilt.current.y + (isSecondary ? -0.04 : 0);
+        const targetRotZ = Math.sin(t * 0.3 + floatOffset * 2) * 0.02;
+
+        outerRef.current.rotation.x = THREE.MathUtils.damp(outerRef.current.rotation.x, targetRotX, 12, delta);
+        outerRef.current.rotation.y = THREE.MathUtils.damp(outerRef.current.rotation.y, targetRotY, 12, delta);
+        outerRef.current.rotation.z = THREE.MathUtils.damp(outerRef.current.rotation.z, targetRotZ, 15, delta);
+
+        if (clickTimelineRef.current > 0) {
+            clickTimelineRef.current = Math.max(0, clickTimelineRef.current - delta * (reducedMotion ? 1.5 : 1.1));
+        }
+        const clickProgress = 1 - clickTimelineRef.current;
+        const pressPhase = clickProgress < 0.2 ? Math.sin((clickProgress / 0.2) * Math.PI) : 0;
+        const sweepT = THREE.MathUtils.clamp((clickProgress - 0.12) / 0.5, 0, 1);
+        const sweepOpacity = Math.sin(sweepT * Math.PI) * (isSecondary ? 0.1 : 0.2);
+        const rippleT = THREE.MathUtils.clamp((clickProgress - 0.24) / 0.76, 0, 1);
+
+        const hoverScale = hovered ? 1.06 : 1;
+        const backgroundScale = isSecondary ? 0.85 : 1;
+        const finalScale = (hoverScale * backgroundScale + pressPhase * 0.05) * baseScale;
+        scaleVector.current.set(finalScale, finalScale, finalScale);
+        outerRef.current.scale.lerp(scaleVector.current, reducedMotion ? 0.25 : 0.35);
+
+        if (isDragging.current) {
+            dragRot.current.x += velocity.current.x;
+            dragRot.current.y += velocity.current.y;
+            velocity.current.x *= 0.88;
+            velocity.current.y *= 0.88;
+        } else {
+            velocity.current.x *= reducedMotion ? 0.8 : 0.85;
+            velocity.current.y *= reducedMotion ? 0.8 : 0.85;
+            velocity.current.x += (0 - dragRot.current.x) * 0.015;
+            velocity.current.y += (0 - dragRot.current.y) * 0.015;
+
+            dragRot.current.x += velocity.current.x;
+            dragRot.current.y += velocity.current.y;
+
+            dragRot.current.x = THREE.MathUtils.damp(dragRot.current.x, 0, reducedMotion ? 12.0 : 15.0, delta);
+            dragRot.current.y = THREE.MathUtils.damp(dragRot.current.y, 0, reducedMotion ? 12.0 : 15.0, delta);
+        }
+
+        dragRot.current.x = Math.atan2(Math.sin(dragRot.current.x), Math.cos(dragRot.current.x));
+        dragRot.current.y = Math.atan2(Math.sin(dragRot.current.y), Math.cos(dragRot.current.y));
+
+        innerRef.current.rotation.x = dragRot.current.x;
+        innerRef.current.rotation.y = dragRot.current.y;
+
+        if (bodyMaterialRef.current) {
+            bodyMaterialRef.current.opacity = THREE.MathUtils.damp(
+                bodyMaterialRef.current.opacity,
+                isSecondary ? 0.86 : 0.97,
+                8,
+                delta,
+            );
+        }
+
+        if (dimmerMaterialRef.current) {
+            dimmerMaterialRef.current.opacity = THREE.MathUtils.damp(
+                dimmerMaterialRef.current.opacity,
+                isSecondary ? 0.28 : 0,
+                10,
+                delta,
+            );
+        }
+
+
+    });
+
+    return (
+        <group ref={(r) => { outerRef.current = r!; if (r) onRef(r); }}>
+            <group ref={innerRef}>
+                <mesh
+                    position={[0, 0, 0.3]}
+                    onPointerOver={(e) => {
+                        e.stopPropagation();
+                        setHovered(true);
+                        onActiveCardChange(id);
+                        setCursor(isDragging.current ? "grabbing" : "grab");
+                    }}
+                    onPointerOut={(e) => {
+                        e.stopPropagation();
+                        setHovered(false);
+                        pointerTiltTarget.current = { x: 0, y: 0 };
+                        if (!isDragging.current) setCursor("auto");
+                        if (activeCardId === id) onActiveCardChange(null);
+                    }}
+                    onPointerDown={onPointerDown}
+                    onPointerUp={onPointerUp}
+                    onPointerMove={onPointerMove}
+                    onClick={onClick}
+                >
+                    <planeGeometry args={[4.3, 2.9]} />
+                    <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+                </mesh>
+
+                <RoundedBox
+                    args={[3.8, 2.4, 0.15]}
+                    radius={0.16}
+                    smoothness={12}
+                >
+                    <meshPhysicalMaterial
+                        ref={bodyMaterialRef}
+                        color="#02040a"
+                        metalness={0.9}
+                        transparent={true}
+                        opacity={0.96}
+                        transmission={0.65}
+                        thickness={2}
+                        roughness={0.08}
+                        ior={1.45}
+                        reflectivity={0.9}
+                        clearcoat={1}
+                        clearcoatRoughness={0.02}
+                        envMapIntensity={1.5}
+                    />
+                </RoundedBox>
+
+                <CardFrame color={color} />
+
+
+                {type === "code" && <CodeCardContent />}
+                {type === "preview" && <PreviewCardContent />}
+                {type === "flow" && <FlowCardContent baseColor={color} />}
+
+                <mesh position={[0, 0, 0.1]} renderOrder={4}>
+                    <planeGeometry args={[3.6, 2.2]} />
+                    <meshBasicMaterial ref={dimmerMaterialRef} color="#020617" transparent opacity={0} depthWrite={false} />
+                </mesh>
+
+                <mesh position={[0, 0, 0.14]} renderOrder={5}>
+                    <planeGeometry args={[3.7, 2.3]} />
+                    <meshBasicMaterial ref={flashMaterialRef} color={color} transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
+                </mesh>
+
+
+
+                {title && (
+                    <Html
+                        position={labelPosition === "right" ? [2.15, 0, 0.1] : [0, 2.3, 0.1]}
+                        center
+                        distanceFactor={10}
+                        zIndexRange={[100, 0]}
+                        className="pointer-events-none select-none transition-all duration-700"
+                        style={{
+                            opacity: isDragging.current ? 0.2 : 0.9,
+                            transform: labelPosition === "right"
+                                ? `translateX(${hovered ? 15 : 0}px) scale(${hovered ? 1.05 : 1})`
+                                : `translateY(${hovered ? -10 : 0}px) scale(${hovered ? 1.05 : 1})`,
+                            pointerEvents: 'none'
+                        }}
+                    >
+                        <div className="flex flex-col items-center group">
+                            <div
+                                className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 text-white px-5 py-2 rounded-xl text-[11px] font-bold shadow-[0_10px_40px_rgba(0,0,0,0.8)] flex items-center gap-3 transition-all duration-300 overflow-hidden relative"
+                                style={{
+                                    borderColor: hovered ? `${color}66` : 'rgba(255,255,255,0.1)',
+                                    boxShadow: hovered ? `0 0 30px ${color}33, 0 10px 40px rgba(0,0,0,0.8)` : '0 10px 40px rgba(0,0,0,0.8)',
+                                    whiteSpace: 'nowrap'
+                                }}>
+                                {/* Shimmer Effect */}
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-[shimmer_2s_infinite] pointer-events-none" />
+
+                                <div className="flex items-center gap-2 relative z-10">
+                                    <div className="flex items-center justify-center">
+                                        {type === "code" && <Code2 size={16} className="text-blue-400" />}
+                                        {type === "flow" && <Bot size={16} className="text-cyan-400" />}
+                                        {type === "preview" && <Monitor size={16} className="text-white" />}
+                                    </div>
+                                    <span className="tracking-[0.12em] uppercase opacity-90">{title}</span>
+                                </div>
+
+                                <div className="w-1.5 h-1.5 rounded-full animate-pulse relative z-10"
+                                    style={{
+                                        backgroundColor: color,
+                                        boxShadow: `0 0 10px ${color}, 0 0 20px ${color}`
+                                    }}>
+                                </div>
+                            </div>
+                        </div>
+                    </Html>
+                )}
+
+            </group>
+        </group>
+    );
+};

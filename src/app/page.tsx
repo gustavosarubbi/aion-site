@@ -38,7 +38,7 @@ export default function Home() {
 
         {/* Full-Section 3D Background */}
         <div className="absolute inset-0 z-0 pointer-events-none overflow-visible">
-          <div className="w-full h-full relative overflow-visible">
+          <div className="w-full h-full relative overflow-visible pointer-events-auto">
             <Hero3DWrapper />
           </div>
           {/* Bottom fade transition */}
@@ -46,9 +46,9 @@ export default function Home() {
         </div>
 
         {/* Content Overlay */}
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 flex flex-col items-center lg:items-start text-center lg:text-left gap-6 mt-8 sm:mt-16">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 flex flex-col items-center lg:items-start text-center lg:text-left gap-6 mt-8 sm:mt-16 pointer-events-none">
           {/* Subtle glow behind the content */}
-          <div className="absolute -inset-10 bg-gradient-to-r from-cyan-500/5 to-blue-500/5 blur-[120px] -z-10 rounded-full opacity-30"></div>
+          <div className="absolute -inset-10 bg-gradient-to-r from-cyan-500/5 to-blue-500/5 blur-[120px] -z-10 rounded-full opacity-30 pointer-events-none"></div>
 
           {/* Logo with glow ring */}
           <motion.div
@@ -113,10 +113,10 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full sm:w-auto"
+            className="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full sm:w-auto pointer-events-auto"
           >
             <ActionNode />
-            <a href="#services" className="px-8 py-3.5 text-sm font-bold text-white/50 hover:text-cyan-400 bg-white/[0.03] border border-white/10 hover:border-cyan-500/40 hover:bg-cyan-500/[0.05] rounded-full transition-all duration-300">
+            <a href="#services" className="px-8 py-3.5 text-sm font-bold text-white/50 hover:text-cyan-400 bg-white/[0.03] border border-white/10 hover:border-cyan-500/40 hover:bg-cyan-500/[0.05] rounded-full transition-all duration-300 pointer-events-auto">
               Ver Serviços
             </a>
           </motion.div>
