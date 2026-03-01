@@ -11,11 +11,31 @@ export default function ActionNode() {
             rel="noopener noreferrer"
             onMouseEnter={() => playSfx("hover")}
             onClick={() => playSfx("click")}
-            className="group relative flex items-center justify-center px-8 py-4 text-sm font-bold text-[#000000] bg-cyan-400 hover:bg-cyan-300 shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_40px_rgba(6,182,212,0.6)] transition-all duration-300 rounded-full overflow-hidden"
+            className="group relative flex items-center justify-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 text-[11px] sm:text-[12px] font-bold tracking-wide text-white rounded-full overflow-hidden transition-all duration-300"
+            style={{
+                fontFamily: "var(--font-montserrat)",
+                background: "linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1E40AF 100%)",
+                boxShadow: "0 0 0 1px rgba(59,130,246,0.3), 0 4px 15px rgba(37,99,235,0.4), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.2)",
+            }}
         >
+            {/* Hover overlay */}
+            <span
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"
+                style={{
+                    background: "linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #2563EB 100%)",
+                    boxShadow: "0 0 40px rgba(59,130,246,0.7)",
+                }}
+            />
+            {/* Shine */}
+            <span className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+
             <span className="relative z-10 flex items-center gap-2">
                 Agendar Consultoria
-                <ArrowRight size={16} weight="bold" className="group-hover:translate-x-0.5 transition-transform duration-200" />
+                <ArrowRight
+                    size={15}
+                    weight="bold"
+                    className="group-hover:translate-x-1 transition-transform duration-200"
+                />
             </span>
         </a>
     );
