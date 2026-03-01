@@ -40,9 +40,9 @@ function RingElement({ radius, rotation, speed, color }: any) {
                 const angle = (i / 24) * Math.PI * 2;
                 const segLen = 0.8;
                 return (
-                    <mesh key={i} position={[Math.cos(angle) * radius, Math.sin(angle) * radius, 0]} rotation={[0, 0, angle + Math.PI / 2]}>
+                    <mesh key={i} position={[Math.cos(angle) * radius, Math.sin(angle) * radius, 0]} rotation={[0, 0, angle + Math.PI / 2]} renderOrder={-1}>
                         <boxGeometry args={[segLen, 0.015, 0.015]} />
-                        <meshBasicMaterial color={color} transparent opacity={i % 3 === 0 ? 0.5 : 0.15} />
+                        <meshBasicMaterial color={color} transparent opacity={i % 3 === 0 ? 0.25 : 0.08} depthWrite={false} depthTest={false} />
                     </mesh>
                 );
             })}

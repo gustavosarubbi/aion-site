@@ -2,9 +2,9 @@
 
 import { useRef, useMemo, useState, useEffect, useCallback } from "react";
 import { useFrame } from "@react-three/fiber";
-import { RoundedBox, Html } from "@react-three/drei";
+import { RoundedBox, Html, QuadraticBezierLine } from "@react-three/drei";
 import * as THREE from "three";
-import { Code2, Bot, Monitor } from "lucide-react";
+import { Code2, Bot, Globe } from "lucide-react";
 import { useSignal } from "./SignalContext";
 import { CardFrame } from "./CardFrame";
 import { CodeCardContent, PreviewCardContent, FlowCardContent } from "./CardContents";
@@ -60,6 +60,13 @@ export const UICard = ({
 
     const [hovered, setHovered] = useState(false);
     const [showTooltip, setShowTooltip] = useState(false);
+    const lineRef = useRef<THREE.BufferGeometry>(null!);
+    const labelPosRef = useRef(new THREE.Vector3());
+
+    const linePoints = useMemo(() => {
+        return [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 0)];
+    }, []);
+
 
     const isDragging = useRef(false);
     const dragDistance = useRef(0);
@@ -160,6 +167,9 @@ export const UICard = ({
         outerRef.current.rotation.x = THREE.MathUtils.damp(outerRef.current.rotation.x, targetRotX, 12, delta);
         outerRef.current.rotation.y = THREE.MathUtils.damp(outerRef.current.rotation.y, targetRotY, 12, delta);
         outerRef.current.rotation.z = THREE.MathUtils.damp(outerRef.current.rotation.z, targetRotZ, 15, delta);
+
+
+
 
         if (clickTimelineRef.current > 0) {
             clickTimelineRef.current = Math.max(0, clickTimelineRef.current - delta * (reducedMotion ? 1.5 : 1.1));
@@ -288,54 +298,132 @@ export const UICard = ({
                 </mesh>
 
 
-
                 {title && (
                     <Html
-                        position={labelPosition === "right" ? [2.15, 0, 0.1] : [0, 2.3, 0.1]}
-                        center
+                        position={labelPosition === "right" ? [3.0, 0, 0.15] : [0, 2.4, 0.15]}
+                        center={labelPosition !== "right"}
                         distanceFactor={10}
                         zIndexRange={[100, 0]}
-                        className="pointer-events-none select-none transition-all duration-700"
+                        className="pointer-events-none select-none"
                         style={{
-                            opacity: isDragging.current ? 0.2 : 0.9,
-                            transform: labelPosition === "right"
-                                ? `translateX(${hovered ? 15 : 0}px) scale(${hovered ? 1.05 : 1})`
-                                : `translateY(${hovered ? -10 : 0}px) scale(${hovered ? 1.05 : 1})`,
-                            pointerEvents: 'none'
+                            opacity: isDragging.current ? 0.2 : 1,
+                            pointerEvents: 'none',
                         }}
                     >
-                        <div className="flex flex-col items-center group">
-                            <div
-                                className="bg-slate-950/60 backdrop-blur-2xl border border-white/10 text-white px-5 py-2 rounded-xl text-[11px] font-bold shadow-[0_10px_40px_rgba(0,0,0,0.8)] flex items-center gap-3 transition-all duration-300 overflow-hidden relative"
-                                style={{
-                                    borderColor: hovered ? `${color}66` : 'rgba(255,255,255,0.1)',
-                                    boxShadow: hovered ? `0 0 30px ${color}33, 0 10px 40px rgba(0,0,0,0.8)` : '0 10px 40px rgba(0,0,0,0.8)',
-                                    whiteSpace: 'nowrap'
+                        <div style={{ transform: labelPosition === "right" ? 'translateX(0)' : 'translateX(-50%)' }}>
+                            <div style={{
+                                background: `linear-gradient(145deg, rgba(8,12,28,0.95), rgba(15,23,42,0.90))`,
+                                border: `1px solid ${color}55`,
+                                borderRadius: '6px',
+                                padding: '8px 16px 8px 14px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '9px',
+                                whiteSpace: 'nowrap' as const,
+                                boxShadow: `0 0 18px ${color}15, 0 4px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)`,
+                                position: 'relative' as const,
+                                overflow: 'hidden',
+                            }}>
+                                {/* Top accent glow line */}
+                                <div style={{
+                                    position: 'absolute', top: 0, left: 0, width: '100%', height: '1px',
+                                    background: `linear-gradient(90deg, transparent, ${color}44, transparent)`,
+                                }} />
+                                {/* Bottom accent glow line */}
+                                <div style={{
+                                    position: 'absolute', bottom: 0, left: '20%', width: '60%', height: '1px',
+                                    background: `linear-gradient(90deg, transparent, ${color}22, transparent)`,
+                                }} />
+
+                                {/* Icon */}
+                                <div style={{ color: color, opacity: 0.9, display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                                    {type === "code" && <Code2 size={13} strokeWidth={2} />}
+                                    {type === "flow" && <Bot size={13} strokeWidth={2} />}
+                                    {type === "preview" && <Globe size={13} strokeWidth={2} />}
+                                </div>
+
+                                {/* Title */}
+                                <span style={{
+                                    fontSize: '10px',
+                                    fontWeight: 700,
+                                    letterSpacing: '0.15em',
+                                    textTransform: 'uppercase' as const,
+                                    color: 'rgba(255,255,255,0.92)',
                                 }}>
-                                {/* Shimmer Effect */}
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full group-hover:animate-[shimmer_2s_infinite] pointer-events-none" />
+                                    {title}
+                                </span>
 
-                                <div className="flex items-center gap-2 relative z-10">
-                                    <div className="flex items-center justify-center">
-                                        {type === "code" && <Code2 size={16} className="text-blue-400" />}
-                                        {type === "flow" && <Bot size={16} className="text-cyan-400" />}
-                                        {type === "preview" && <Monitor size={16} className="text-white" />}
-                                    </div>
-                                    <span className="tracking-[0.12em] uppercase opacity-90">{title}</span>
-                                </div>
-
-                                <div className="w-1.5 h-1.5 rounded-full animate-pulse relative z-10"
-                                    style={{
-                                        backgroundColor: color,
-                                        boxShadow: `0 0 10px ${color}, 0 0 20px ${color}`
-                                    }}>
-                                </div>
+                                {/* Status dot */}
+                                <div style={{
+                                    width: '5px', height: '5px', borderRadius: '50%',
+                                    backgroundColor: color,
+                                    boxShadow: `0 0 6px ${color}, 0 0 12px ${color}66`,
+                                    flexShrink: 0,
+                                    animation: 'pulse 2s ease-in-out infinite',
+                                }} />
                             </div>
                         </div>
                     </Html>
                 )}
 
+                {/* Bezier Connection Line - Card edge to Label */}
+                <QuadraticBezierLine
+                    start={labelPosition === "right" ? [1.9, 0, 0.15] : [0, 1.27, 0.15]}
+                    end={labelPosition === "right" ? [3.0, 0, 0.15] : [0, 2.4, 0.15]}
+                    mid={labelPosition === "right" ? [2.4, 0.25, 0.15] : [0.35, 1.85, 0.15]}
+                    color={color}
+                    transparent
+                    opacity={0.4}
+                    lineWidth={1.8}
+                />
+
+                {/* Pulse orb traveling along the bezier */}
+                <PulseOrb
+                    start={labelPosition === "right" ? [1.9, 0, 0.15] : [0, 1.27, 0.15]}
+                    end={labelPosition === "right" ? [3.0, 0, 0.15] : [0, 2.4, 0.15]}
+                    mid={labelPosition === "right" ? [2.4, 0.25, 0.15] : [0.35, 1.85, 0.15]}
+                    color={color}
+                />
+
+
             </group>
         </group>
     );
 };
+
+// Pulse orb that travels along a quadratic bezier curve
+function PulseOrb({ start, end, mid, color }: { start: [number, number, number]; end: [number, number, number]; mid: [number, number, number]; color: string }) {
+    const ref = useRef<THREE.Mesh>(null!);
+    const glowRef = useRef<THREE.Mesh>(null!);
+    const curve = useMemo(() => {
+        return new THREE.QuadraticBezierCurve3(
+            new THREE.Vector3(...start),
+            new THREE.Vector3(...mid),
+            new THREE.Vector3(...end)
+        );
+    }, [start, mid, end]);
+
+    useFrame((state) => {
+        if (!ref.current) return;
+        // Use a ping-pong so the orb travels the full path and returns
+        const raw = (state.clock.getElapsedTime() * 0.25) % 2;
+        const t = raw <= 1 ? raw : 2 - raw; // ping-pong 0→1→0
+        const point = curve.getPoint(t);
+        ref.current.position.copy(point);
+        if (glowRef.current) glowRef.current.position.copy(point);
+    });
+
+    return (
+        <group>
+            <mesh ref={ref}>
+                <sphereGeometry args={[0.03, 12, 12]} />
+                <meshBasicMaterial color={color} />
+                <pointLight distance={0.6} intensity={1.5} color={color} />
+            </mesh>
+            <mesh ref={glowRef}>
+                <sphereGeometry args={[0.09, 12, 12]} />
+                <meshBasicMaterial color={color} transparent opacity={0.25} />
+            </mesh>
+        </group>
+    );
+}

@@ -4,8 +4,7 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { useFrame } from "@react-three/fiber";
 import { PerspectiveCamera, Stars, Environment } from "@react-three/drei";
 import * as THREE from "three";
-import { OrbitalRings } from "./OrbitalRings";
-import { CLUSTER_CENTER } from "./OrbitingProps";
+import { OrbitingProps, CLUSTER_CENTER } from "./OrbitingProps";
 import { UICard } from "./UICard";
 
 export function Scene({ containerRef }: { containerRef: React.RefObject<HTMLDivElement> }) {
@@ -54,7 +53,7 @@ export function Scene({ containerRef }: { containerRef: React.RefObject<HTMLDivE
             <Environment preset="night" />
             <Stars radius={100} depth={50} count={reducedMotion ? 220 : 320} factor={reducedMotion ? 3.2 : 4} saturation={0} fade speed={reducedMotion ? 0.02 : 0.05} />
 
-            <OrbitalRings radius={3.2} />
+            <OrbitingProps />
 
             <group position={[CLUSTER_CENTER.x, CLUSTER_CENTER.y, CLUSTER_CENTER.z]} rotation={[0, -0.1, 0]}>
                 <UICard
