@@ -2,41 +2,29 @@
 
 import { playSfx } from "@/lib/audio";
 import { ArrowRight } from "@phosphor-icons/react";
+import { motion } from "framer-motion";
 
 export default function ActionNode() {
-    return (
-        <a
-            href="https://wa.me/5511999999999"
-            target="_blank"
-            rel="noopener noreferrer"
-            onMouseEnter={() => playSfx("hover")}
-            onClick={() => playSfx("click")}
-            className="group relative flex items-center justify-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 text-[11px] sm:text-[12px] font-bold tracking-wide text-white rounded-full overflow-hidden transition-all duration-300"
-            style={{
-                fontFamily: "var(--font-montserrat)",
-                background: "linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1E40AF 100%)",
-                boxShadow: "0 0 0 1px rgba(59,130,246,0.3), 0 4px 15px rgba(37,99,235,0.4), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.2)",
-            }}
-        >
-            {/* Hover overlay */}
-            <span
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"
-                style={{
-                    background: "linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #2563EB 100%)",
-                    boxShadow: "0 0 40px rgba(59,130,246,0.7)",
-                }}
-            />
-            {/* Shine */}
-            <span className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-
-            <span className="relative z-10 flex items-center gap-2">
-                Agendar Consultoria
-                <ArrowRight
-                    size={15}
-                    weight="bold"
-                    className="group-hover:translate-x-1 transition-transform duration-200"
-                />
-            </span>
-        </a>
-    );
+  return (
+    <motion.a
+      href="https://wa.me/5511999999999"
+      target="_blank"
+      rel="noopener noreferrer"
+      onMouseEnter={() => playSfx("hover")}
+      onClick={() => playSfx("click")}
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
+      className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 h-[44px] px-5 sm:px-6 rounded-xl border border-[#8eb1ff]/35 bg-gradient-to-r from-[#1a2f63] via-[#244886] to-[#2d5ca8] text-[10px] sm:text-[11px] font-black tracking-[0.12em] text-white uppercase transition-all duration-250 hover:from-[#203875] hover:via-[#2a5397] hover:to-[#3a6bbd] hover:border-[#b4cbff]/45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9fc0ff]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-black shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_6px_16px_rgba(7,20,46,0.45)]"
+      style={{ fontFamily: "var(--font-montserrat)" }}
+    >
+      <span className="relative z-10 flex items-center gap-2">
+        Agendar Consultoria
+        <ArrowRight
+          size={15}
+          weight="bold"
+          className="transition-transform duration-300 group-hover:translate-x-0.5"
+        />
+      </span>
+    </motion.a>
+  );
 }

@@ -1,26 +1,45 @@
 "use client";
 
-import { useRef, useState, useEffect, Suspense } from "react";
+import { Suspense, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
+
 import { SignalProvider } from "./hero/SignalContext";
 import { Scene } from "./hero/Scene";
 
-export default function Hero3DViz() {
-    const [mounted, setMounted] = useState(false);
-    const containerRef = useRef<HTMLDivElement>(null);
+type Hero3DVizProps = {
+    quality?: "desktop" | "mobile";
+};
 
-    useEffect(() => setMounted(true), []);
-    if (!mounted) return <div className="w-full h-full" />;
+export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const mobileOptimized = quality === "mobile";
 
     return (
-        <div ref={containerRef} className="w-full h-full relative overflow-hidden flex items-center justify-center pointer-events-auto">
-            <div className="absolute left-[65%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-cyan-500/10 rounded-full blur-[80px] pointer-events-none" />
+        <div
+            ref={containerRef}
+            className="w-full h-full relative overflow-hidden flex items-center justify-center"
+        >
+            <div
+                className={
+                    mobileOptimized
+                        ? "absolute left-[62%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] h-[260px] bg-cyan-500/8 rounded-full blur-[72px] pointer-events-none"
+                        : "absolute left-[65%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-cyan-500/10 rounded-full blur-[80px] pointer-events-none"
+                }
+            />
 
             <div className="w-full h-full absolute inset-0 overflow-visible pointer-events-auto">
-                <Canvas dpr={[1, 1.8]} gl={{ antialias: true, alpha: true }} style={{ background: "transparent" }}>
+                <Canvas
+                    dpr={mobileOptimized ? [0.85, 1.15] : [1, 1.7]}
+                    gl={{
+                        antialias: !mobileOptimized,
+                        alpha: true,
+                        powerPreference: "high-performance",
+                    }}
+                    style={{ background: "transparent" }}
+                >
                     <Suspense fallback={null}>
                         <SignalProvider>
-                            <Scene containerRef={containerRef as any} />
+                            <Scene mobileOptimized={mobileOptimized} />
                         </SignalProvider>
                     </Suspense>
                 </Canvas>
