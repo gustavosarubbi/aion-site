@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useRef } from "react";
+import { Suspense, useMemo, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 
 import { SignalProvider } from "./hero/SignalContext";
@@ -13,6 +13,21 @@ type Hero3DVizProps = {
 export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const mobileOptimized = quality === "mobile";
+
+    const dprRange = useMemo<[number, number]>(() => {
+        if (typeof navigator === "undefined") {
+            return mobileOptimized ? [0.78, 1] : [0.9, 1.3];
+        }
+
+        const cores = navigator.hardwareConcurrency ?? 8;
+        const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
+        const lowEnd = cores <= 4 || memory <= 4;
+        const midTier = !lowEnd && (cores <= 8 || memory <= 8);
+
+        if (mobileOptimized || lowEnd) return [0.7, 1];
+        if (midTier) return [0.85, 1.2];
+        return [1, 1.6];
+    }, [mobileOptimized]);
 
     return (
         <div
@@ -29,12 +44,14 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
 
             <div className="w-full h-full absolute inset-0 overflow-visible pointer-events-auto">
                 <Canvas
-                    dpr={mobileOptimized ? [0.85, 1.15] : [1, 1.7]}
+                    dpr={dprRange}
                     gl={{
-                        antialias: !mobileOptimized,
+                        antialias: dprRange[1] >= 1.2,
                         alpha: true,
                         powerPreference: "high-performance",
+                        stencil: false,
                     }}
+                    camera={{ near: 0.1, far: 90 }}
                     style={{ background: "transparent" }}
                 >
                     <Suspense fallback={null}>

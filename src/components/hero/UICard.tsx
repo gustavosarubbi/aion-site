@@ -1,13 +1,28 @@
 "use client";
 
 import { useRef, useMemo, useState, useEffect, useCallback } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, type ThreeEvent } from "@react-three/fiber";
 import { RoundedBox, Html, QuadraticBezierLine } from "@react-three/drei";
 import * as THREE from "three";
 import { Code2, Bot, Globe } from "lucide-react";
 import { useSignal } from "./SignalContext";
 import { CardFrame } from "./CardFrame";
 import { CodeCardContent, PreviewCardContent, FlowCardContent } from "./CardContents";
+
+function hashSeed(seed: string, channel: number) {
+    let hash = 2166136261 ^ channel;
+
+    for (let i = 0; i < seed.length; i += 1) {
+        hash ^= seed.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+    }
+
+    return (hash >>> 0) / 4294967295;
+}
+
+function seededRange(seed: string, channel: number, min: number, max: number) {
+    return min + hashSeed(seed, channel) * (max - min);
+}
 
 export type CardType = "code" | "flow" | "preview";
 
@@ -26,6 +41,7 @@ export type UICardProps = {
     reducedMotion: boolean;
     labelPosition?: "top" | "right";
     baseScale?: number;
+    qualityTier?: "high" | "medium" | "low";
 };
 
 export const UICard = ({
@@ -43,30 +59,25 @@ export const UICard = ({
     reducedMotion,
     labelPosition = "top",
     baseScale = 1,
+    qualityTier = "high",
 }: UICardProps) => {
     const outerRef = useRef<THREE.Group>(null!);
     const innerRef = useRef<THREE.Group>(null!);
     const bodyMaterialRef = useRef<THREE.MeshPhysicalMaterial>(null);
     const dimmerMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
-    const flashMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
 
     const scaleVector = useRef(new THREE.Vector3(1, 1, 1));
     const clickTimelineRef = useRef(0);
     const signal = useSignal();
 
-    const floatOffset = useMemo(() => Math.random() * Math.PI * 2, []);
-    const wobbleX = useMemo(() => 0.5 + Math.random() * 0.7, []);
-    const wobbleZ = useMemo(() => 0.3 + Math.random() * 0.5, []);
+    const floatOffset = useMemo(() => seededRange(id, 1, 0, Math.PI * 2), [id]);
+    const wobbleX = useMemo(() => seededRange(id, 2, 0.5, 1.2), [id]);
+    const wobbleZ = useMemo(() => seededRange(id, 3, 0.3, 0.8), [id]);
 
     const [hovered, setHovered] = useState(false);
-    const [showTooltip, setShowTooltip] = useState(false);
-    const lineRef = useRef<THREE.BufferGeometry>(null!);
-    const labelPosRef = useRef(new THREE.Vector3());
-
-    const linePoints = useMemo(() => {
-        return [new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 0)];
-    }, []);
-
+    const lowQuality = qualityTier === "low";
+    const mediumQuality = qualityTier === "medium";
+    const motionScalar = lowQuality ? 0.58 : mediumQuality ? 0.78 : 1;
 
     const isDragging = useRef(false);
     const dragDistance = useRef(0);
@@ -79,14 +90,6 @@ export const UICard = ({
     const isSecondary = activeCardId !== null && activeCardId !== id;
 
     useEffect(() => {
-        if (hovered) {
-            const timer = window.setTimeout(() => setShowTooltip(true), 140);
-            return () => window.clearTimeout(timer);
-        }
-        setShowTooltip(false);
-    }, [hovered]);
-
-    useEffect(() => {
         return () => {
             if (typeof document !== "undefined") document.body.style.cursor = "auto";
         };
@@ -96,21 +99,23 @@ export const UICard = ({
         if (typeof document !== "undefined") document.body.style.cursor = cursor;
     }, []);
 
-    const onPointerDown = useCallback((e: any) => {
+    const onPointerDown = useCallback((e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation();
         isDragging.current = true;
         dragDistance.current = 0;
         prevPointer.current = { x: e.clientX, y: e.clientY };
         velocity.current = { x: 0, y: 0 };
-        try { e.target.setPointerCapture(e.pointerId); } catch (err) { }
+        const target = e.target as Element | null;
+        target?.setPointerCapture?.(e.pointerId);
         onActiveCardChange(id);
         setCursor("grabbing");
     }, [id, onActiveCardChange, setCursor]);
 
-    const onPointerUp = useCallback((e: any) => {
+    const onPointerUp = useCallback((e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation();
         isDragging.current = false;
-        try { e.target.releasePointerCapture(e.pointerId); } catch (err) { }
+        const target = e.target as Element | null;
+        target?.releasePointerCapture?.(e.pointerId);
         onActiveCardChange(null);
         if (hovered) {
             setCursor("grab");
@@ -119,7 +124,7 @@ export const UICard = ({
         setCursor("auto");
     }, [hovered, onActiveCardChange, setCursor]);
 
-    const onPointerMove = useCallback((e: any) => {
+    const onPointerMove = useCallback((e: ThreeEvent<PointerEvent>) => {
         if (isDragging.current) {
             e.stopPropagation();
             const dx = e.clientX - prevPointer.current.x;
@@ -132,13 +137,15 @@ export const UICard = ({
             return;
         }
 
+        if (reducedMotion || lowQuality) return;
+
         if (e.uv) {
             pointerTiltTarget.current.x = (0.5 - e.uv.y) * 0.09;
             pointerTiltTarget.current.y = (e.uv.x - 0.5) * 0.09;
         }
-    }, []);
+    }, [lowQuality, reducedMotion]);
 
-    const onClick = useCallback((e: any) => {
+    const onClick = useCallback((e: ThreeEvent<MouseEvent>) => {
         e.stopPropagation();
         if (dragDistance.current >= 8) return;
         clickTimelineRef.current = 1;
@@ -149,9 +156,17 @@ export const UICard = ({
         if (!outerRef.current || !innerRef.current) return;
         const t = state.clock.getElapsedTime() * speed * (reducedMotion ? 0.9 : 1) + delay;
 
-        const targetX = position[0] + Math.cos(t * wobbleX + floatOffset) * (reducedMotion ? 0.13 : 0.18);
-        const targetY = position[1] + Math.sin(t * 1.3 + floatOffset) * (reducedMotion ? 0.16 : 0.22) + Math.sin(t * 0.9) * (reducedMotion ? 0.06 : 0.1);
-        const targetZ = (position[2] || 0) + Math.sin(t * wobbleZ) * (reducedMotion ? 0.08 : 0.12) + (isSecondary ? -0.55 : 0);
+        const targetX =
+            position[0] + Math.cos(t * wobbleX + floatOffset) * (reducedMotion ? 0.13 : 0.18) * motionScalar;
+        const targetY =
+            position[1] +
+            (Math.sin(t * 1.3 + floatOffset) * (reducedMotion ? 0.16 : 0.22) +
+                Math.sin(t * 0.9) * (reducedMotion ? 0.06 : 0.1)) *
+                motionScalar;
+        const targetZ =
+            (position[2] || 0) +
+            Math.sin(t * wobbleZ) * (reducedMotion ? 0.08 : 0.12) * motionScalar +
+            (isSecondary ? -0.55 : 0);
 
         outerRef.current.position.x = THREE.MathUtils.damp(outerRef.current.position.x, targetX, 12, delta);
         outerRef.current.position.y = THREE.MathUtils.damp(outerRef.current.position.y, targetY, 12, delta);
@@ -168,23 +183,17 @@ export const UICard = ({
         outerRef.current.rotation.y = THREE.MathUtils.damp(outerRef.current.rotation.y, targetRotY, 12, delta);
         outerRef.current.rotation.z = THREE.MathUtils.damp(outerRef.current.rotation.z, targetRotZ, 15, delta);
 
-
-
-
         if (clickTimelineRef.current > 0) {
             clickTimelineRef.current = Math.max(0, clickTimelineRef.current - delta * (reducedMotion ? 1.5 : 1.1));
         }
         const clickProgress = 1 - clickTimelineRef.current;
         const pressPhase = clickProgress < 0.2 ? Math.sin((clickProgress / 0.2) * Math.PI) : 0;
-        const sweepT = THREE.MathUtils.clamp((clickProgress - 0.12) / 0.5, 0, 1);
-        const sweepOpacity = Math.sin(sweepT * Math.PI) * (isSecondary ? 0.1 : 0.2);
-        const rippleT = THREE.MathUtils.clamp((clickProgress - 0.24) / 0.76, 0, 1);
 
         const hoverScale = hovered ? 1.06 : 1;
         const backgroundScale = isSecondary ? 0.85 : 1;
         const finalScale = (hoverScale * backgroundScale + pressPhase * 0.05) * baseScale;
         scaleVector.current.set(finalScale, finalScale, finalScale);
-        outerRef.current.scale.lerp(scaleVector.current, reducedMotion ? 0.25 : 0.35);
+        outerRef.current.scale.lerp(scaleVector.current, reducedMotion || lowQuality ? 0.22 : 0.35);
 
         if (isDragging.current) {
             dragRot.current.x += velocity.current.x;
@@ -261,42 +270,36 @@ export const UICard = ({
                 <RoundedBox
                     args={[3.8, 2.4, 0.15]}
                     radius={0.16}
-                    smoothness={12}
+                    smoothness={lowQuality ? 8 : 12}
                 >
                     <meshPhysicalMaterial
                         ref={bodyMaterialRef}
                         color="#02040a"
-                        metalness={0.9}
+                        metalness={lowQuality ? 0.35 : mediumQuality ? 0.65 : 0.9}
                         transparent={true}
                         opacity={0.96}
-                        transmission={0.65}
-                        thickness={2}
-                        roughness={0.08}
+                        transmission={lowQuality ? 0.12 : mediumQuality ? 0.38 : 0.65}
+                        thickness={lowQuality ? 0.4 : mediumQuality ? 1.1 : 2}
+                        roughness={lowQuality ? 0.26 : mediumQuality ? 0.15 : 0.08}
                         ior={1.45}
-                        reflectivity={0.9}
-                        clearcoat={1}
-                        clearcoatRoughness={0.02}
-                        envMapIntensity={1.5}
+                        reflectivity={lowQuality ? 0.35 : mediumQuality ? 0.6 : 0.9}
+                        clearcoat={lowQuality ? 0.4 : 1}
+                        clearcoatRoughness={lowQuality ? 0.1 : 0.02}
+                        envMapIntensity={lowQuality ? 0.55 : mediumQuality ? 1 : 1.5}
                     />
                 </RoundedBox>
 
-                <CardFrame color={color} />
+                <CardFrame color={color} reducedMotion={reducedMotion || lowQuality} reducedDetail={lowQuality} />
 
 
-                {type === "code" && <CodeCardContent />}
-                {type === "preview" && <PreviewCardContent />}
-                {type === "flow" && <FlowCardContent baseColor={color} />}
+                {type === "code" && <CodeCardContent reducedDetail={lowQuality} />}
+                {type === "preview" && <PreviewCardContent reducedDetail={lowQuality} />}
+                {type === "flow" && <FlowCardContent baseColor={color} reducedDetail={lowQuality} />}
 
                 <mesh position={[0, 0, 0.1]} renderOrder={4}>
                     <planeGeometry args={[3.6, 2.2]} />
                     <meshBasicMaterial ref={dimmerMaterialRef} color="#020617" transparent opacity={0} depthWrite={false} />
                 </mesh>
-
-                <mesh position={[0, 0, 0.14]} renderOrder={5}>
-                    <planeGeometry args={[3.7, 2.3]} />
-                    <meshBasicMaterial ref={flashMaterialRef} color={color} transparent opacity={0} depthWrite={false} blending={THREE.AdditiveBlending} />
-                </mesh>
-
 
                 {title && (
                     <Html
@@ -373,17 +376,19 @@ export const UICard = ({
                     mid={labelPosition === "right" ? [2.4, 0.25, 0.15] : [0.35, 1.85, 0.15]}
                     color={color}
                     transparent
-                    opacity={0.4}
-                    lineWidth={1.8}
+                    opacity={lowQuality ? 0.28 : 0.4}
+                    lineWidth={lowQuality ? 1.2 : 1.8}
                 />
 
                 {/* Pulse orb traveling along the bezier */}
-                <PulseOrb
-                    start={labelPosition === "right" ? [1.9, 0, 0.15] : [0, 1.27, 0.15]}
-                    end={labelPosition === "right" ? [3.0, 0, 0.15] : [0, 2.4, 0.15]}
-                    mid={labelPosition === "right" ? [2.4, 0.25, 0.15] : [0.35, 1.85, 0.15]}
-                    color={color}
-                />
+                {!lowQuality && (
+                    <PulseOrb
+                        start={labelPosition === "right" ? [1.9, 0, 0.15] : [0, 1.27, 0.15]}
+                        end={labelPosition === "right" ? [3.0, 0, 0.15] : [0, 2.4, 0.15]}
+                        mid={labelPosition === "right" ? [2.4, 0.25, 0.15] : [0.35, 1.85, 0.15]}
+                        color={color}
+                    />
+                )}
 
 
             </group>

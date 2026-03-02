@@ -6,20 +6,35 @@ import * as THREE from "three";
 
 export const CLUSTER_CENTER = new THREE.Vector3(4.5, 0, 0);
 
-export function OrbitingProps({ radius = 5.0, speed = 0.15, count = 12 }) {
+function seededUnit(index: number, channel: number) {
+    const x = Math.sin((index + 1) * 12.9898 + (channel + 1) * 78.233) * 43758.5453;
+    return x - Math.floor(x);
+}
+
+export function OrbitingProps({
+    radius = 5.0,
+    speed = 0.15,
+    count = 12,
+    reducedMotion = false,
+}: {
+    radius?: number;
+    speed?: number;
+    count?: number;
+    reducedMotion?: boolean;
+}) {
     const groupRef = useRef<THREE.Group>(null!);
     const props = useMemo(() => {
         const types = ["octahedron", "dodecahedron", "tetrahedron"];
         const colors = ["#06b6d4", "#3b82f6", "#a855f7", "#0ea5e9", "#8b5cf6", "#22d3ee"];
         return [...Array(count)].map((_, i) => ({
-            phase: (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.5,
-            offset: (i / count) * Math.PI * 2 + Math.random() * 0.6,
-            size: 0.08 + Math.random() * 0.10,
+            phase: (i / count) * Math.PI * 2 + (seededUnit(i, 1) - 0.5) * 0.5,
+            offset: (i / count) * Math.PI * 2 + seededUnit(i, 2) * 0.6,
+            size: 0.08 + seededUnit(i, 3) * 0.10,
             type: types[i % types.length],
             color: colors[i % colors.length],
-            speedMult: 0.3 + (i % 4) * 0.2 + Math.random() * 0.3,
-            wobble: Math.random() * 1.2,
-            orbitRadius: radius * (0.75 + (i % 3) * 0.12 + Math.random() * 0.1),
+            speedMult: 0.3 + (i % 4) * 0.2 + seededUnit(i, 4) * 0.3,
+            wobble: seededUnit(i, 5) * 1.2,
+            orbitRadius: radius * (0.75 + (i % 3) * 0.12 + seededUnit(i, 6) * 0.1),
             vertDir: i % 2 === 0 ? 1 : -1,
         }));
     }, [count, radius]);
@@ -33,8 +48,10 @@ export function OrbitingProps({ radius = 5.0, speed = 0.15, count = 12 }) {
             child.position.x = CLUSTER_CENTER.x + Math.cos(angle) * p.orbitRadius;
             child.position.z = CLUSTER_CENTER.z + Math.sin(angle) * p.orbitRadius * 0.65;
             child.position.y = CLUSTER_CENTER.y + Math.sin(t * 0.35 + p.offset) * 2.2 * p.vertDir;
-            child.rotation.x += 0.012;
-            child.rotation.y += 0.009;
+            if (!reducedMotion) {
+                child.rotation.x += 0.012;
+                child.rotation.y += 0.009;
+            }
         });
     });
 

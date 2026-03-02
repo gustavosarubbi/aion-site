@@ -4,11 +4,21 @@ import { useFrame } from "@react-three/fiber";
 import { RoundedBox, Edges } from "@react-three/drei";
 import * as THREE from "three";
 
-export function CardFrame({ color }: { color: string }) {
+export function CardFrame({
+    color,
+    reducedMotion = false,
+    reducedDetail = false,
+}: {
+    color: string;
+    reducedMotion?: boolean;
+    reducedDetail?: boolean;
+}) {
     const gridRef = useRef<THREE.Mesh>(null!);
     const borderMatRef = useRef<THREE.MeshStandardMaterial>(null!);
 
     useFrame((state) => {
+        if (reducedMotion) return;
+
         if (gridRef.current) {
             gridRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.02;
         }
@@ -24,12 +34,23 @@ export function CardFrame({ color }: { color: string }) {
         <group>
             {/* Glowing Border Frame */}
             <group scale={1.002}>
-                <RoundedBox args={[3.94, 2.54, 0.13]} radius={0.18} smoothness={12}>
-                    <meshStandardMaterial ref={borderMatRef} color={color} transparent opacity={0.15} emissive={color} emissiveIntensity={0.6} metalness={1} roughness={0} />
+                <RoundedBox args={[3.94, 2.54, 0.13]} radius={0.18} smoothness={reducedDetail ? 8 : 12}>
+                    <meshStandardMaterial
+                        ref={borderMatRef}
+                        color={color}
+                        transparent
+                        opacity={0.15}
+                        emissive={color}
+                        emissiveIntensity={reducedMotion ? 0.38 : 0.6}
+                        metalness={reducedDetail ? 0.7 : 1}
+                        roughness={reducedDetail ? 0.18 : 0}
+                    />
                     <Edges color={color} threshold={15} />
-                    <group scale={1.005}>
-                        <Edges color={color} threshold={10} />
-                    </group>
+                    {!reducedDetail && (
+                        <group scale={1.005}>
+                            <Edges color={color} threshold={10} />
+                        </group>
+                    )}
                 </RoundedBox>
             </group>
 
@@ -71,7 +92,7 @@ export function CardFrame({ color }: { color: string }) {
             {/* Window Buttons */}
             {(["#ff5f57", "#febc2e", "#28c840"] as const).map((c, i) => (
                 <mesh key={i} position={[-1.5 + i * 0.2, 0.95, 0.075]}>
-                    <sphereGeometry args={[0.055, 16, 16]} />
+                    <sphereGeometry args={[0.055, reducedDetail ? 10 : 16, reducedDetail ? 10 : 16]} />
                     <meshStandardMaterial color={c} emissive={c} emissiveIntensity={1.2} />
                 </mesh>
             ))}
