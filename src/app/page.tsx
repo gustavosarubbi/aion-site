@@ -209,27 +209,27 @@ export default function Home() {
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-5 lg:gap-6 lg:max-w-[720px] xl:max-w-[820px]">
             <div className="absolute -inset-10 bg-gradient-to-r from-blue-500/7 via-cyan-500/4 to-blue-500/6 blur-[102px] -z-10 rounded-full opacity-42 pointer-events-none" />
 
-            <div className="relative z-20 flex items-center gap-3.5 lg:-ml-1 mb-2">
+            <div className="relative z-20 w-full flex items-center justify-center lg:justify-start gap-3 mb-2">
               <div className="relative flex items-center justify-center">
                 <Image
                   src="/AionLogo.png"
                   alt="Aion Logo"
-                  width={48}
-                  height={48}
+                  width={56}
+                  height={56}
                   priority
                   unoptimized
-                  className="h-10 w-10 sm:h-12 sm:w-12 object-contain"
+                  className="h-12 w-12 sm:h-14 sm:w-14 object-contain"
                 />
               </div>
-              <div className="flex flex-col -space-y-0.5 mt-0.5">
+              <div className="flex flex-col -space-y-0.5">
                 <span
-                  className="text-white font-extrabold tracking-[0.23em] text-[1.55rem] sm:text-[1.82rem] leading-none drop-shadow-[0_0_14px_rgba(125,211,252,0.34)]"
+                  className="text-white font-extrabold tracking-[0.22em] text-[1.3rem] sm:text-[1.5rem] leading-none drop-shadow-[0_0_10px_rgba(125,211,252,0.28)]"
                   style={montserrat}
                 >
                   AION
                 </span>
                 <span
-                  className="text-[10px] sm:text-[12px] font-semibold tracking-[0.3em] text-[#4169E1] uppercase leading-none pl-[2px] drop-shadow-[0_0_14px_rgba(65,105,225,0.75)]"
+                  className="text-[9px] sm:text-[10px] font-semibold tracking-[0.28em] text-[#4169E1] uppercase leading-none pl-[2px] drop-shadow-[0_0_10px_rgba(65,105,225,0.65)]"
                   style={{ fontFamily: "var(--font-source-code-pro)" }}
                 >
                   digital
@@ -262,7 +262,7 @@ export default function Home() {
                 <ActionNode />
                 <a
                   href="#services"
-                  className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 h-[44px] px-5 sm:px-6 rounded-xl border border-[#6f8fd4]/35 bg-gradient-to-r from-[#081223]/95 to-[#0d1b33]/90 text-[10px] sm:text-[11px] font-black tracking-[0.12em] text-[#cfe0ff] uppercase transition-all duration-250 hover:from-[#0c1930] hover:to-[#132847] hover:border-[#97b2e8]/45 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9db8f0]/45 focus-visible:ring-offset-2 focus-visible:ring-offset-black pointer-events-auto shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                  className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 h-[46px] px-6 sm:px-7 rounded-full bg-[#3475f3] text-[12px] sm:text-[13px] font-semibold text-white transition-colors duration-200 hover:bg-[#3f81ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-200/45 focus-visible:ring-offset-2 focus-visible:ring-offset-black pointer-events-auto shadow-[0_0_22px_rgba(52,117,243,0.55)]"
                   style={montserrat}
                 >
                   Ver Serviços
