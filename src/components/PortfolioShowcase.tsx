@@ -2,7 +2,7 @@ import { ArrowUpRight } from "@phosphor-icons/react/dist/ssr";
 
 export default function PortfolioShowcase() {
     return (
-        <section className="relative z-10 w-full py-32 bg-gradient-to-b from-[#000000] via-[#030712] to-[#000000]">
+        <section id="cases" className="cv-auto relative z-10 w-full py-32 bg-gradient-to-b from-[#000000] via-[#030712] to-[#000000]" style={{ containIntrinsicSize: "940px" }}>
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[40%] h-px bg-gradient-to-r from-transparent via-cyan-500/25 to-transparent"></div>
 
             <div className="max-w-6xl mx-auto px-6 flex flex-col gap-16">

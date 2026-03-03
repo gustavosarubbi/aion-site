@@ -1,5 +1,3 @@
-"use client";
-
 import ActionNode from "@/components/ActionNode";
 import PortfolioShowcase from "@/components/PortfolioShowcase";
 import ServiceStack from "@/components/ServiceStack";
@@ -8,32 +6,20 @@ import Methodology from "@/components/Methodology";
 import FAQ from "@/components/FAQ";
 import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
-import Squares from "@/components/Squares";
-import Hero3DWrapper from "@/components/Hero3DWrapper";
-import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { Code, ChatCircleDots, RocketLaunch } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
+import HeroHeadline from "@/components/HeroHeadline";
+import dynamic from "next/dynamic";
+import { Code, ChatCircleDots, RocketLaunch } from "@phosphor-icons/react/dist/ssr";
+
+const Squares = dynamic(() => import("@/components/Squares"), {
+  loading: () => <div className="w-full h-full" />,
+});
+
+const Hero3DWrapper = dynamic(() => import("@/components/Hero3DWrapper"), {
+  loading: () => <div className="w-full h-[420px] lg:h-[560px]" />,
+});
 
 // Montserrat font class applied consistently
 const montserrat = { fontFamily: "var(--font-montserrat)" } as const;
-
-const heroContent = [
-  { service: "SITES", outcome: "RESULTADOS" },
-  { service: "CHATBOTS", outcome: "ATENDIMENTO" },
-  { service: "AUTOMACAO", outcome: "ESCALA" },
-  { service: "FUNIS", outcome: "CONVERSAO" },
-];
-
-const longestService = heroContent.reduce(
-  (longest, item) => (item.service.length > longest.length ? item.service : longest),
-  ""
-);
-
-const longestOutcome = heroContent.reduce(
-  (longest, item) => (item.outcome.length > longest.length ? item.outcome : longest),
-  ""
-);
 
 const serviceItems = [
   {
@@ -45,91 +31,19 @@ const serviceItems = [
   },
   {
     icon: ChatCircleDots,
-    label: "CHATBOTS",
+    label: "CONVERSÃO",
     color: "text-violet-300",
     halo: "bg-violet-400/35",
     divider: "via-violet-300/70",
   },
   {
     icon: RocketLaunch,
-    label: "AUTOMACAO",
+    label: "AUTOMAÇÃO",
     color: "text-orange-300",
     halo: "bg-orange-400/35",
     divider: "via-orange-300/75",
   },
 ] as const;
-
-function HeroHeadline() {
-  const [index, setIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((prev) => (prev + 1) % heroContent.length);
-    }, 3800);
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <div
-      style={montserrat}
-      className="w-full lg:max-w-[720px] flex flex-col items-center lg:items-start gap-1 sm:gap-1 overflow-visible"
-    >
-      <h1 className="flex flex-wrap items-center justify-center lg:justify-start gap-x-1 sm:gap-x-2 gap-y-0 w-full">
-        <span className="block font-black text-blue-200/80 tracking-tight text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] uppercase">
-          TRANSFORMAMOS
-        </span>
-
-        <div className="relative inline-flex items-end pb-0.5 sm:pb-1">
-          <span className="invisible font-black text-transparent text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] tracking-tight leading-none pt-0.5 uppercase">
-            {longestService}
-          </span>
-          <AnimatePresence mode="popLayout" initial={false}>
-            <motion.span
-              key={heroContent[index].service}
-              initial={{ opacity: 0, filter: "blur(2px)", y: 8 }}
-              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-              exit={{ opacity: 0, filter: "blur(2px)", y: -8 }}
-              transition={{ duration: 0.28, ease: "easeOut" }}
-              className="absolute inset-x-0 lg:inset-x-auto lg:left-0 flex justify-center lg:justify-start"
-            >
-              <span className="inline-flex flex-col items-center lg:items-start w-fit">
-                <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#99e9ff] via-[#57c9ff] to-[#357dff] drop-shadow-[0_0_8px_rgba(56,189,248,0.36)] text-center lg:text-left text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] tracking-tight leading-none pt-0.5 uppercase">
-                  {heroContent[index].service}
-                </span>
-                <span className="mt-0.5 h-[2px] w-full bg-gradient-to-r from-cyan-300/85 via-sky-300/70 to-blue-400/35 shadow-[0_0_12px_rgba(34,211,238,0.55)]" />
-              </span>
-            </motion.span>
-          </AnimatePresence>
-        </div>
-      </h1>
-
-      <h1 className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 sm:gap-3.5 w-full -mt-2 sm:-mt-3">
-        <span className="block font-black text-blue-200/80 tracking-tight text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] mt-1 uppercase">
-          EM
-        </span>
-
-        <div className="relative h-[2.2rem] sm:h-[3rem] lg:h-[3.8rem] inline-flex items-center overflow-visible">
-          <span className="invisible font-black text-transparent tracking-tight text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] leading-none whitespace-nowrap pt-0.5 uppercase">
-            {longestOutcome}
-          </span>
-
-          <AnimatePresence mode="popLayout" initial={false}>
-            <motion.div
-              key={heroContent[index].outcome}
-              initial={{ opacity: 0, y: 8, filter: "blur(2px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -8, filter: "blur(2px)" }}
-              transition={{ duration: 0.28, ease: "easeOut", delay: 0.04 }}
-              className="absolute inset-x-0 lg:inset-x-auto lg:left-0 text-transparent bg-clip-text bg-gradient-to-r from-[#98e7ff] via-[#4eb8ff] to-[#2b67e9] drop-shadow-[0_0_9px_rgba(56,189,248,0.32)] font-black tracking-tight text-center lg:text-left text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] leading-none whitespace-nowrap pt-0.5 uppercase"
-            >
-              {heroContent[index].outcome}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </h1>
-    </div>
-  );
-}
 
 function HeroSubtitle() {
   return (
@@ -137,36 +51,38 @@ function HeroSubtitle() {
       style={montserrat}
       className="text-white/82 text-sm sm:text-base lg:text-[17px] leading-relaxed font-medium max-w-[46ch] mt-1 sm:mt-2"
     >
-      Da visita ao fechamento, criamos sites, chatbots e automacoes para gerar
-      mais conversao com menos atrito.
+      Da visita ao fechamento, criamos sites, chatbots e automações para gerar
+      mais conversão com menos atrito.
     </p>
   );
 }
 
 function ServiceBar() {
   return (
-    <div className="inline-flex items-stretch rounded-2xl border border-white/14 bg-[#040d1d]/70 overflow-hidden shadow-[0_16px_44px_rgba(0,0,0,0.45)]">
-      {serviceItems.map(({ icon: Icon, label, color, halo, divider }, i) => (
-        <div
-          key={i}
-          className="relative flex items-center gap-2.5 sm:gap-3 px-4 sm:px-6 py-2.5 sm:py-3.5 cursor-default transition-colors duration-300 hover:bg-white/[0.025]"
-        >
+    <div className="flex items-center overflow-visible">
+      {serviceItems.map(({ icon: Icon, label, color, halo }, i) => (
+        <div key={i} className="flex items-center">
+          <div className="flex items-center gap-2 sm:gap-2.5 py-1.5 cursor-default px-2 sm:px-3 lg:first:pl-0 last:pr-0">
+            <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full">
+              <span className={`absolute inset-0 rounded-full ${halo} blur-md opacity-70`} />
+              <Icon size={18} weight="duotone" className={color} />
+            </span>
+            <span
+              style={montserrat}
+              className={`text-[10px] sm:text-[11px] font-extrabold tracking-[0.18em] ${color} uppercase whitespace-nowrap drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]`}
+            >
+              {label}
+            </span>
+          </div>
           {i !== serviceItems.length - 1 && (
-            <>
-              <span className={`absolute right-0 top-1/2 h-[64%] w-px -translate-y-1/2 bg-gradient-to-b from-transparent ${divider} to-transparent`} />
-              <span className={`absolute right-0 top-1/2 h-[40%] w-[3px] -translate-y-1/2 rounded-full ${halo} blur-[3px]`} />
-            </>
+            <div className="relative h-4 w-[1px] bg-white/70 self-center mx-1 sm:mx-2 overflow-visible">
+              {/* Core glow - sharp */}
+              <div className="absolute inset-0 bg-white blur-[1px]" />
+              {/* Aura - soft white/blue tint for tech feel */}
+              <div className="absolute inset-x-[-3px] inset-y-[-2px] bg-blue-400/20 blur-[6px] rounded-full" />
+              <div className="absolute inset-x-[-1px] inset-y-[-1px] bg-white/40 blur-[3px] rounded-full" />
+            </div>
           )}
-          <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full">
-            <span className={`absolute inset-0 rounded-full ${halo} blur-md`} />
-            <Icon size={18} weight="duotone" className={color} />
-          </span>
-          <span
-            style={montserrat}
-            className={`text-[9px] sm:text-[11px] font-extrabold tracking-[0.16em] ${color} uppercase whitespace-nowrap`}
-          >
-            {label}
-          </span>
         </div>
       ))}
     </div>
@@ -193,11 +109,11 @@ export default function Home() {
         />
       </div>
 
-      <div className="fixed top-[18%] left-[8%] w-[34vw] h-[34vw] rounded-full bg-blue-600/10 blur-[130px] pointer-events-none mix-blend-screen z-0" />
-      <div className="fixed bottom-[12%] right-[10%] w-[28vw] h-[28vw] rounded-full bg-cyan-500/7 blur-[118px] pointer-events-none mix-blend-screen z-0" />
+      <div className="fixed top-[18%] left-[8%] w-[34vw] h-[34vw] rounded-full bg-blue-600/9 blur-[96px] pointer-events-none mix-blend-screen z-0" />
+      <div className="fixed bottom-[12%] right-[10%] w-[28vw] h-[28vw] rounded-full bg-cyan-500/6 blur-[88px] pointer-events-none mix-blend-screen z-0" />
       <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,transparent_0%,#000000_100%)]" />
 
-      <section className="relative w-full min-h-[90vh] flex flex-col items-center justify-start overflow-visible pt-16 sm:pt-24 pb-12">
+      <section id="inicio" className="relative w-full min-h-[90vh] flex flex-col items-center justify-start overflow-visible pt-16 sm:pt-24 pb-12">
         <div className="absolute inset-0 z-0 pointer-events-none overflow-visible">
           <div className="w-full h-full relative overflow-visible pointer-events-auto">
             <Hero3DWrapper />
@@ -205,43 +121,16 @@ export default function Home() {
           <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#000000] to-transparent z-10" />
         </div>
 
-        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 mt-6 sm:mt-12 pointer-events-none">
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 mt-2 sm:mt-4 pointer-events-none">
           <div className="flex flex-col items-center lg:items-start text-center lg:text-left gap-5 lg:gap-6 lg:max-w-[720px] xl:max-w-[820px]">
-            <div className="absolute -inset-10 bg-gradient-to-r from-blue-500/7 via-cyan-500/4 to-blue-500/6 blur-[102px] -z-10 rounded-full opacity-42 pointer-events-none" />
+            <div className="absolute -inset-10 bg-gradient-to-r from-blue-500/7 via-cyan-500/4 to-blue-500/6 blur-[74px] -z-10 rounded-full opacity-42 pointer-events-none" />
 
-            <div className="relative z-20 w-full flex items-center justify-center lg:justify-start gap-3 mb-2">
-              <div className="relative flex items-center justify-center">
-                <Image
-                  src="/AionLogo.png"
-                  alt="Aion Logo"
-                  width={56}
-                  height={56}
-                  priority
-                  unoptimized
-                  className="h-12 w-12 sm:h-14 sm:w-14 object-contain"
-                />
-              </div>
-              <div className="flex flex-col -space-y-0.5">
-                <span
-                  className="text-white font-extrabold tracking-[0.22em] text-[1.3rem] sm:text-[1.5rem] leading-none drop-shadow-[0_0_10px_rgba(125,211,252,0.28)]"
-                  style={montserrat}
-                >
-                  AION
-                </span>
-                <span
-                  className="text-[9px] sm:text-[10px] font-semibold tracking-[0.28em] text-[#4169E1] uppercase leading-none pl-[2px] drop-shadow-[0_0_10px_rgba(65,105,225,0.65)]"
-                  style={{ fontFamily: "var(--font-source-code-pro)" }}
-                >
-                  digital
-                </span>
-              </div>
-            </div>
 
-            <div className="z-10 mt-2 mb-2">
+            <div className="z-10 mb-0.5">
               <ServiceBar />
             </div>
 
-            <div className="relative z-10 overflow-visible w-full">
+            <div className="relative z-10 overflow-visible w-full -mt-2">
               <HeroHeadline />
             </div>
 
@@ -249,7 +138,7 @@ export default function Home() {
               <HeroSubtitle />
             </div>
 
-            <div className="flex flex-col items-center lg:items-start gap-4 pt-4 w-full sm:w-auto pointer-events-auto">
+            <div className="flex flex-col items-center lg:items-start gap-4 pt-2 w-full sm:w-auto pointer-events-auto">
               <p
                 style={montserrat}
                 className="text-[9px] sm:text-[10px] tracking-[0.16em] sm:tracking-[0.2em] text-white/55 uppercase font-semibold flex items-center justify-center lg:justify-start gap-2"

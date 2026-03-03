@@ -52,7 +52,7 @@ export function InteractiveDetail({
         const next = THREE.MathUtils.damp(pulseRef.current, 0, decay * 38, delta);
         pulseRef.current = next;
         const now = performance.now();
-        const minRenderGapMs = reducedDetail ? 64 : 32;
+        const minRenderGapMs = reducedDetail ? 120 : 72;
         const canRender = now - lastRenderAtRef.current >= minRenderGapMs;
 
         if (((Math.abs(next - renderedPulseRef.current) > 0.02) && canRender) || next < 0.01) {

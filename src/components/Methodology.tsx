@@ -9,7 +9,7 @@ export default function Methodology() {
     ];
 
     return (
-        <section className="relative z-10 w-full py-32 bg-gradient-to-b from-[#000000] via-[#040810] to-[#000000]">
+        <section id="process" className="cv-auto relative z-10 w-full py-32 bg-gradient-to-b from-[#000000] via-[#040810] to-[#000000]" style={{ containIntrinsicSize: "980px" }}>
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[60%] h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"></div>
 
             <div className="max-w-6xl mx-auto px-6">

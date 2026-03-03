@@ -2,11 +2,10 @@
 
 import { playSfx } from "@/lib/audio";
 import { ArrowRight } from "@phosphor-icons/react";
-import { motion } from "framer-motion";
 
 export default function ActionNode() {
   return (
-    <motion.a
+    <a
       href="https://wa.me/5511999999999"
       target="_blank"
       rel="noopener noreferrer"
@@ -19,6 +18,6 @@ export default function ActionNode() {
         Agendar Consultoria
         <ArrowRight size={15} weight="bold" />
       </span>
-    </motion.a>
+    </a>
   );
 }

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Montserrat, Source_Code_Pro } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
+import Header from "@/components/Header";
+import WebVitalsReporter from "@/components/WebVitalsReporter";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -31,6 +33,8 @@ export default function RootLayout({
         className={`${montserrat.variable} ${sourceCodePro.variable} antialiased bg-aionNavy text-aionWhite`}
       >
         <SmoothScroll>
+          <WebVitalsReporter />
+          <Header />
           {children}
         </SmoothScroll>
       </body>

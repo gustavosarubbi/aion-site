@@ -5,18 +5,35 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { CLUSTER_CENTER } from "./OrbitingProps";
 
+type RingConfig = {
+    rotation: [number, number, number];
+    speed: number;
+    color: string;
+    key: string;
+    customRadius: number;
+    offsetX?: number;
+};
+
+type RingElementProps = {
+    radius: number;
+    rotation: [number, number, number];
+    speed: number;
+    color: string;
+};
+
 export function OrbitalRings({ radius = 4.1 }) {
-    const rings = useMemo(() => {
+    const rings = useMemo<RingConfig[]>(() => {
+        const scale = radius / 4.1;
         return [
-            { rotation: [Math.PI / 2 + (8 * Math.PI / 180), 0, 0] as [number, number, number], speed: 0.1, color: "#06b6d4", key: "horizontal", customRadius: 3.8 },
-            { rotation: [0, Math.PI / 2, 0] as [number, number, number], speed: 0.15, color: "#3b82f6", key: "vertical", customRadius: 3.5, offsetX: 0 }
+            { rotation: [Math.PI / 2 + (8 * Math.PI / 180), 0, 0], speed: 0.1, color: "#06b6d4", key: "horizontal", customRadius: 3.8 * scale },
+            { rotation: [0, Math.PI / 2, 0], speed: 0.15, color: "#3b82f6", key: "vertical", customRadius: 3.5 * scale, offsetX: 0 }
         ];
-    }, []);
+    }, [radius]);
 
     return (
         <group position={CLUSTER_CENTER}>
             {rings.map((ring) => {
-                const { key, customRadius, offsetX, ...rest } = ring as any;
+                const { key, customRadius, offsetX, ...rest } = ring;
                 return (
                     <group key={key} position={[offsetX || 0, 0, 0]}>
                         <RingElement {...rest} radius={customRadius} />
@@ -27,7 +44,7 @@ export function OrbitalRings({ radius = 4.1 }) {
     );
 }
 
-function RingElement({ radius, rotation, speed, color }: any) {
+function RingElement({ radius, rotation, speed, color }: RingElementProps) {
     const ref = useRef<THREE.Group>(null!);
     useFrame((state) => {
         if (!ref.current) return;

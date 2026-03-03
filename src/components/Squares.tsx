@@ -23,11 +23,26 @@ const Squares = ({
     const numSquaresY = useRef(0);
     const gridOffset = useRef({ x: 0, y: 0 });
     const hoveredSquareRef = useRef<{ x: number; y: number } | null>(null);
+    const lastFrameAtRef = useRef(0);
+    const isVisibleRef = useRef(true);
 
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const nav = navigator as Navigator & {
+            deviceMemory?: number;
+            connection?: { saveData?: boolean };
+        };
+        const cores = nav.hardwareConcurrency ?? 8;
+        const memory = nav.deviceMemory ?? 8;
+        const saveData = Boolean(nav.connection?.saveData);
+        const lowPowerDevice = saveData || cores <= 4 || memory <= 4;
+
+        const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const frameInterval = mediaQuery.matches || lowPowerDevice ? 1000 / 14 : 1000 / 30;
 
         const resizeCanvas = () => {
             canvas.width = canvas.offsetWidth;
@@ -40,8 +55,6 @@ const Squares = ({
         resizeCanvas();
 
         const drawGrid = () => {
-            if (!ctx) return;
-
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             const startX = Math.floor(gridOffset.current.x / squareSize) * squareSize;
@@ -81,7 +94,18 @@ const Squares = ({
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         };
 
-        const updateAnimation = () => {
+        const updateAnimation = (timestamp: number) => {
+            if (!isVisibleRef.current) {
+                requestRef.current = requestAnimationFrame(updateAnimation);
+                return;
+            }
+
+            if (timestamp - lastFrameAtRef.current < frameInterval) {
+                requestRef.current = requestAnimationFrame(updateAnimation);
+                return;
+            }
+
+            lastFrameAtRef.current = timestamp;
             const effectiveSpeed = Math.max(speed, 0.1);
             switch (direction) {
                 case 'right':
@@ -105,10 +129,15 @@ const Squares = ({
             }
 
             drawGrid();
-            if (requestRef.current !== null) {
-                requestRef.current = requestAnimationFrame(updateAnimation);
-            }
+            requestRef.current = requestAnimationFrame(updateAnimation);
         };
+
+        const onVisibilityChange = () => {
+            isVisibleRef.current = document.visibilityState === 'visible';
+        };
+
+        onVisibilityChange();
+        document.addEventListener('visibilitychange', onVisibilityChange);
 
         const handleMouseMove = (event: MouseEvent) => {
             const rect = canvas.getBoundingClientRect();
@@ -136,10 +165,16 @@ const Squares = ({
 
         canvas.addEventListener('mousemove', handleMouseMove);
         canvas.addEventListener('mouseleave', handleMouseLeave);
-        requestRef.current = requestAnimationFrame(updateAnimation);
+
+        if (mediaQuery.matches || lowPowerDevice) {
+            drawGrid();
+        } else {
+            requestRef.current = requestAnimationFrame(updateAnimation);
+        }
 
         return () => {
             window.removeEventListener('resize', resizeCanvas);
+            document.removeEventListener('visibilitychange', onVisibilityChange);
             if (requestRef.current) cancelAnimationFrame(requestRef.current);
             canvas.removeEventListener('mousemove', handleMouseMove);
             canvas.removeEventListener('mouseleave', handleMouseLeave);

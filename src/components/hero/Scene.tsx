@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { useFrame } from "@react-three/fiber";
 import { PerspectiveCamera, Stars, Environment } from "@react-three/drei";
 import * as THREE from "three";
 import { OrbitingProps, CLUSTER_CENTER } from "./OrbitingProps";
@@ -19,7 +18,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
     const previewCardRef = useRef<THREE.Group>(null!);
 
     const [activeCardId, setActiveCardId] = useState<string | null>(null);
-    const [performanceTier, setPerformanceTier] = useState<PerformanceTier>(() => {
+    const [performanceTier] = useState<PerformanceTier>(() => {
         if (typeof navigator === "undefined") return mobileOptimized ? "low" : "medium";
 
         const cores = navigator.hardwareConcurrency ?? 8;
@@ -30,7 +29,6 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
         return "high";
     });
     const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-    const fpsTracker = useRef({ frames: 0, elapsed: 0 });
 
     useEffect(() => {
         if (typeof window === "undefined") return;
@@ -40,28 +38,6 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
         mq.addEventListener("change", onChange);
         return () => mq.removeEventListener("change", onChange);
     }, []);
-
-    useFrame((_, delta) => {
-        fpsTracker.current.frames += 1;
-        fpsTracker.current.elapsed += delta;
-        if (fpsTracker.current.elapsed < 1.2) return;
-
-        const fps = fpsTracker.current.frames / fpsTracker.current.elapsed;
-        fpsTracker.current.frames = 0;
-        fpsTracker.current.elapsed = 0;
-
-        setPerformanceTier((current) => {
-            if (fps < 34) return "low";
-            if (fps < 47) return current === "high" ? "medium" : current;
-
-            if (fps > 58) {
-                if (current === "low") return "medium";
-                if (current === "medium" && !mobileOptimized) return "high";
-            }
-
-            return current;
-        });
-    });
 
     const reducedMotion = prefersReducedMotion || performanceTier === "low";
     const visualLowMode = mobileOptimized || reducedMotion;
@@ -83,17 +59,17 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
             <Stars
                 radius={100}
                 depth={50}
-                count={visualLowMode ? 90 : visualMediumMode ? 180 : 300}
-                factor={visualLowMode ? 2.2 : visualMediumMode ? 3.2 : 4}
+                count={visualLowMode ? 64 : visualMediumMode ? 140 : 240}
+                factor={visualLowMode ? 1.8 : visualMediumMode ? 2.8 : 3.6}
                 saturation={0}
                 fade
-                speed={visualLowMode ? 0.012 : visualMediumMode ? 0.028 : 0.045}
+                speed={visualLowMode ? 0.01 : visualMediumMode ? 0.02 : 0.04}
             />
 
             <OrbitingProps
-                count={visualLowMode ? 6 : visualMediumMode ? 9 : 12}
-                radius={visualLowMode ? 4.15 : visualMediumMode ? 4.6 : 5}
-                speed={visualLowMode ? 0.08 : visualMediumMode ? 0.11 : 0.15}
+                count={visualLowMode ? 4 : visualMediumMode ? 7 : 11}
+                radius={visualLowMode ? 4.1 : visualMediumMode ? 4.5 : 5}
+                speed={visualLowMode ? 0.06 : visualMediumMode ? 0.1 : 0.14}
                 reducedMotion={visualLowMode}
             />
 
@@ -104,11 +80,11 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                 {!mobileOptimized && (
                     <UICard
                         id="code-card"
-                        position={[-1.5, 1.4, -4.0]}
+                        position={[-1.5, 1.1, -4.0]}
                         initialRotation={[-0.1, -0.5, 0.1]}
                         color="#3b82f6"
                         type="code"
-                        title="Automacao Inteligente"
+                        title="Automação Inteligente"
                         onRef={(r) => {
                             codeCardRef.current = r;
                         }}
@@ -124,11 +100,11 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
 
                 <UICard
                     id="flow-card"
-                    position={mobileOptimized ? [1.4, 0.2, -1.8] : [2.0, 0.2, -1.8]}
+                    position={mobileOptimized ? [1.4, -0.1, -1.8] : [2.0, -0.1, -1.8]}
                     initialRotation={[0.05, 0.3, -0.05]}
-                    color="#06b6d4"
+                    color="#ffff00"
                     type="flow"
-                    title="ChatBots Modernos"
+                    title="Conversão Digital"
                     onRef={(r) => {
                         flowCardRef.current = r;
                     }}
@@ -143,9 +119,9 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
 
                 <UICard
                     id="preview-card"
-                    position={mobileOptimized ? [-1.0, -0.95, 1.5] : [-1.3, -1.0, 1.5]}
+                    position={mobileOptimized ? [-1.0, -1.2, 1.5] : [-1.3, -1.2, 1.5]}
                     initialRotation={[-0.05, -0.1, 0.02]}
-                    color="#ffffff"
+                    color="#ff00ea"
                     type="preview"
                     title="Web Design"
                     onRef={(r) => {

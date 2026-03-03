@@ -1,10 +1,10 @@
 "use client";
 
-import { useRef, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-export const CLUSTER_CENTER = new THREE.Vector3(4.5, 0, 0);
+export const CLUSTER_CENTER = new THREE.Vector3(4.5, -0.4, 0);
 
 function seededUnit(index: number, channel: number) {
     const x = Math.sin((index + 1) * 12.9898 + (channel + 1) * 78.233) * 43758.5453;
@@ -23,9 +23,40 @@ export function OrbitingProps({
     reducedMotion?: boolean;
 }) {
     const groupRef = useRef<THREE.Group>(null!);
+    const colors = useMemo(() => ["#06b6d4", "#3b82f6", "#a855f7", "#0ea5e9", "#8b5cf6", "#22d3ee"], []);
+
+    const geometries = useMemo(
+        () => ({
+            octahedron: new THREE.OctahedronGeometry(1, 0),
+            dodecahedron: new THREE.DodecahedronGeometry(1, 0),
+            tetrahedron: new THREE.TetrahedronGeometry(1, 0),
+        }),
+        []
+    );
+
+    const materials = useMemo(() => {
+        return colors.reduce<Record<string, THREE.MeshBasicMaterial>>((acc, color) => {
+            acc[color] = new THREE.MeshBasicMaterial({
+                color,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.6,
+            });
+            return acc;
+        }, {});
+    }, [colors]);
+
+    useEffect(() => {
+        return () => {
+            geometries.octahedron.dispose();
+            geometries.dodecahedron.dispose();
+            geometries.tetrahedron.dispose();
+            Object.values(materials).forEach((material) => material.dispose());
+        };
+    }, [geometries, materials]);
+
     const props = useMemo(() => {
         const types = ["octahedron", "dodecahedron", "tetrahedron"];
-        const colors = ["#06b6d4", "#3b82f6", "#a855f7", "#0ea5e9", "#8b5cf6", "#22d3ee"];
         return [...Array(count)].map((_, i) => ({
             phase: (i / count) * Math.PI * 2 + (seededUnit(i, 1) - 0.5) * 0.5,
             offset: (i / count) * Math.PI * 2 + seededUnit(i, 2) * 0.6,
@@ -37,7 +68,7 @@ export function OrbitingProps({
             orbitRadius: radius * (0.75 + (i % 3) * 0.12 + seededUnit(i, 6) * 0.1),
             vertDir: i % 2 === 0 ? 1 : -1,
         }));
-    }, [count, radius]);
+    }, [colors, count, radius]);
 
     useFrame((state) => {
         const t = state.clock.getElapsedTime() * speed;
@@ -58,12 +89,12 @@ export function OrbitingProps({
     return (
         <group ref={groupRef}>
             {props.map((p, i) => (
-                <mesh key={i}>
-                    {p.type === "octahedron" && <octahedronGeometry args={[p.size, 0]} />}
-                    {p.type === "dodecahedron" && <dodecahedronGeometry args={[p.size, 0]} />}
-                    {p.type === "tetrahedron" && <tetrahedronGeometry args={[p.size, 0]} />}
-                    <meshBasicMaterial color={p.color} wireframe transparent opacity={0.3} />
-                </mesh>
+                <mesh
+                    key={i}
+                    geometry={geometries[p.type as keyof typeof geometries]}
+                    material={materials[p.color]}
+                    scale={p.size}
+                />
             ))}
         </group>
     );

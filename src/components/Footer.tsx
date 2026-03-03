@@ -2,7 +2,7 @@ import { InstagramLogo, LinkedinLogo, XLogo, EnvelopeSimple, Phone } from "@phos
 
 export default function Footer() {
     return (
-        <footer className="w-full relative z-10 bg-[#020305] mt-0 text-white/30">
+        <footer className="cv-auto w-full relative z-10 bg-[#020305] mt-0 text-white/30" style={{ containIntrinsicSize: "460px" }}>
             <div className="w-full h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent"></div>
 
             <div className="max-w-6xl mx-auto px-6 py-16 flex flex-col md:flex-row justify-between items-start gap-12 lg:gap-28">

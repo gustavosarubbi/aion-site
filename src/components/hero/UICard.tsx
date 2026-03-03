@@ -63,7 +63,7 @@ export const UICard = ({
 }: UICardProps) => {
     const outerRef = useRef<THREE.Group>(null!);
     const innerRef = useRef<THREE.Group>(null!);
-    const bodyMaterialRef = useRef<THREE.MeshPhysicalMaterial>(null);
+    const bodyMaterialRef = useRef<(THREE.Material & { opacity: number }) | null>(null);
     const dimmerMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
 
     const scaleVector = useRef(new THREE.Vector3(1, 1, 1));
@@ -75,6 +75,7 @@ export const UICard = ({
     const wobbleZ = useMemo(() => seededRange(id, 3, 0.3, 0.8), [id]);
 
     const [hovered, setHovered] = useState(false);
+    const [dragging, setDragging] = useState(false);
     const lowQuality = qualityTier === "low";
     const mediumQuality = qualityTier === "medium";
     const motionScalar = lowQuality ? 0.58 : mediumQuality ? 0.78 : 1;
@@ -102,6 +103,7 @@ export const UICard = ({
     const onPointerDown = useCallback((e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation();
         isDragging.current = true;
+        setDragging(true);
         dragDistance.current = 0;
         prevPointer.current = { x: e.clientX, y: e.clientY };
         velocity.current = { x: 0, y: 0 };
@@ -114,6 +116,7 @@ export const UICard = ({
     const onPointerUp = useCallback((e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation();
         isDragging.current = false;
+        setDragging(false);
         const target = e.target as Element | null;
         target?.releasePointerCapture?.(e.pointerId);
         onActiveCardChange(null);
@@ -162,7 +165,7 @@ export const UICard = ({
             position[1] +
             (Math.sin(t * 1.3 + floatOffset) * (reducedMotion ? 0.16 : 0.22) +
                 Math.sin(t * 0.9) * (reducedMotion ? 0.06 : 0.1)) *
-                motionScalar;
+            motionScalar;
         const targetZ =
             (position[2] || 0) +
             Math.sin(t * wobbleZ) * (reducedMotion ? 0.08 : 0.12) * motionScalar +
@@ -270,23 +273,36 @@ export const UICard = ({
                 <RoundedBox
                     args={[3.8, 2.4, 0.15]}
                     radius={0.16}
-                    smoothness={lowQuality ? 8 : 12}
+                    smoothness={lowQuality ? 6 : mediumQuality ? 10 : 12}
                 >
-                    <meshPhysicalMaterial
-                        ref={bodyMaterialRef}
-                        color="#02040a"
-                        metalness={lowQuality ? 0.35 : mediumQuality ? 0.65 : 0.9}
-                        transparent={true}
-                        opacity={0.96}
-                        transmission={lowQuality ? 0.12 : mediumQuality ? 0.38 : 0.65}
-                        thickness={lowQuality ? 0.4 : mediumQuality ? 1.1 : 2}
-                        roughness={lowQuality ? 0.26 : mediumQuality ? 0.15 : 0.08}
-                        ior={1.45}
-                        reflectivity={lowQuality ? 0.35 : mediumQuality ? 0.6 : 0.9}
-                        clearcoat={lowQuality ? 0.4 : 1}
-                        clearcoatRoughness={lowQuality ? 0.1 : 0.02}
-                        envMapIntensity={lowQuality ? 0.55 : mediumQuality ? 1 : 1.5}
-                    />
+                    {lowQuality ? (
+                        <meshStandardMaterial
+                            ref={bodyMaterialRef}
+                            color="#02040a"
+                            metalness={0.28}
+                            roughness={0.5}
+                            transparent
+                            opacity={0.9}
+                            emissive="#030712"
+                            emissiveIntensity={0.12}
+                        />
+                    ) : (
+                        <meshPhysicalMaterial
+                            ref={bodyMaterialRef}
+                            color="#02040a"
+                            metalness={mediumQuality ? 0.65 : 0.9}
+                            transparent={true}
+                            opacity={0.96}
+                            transmission={mediumQuality ? 0.3 : 0.6}
+                            thickness={mediumQuality ? 0.8 : 1.8}
+                            roughness={mediumQuality ? 0.18 : 0.08}
+                            ior={1.45}
+                            reflectivity={mediumQuality ? 0.58 : 0.9}
+                            clearcoat={mediumQuality ? 0.7 : 1}
+                            clearcoatRoughness={mediumQuality ? 0.06 : 0.02}
+                            envMapIntensity={mediumQuality ? 0.85 : 1.4}
+                        />
+                    )}
                 </RoundedBox>
 
                 <CardFrame color={color} reducedMotion={reducedMotion || lowQuality} reducedDetail={lowQuality} />
@@ -309,7 +325,7 @@ export const UICard = ({
                         zIndexRange={[100, 0]}
                         className="pointer-events-none select-none"
                         style={{
-                            opacity: isDragging.current ? 0.2 : 1,
+                            opacity: dragging ? 0.2 : 1,
                             pointerEvents: 'none',
                         }}
                     >
@@ -369,26 +385,23 @@ export const UICard = ({
                     </Html>
                 )}
 
-                {/* Bezier Connection Line - Card edge to Label */}
                 <QuadraticBezierLine
                     start={labelPosition === "right" ? [1.9, 0, 0.15] : [0, 1.27, 0.15]}
                     end={labelPosition === "right" ? [3.0, 0, 0.15] : [0, 2.4, 0.15]}
                     mid={labelPosition === "right" ? [2.4, 0.25, 0.15] : [0.35, 1.85, 0.15]}
                     color={color}
                     transparent
-                    opacity={lowQuality ? 0.28 : 0.4}
-                    lineWidth={lowQuality ? 1.2 : 1.8}
+                    opacity={0.6}
+                    lineWidth={1.8}
                 />
 
                 {/* Pulse orb traveling along the bezier */}
-                {!lowQuality && (
-                    <PulseOrb
-                        start={labelPosition === "right" ? [1.9, 0, 0.15] : [0, 1.27, 0.15]}
-                        end={labelPosition === "right" ? [3.0, 0, 0.15] : [0, 2.4, 0.15]}
-                        mid={labelPosition === "right" ? [2.4, 0.25, 0.15] : [0.35, 1.85, 0.15]}
-                        color={color}
-                    />
-                )}
+                <PulseOrb
+                    start={labelPosition === "right" ? [1.9, 0, 0.15] : [0, 1.27, 0.15]}
+                    end={labelPosition === "right" ? [3.0, 0, 0.15] : [0, 2.4, 0.15]}
+                    mid={labelPosition === "right" ? [2.4, 0.25, 0.15] : [0.35, 1.85, 0.15]}
+                    color={color}
+                />
 
 
             </group>
@@ -410,8 +423,8 @@ function PulseOrb({ start, end, mid, color }: { start: [number, number, number];
 
     useFrame((state) => {
         if (!ref.current) return;
-        // Use a ping-pong so the orb travels the full path and returns
-        const raw = (state.clock.getElapsedTime() * 0.25) % 2;
+        // Faster pulse speed: 0.65 instead of 0.25
+        const raw = (state.clock.getElapsedTime() * 0.65) % 2;
         const t = raw <= 1 ? raw : 2 - raw; // ping-pong 0→1→0
         const point = curve.getPoint(t);
         ref.current.position.copy(point);

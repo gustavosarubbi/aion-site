@@ -33,8 +33,10 @@ export default function AmbientLogs() {
                     setText(text.slice(0, -1));
                 }, 15); // Fast delete
             } else {
-                setLogIndex((prev) => (prev + 1) % LOGS.length);
-                setIsTyping(true);
+                timeout = setTimeout(() => {
+                    setLogIndex((prev) => (prev + 1) % LOGS.length);
+                    setIsTyping(true);
+                }, 0);
             }
         }
 

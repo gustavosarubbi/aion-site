@@ -9,7 +9,7 @@ export default function FAQ() {
     ];
 
     return (
-        <section className="relative z-10 w-full py-32 bg-gradient-to-b from-transparent via-[#020408] to-transparent">
+        <section id="faq" className="cv-auto relative z-10 w-full py-32 bg-gradient-to-b from-transparent via-[#020408] to-transparent" style={{ containIntrinsicSize: "760px" }}>
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[30%] h-px bg-gradient-to-r from-transparent via-cyan-500/15 to-transparent"></div>
 
             <div className="max-w-3xl mx-auto px-6">

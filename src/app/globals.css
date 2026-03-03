@@ -178,3 +178,8 @@ body::before {
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+
+.cv-auto {
+  content-visibility: auto;
+  contain: layout paint style;
+}

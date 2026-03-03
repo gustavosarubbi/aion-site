@@ -1,53 +1,27 @@
-"use client";
-
-import { useState, useRef } from "react";
-import { Globe, WhatsappLogo, ChartLineUp, ArrowRight, Code, Cpu, Layout } from "@phosphor-icons/react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { Globe, WhatsappLogo, ChartLineUp, ArrowRight, Code, Cpu, Layout } from "@phosphor-icons/react/dist/ssr";
+import type { ReactNode } from "react";
 
 function BentoCard({
     title,
     desc,
-    icon: Icon,
+    icon,
     tag,
     className = "",
-    accent = "cyan",
 }: {
     title: string;
     desc: string;
-    icon: any;
+    icon: ReactNode;
     tag: string;
     className?: string;
-    accent?: string;
 }) {
-    const mouseX = useMotionValue(0);
-    const mouseY = useMotionValue(0);
-
-    function onMouseMove({ currentTarget, clientX, clientY }: any) {
-        const { left, top } = currentTarget.getBoundingClientRect();
-        mouseX.set(clientX - left);
-        mouseY.set(clientY - top);
-    }
-
     return (
-        <motion.div
-            onMouseMove={onMouseMove}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className={`group relative overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.02] p-8 transition-all hover:bg-white/[0.04] ${className}`}
-        >
-            {/* Spotlight Effect */}
-            <motion.div
-                className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100"
-                style={{
-                    background: `radial-gradient(600px circle at ${mouseX}px ${mouseY}px, rgba(6,182,212,0.1), transparent 40%)`,
-                }}
-            />
+        <article className={`group relative overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.02] p-8 transition-all hover:bg-white/[0.04] ${className}`}>
+            <div className="pointer-events-none absolute inset-0 rounded-3xl bg-[radial-gradient(circle_at_30%_20%,rgba(6,182,212,0.14),transparent_45%)] opacity-0 transition duration-300 group-hover:opacity-100" />
 
             <div className="relative z-10 flex h-full flex-col justify-between gap-6">
                 <div className="flex items-start justify-between">
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.1)] transition-transform group-hover:scale-110">
-                        <Icon size={24} weight="duotone" />
+                        {icon}
                     </div>
                     <span className="rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1 text-[10px] font-bold tracking-widest text-white/40 uppercase">
                         {tag}
@@ -55,7 +29,7 @@ function BentoCard({
                 </div>
 
                 <div>
-                    <h3 className="text-xl font-bold tracking-tight text-white mb-2">{title}</h3>
+                    <h3 className="mb-2 text-xl font-bold tracking-tight text-white">{title}</h3>
                     <p className="text-sm leading-relaxed text-white/40 group-hover:text-white/60 transition-colors">
                         {desc}
                     </p>
@@ -65,84 +39,70 @@ function BentoCard({
                     Saber mais <ArrowRight size={14} weight="bold" />
                 </div>
             </div>
-        </motion.div>
+        </article>
     );
 }
 
 export default function CommercialExpertise() {
     return (
-        <section id="services" className="relative z-10 w-full py-32">
+        <section id="services" className="cv-auto relative z-10 w-full py-32" style={{ containIntrinsicSize: "1000px" }}>
             <div className="max-w-6xl mx-auto px-6">
                 <div className="flex flex-col items-center gap-4 text-center mb-20">
-                    <motion.span
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        className="text-[10px] font-bold tracking-[0.3em] text-cyan-400 uppercase"
-                    >
+                    <span className="text-[10px] font-bold tracking-[0.3em] text-cyan-400 uppercase">
                         Nossa Expertise
-                    </motion.span>
-                    <motion.h2
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        className="text-4xl md:text-5xl font-bold tracking-tighter text-white"
-                    >
+                    </span>
+                    <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white">
                         Criamos a <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">vanguarda digital.</span>
-                    </motion.h2>
+                    </h2>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-5 auto-rows-[280px]">
-                    {/* Main Webdesign Bento Element */}
                     <BentoCard
                         className="md:col-span-3 lg:col-span-8 lg:row-span-2"
-                        icon={Layout}
+                        icon={<Layout size={24} weight="duotone" />}
                         tag="Web Design & UI"
-                        title="Experiências Digitais de Elite"
-                        desc="Não fazemos apenas sites. Construímos ativos digitais de alta performance com Next.js, focados em UX impecável e conversão máxima. Design que para o scroll e tecnologia que escala seu negócio."
+                        title="Experiencias Digitais de Elite"
+                        desc="Nao fazemos apenas sites. Construimos ativos digitais de alta performance com Next.js, focados em UX impecavel e conversao maxima."
                     />
 
-                    {/* Chatbot Bento Element */}
                     <BentoCard
                         className="md:col-span-3 lg:col-span-4"
-                        icon={WhatsappLogo}
-                        tag="Automação AI"
+                        icon={<WhatsappLogo size={24} weight="duotone" />}
+                        tag="Automacao AI"
                         title="Bots Inteligentes"
                         desc="Capture e qualifique leads 24/7 com chatbots via API oficial."
                     />
 
-                    {/* Workflow Bento Element */}
                     <BentoCard
                         className="md:col-span-3 lg:col-span-4"
-                        icon={ChartLineUp}
+                        icon={<ChartLineUp size={24} weight="duotone" />}
                         tag="Sistemas"
-                        title="Automação de Processos"
-                        desc="Conecte seu CRM e ERP com workflows inteligentes que eliminam o trabalho manual."
+                        title="Automacao de Processos"
+                        desc="Conecte seu CRM e ERP com workflows inteligentes que eliminam trabalho manual."
                     />
 
-                    {/* Speed/Tech Bento Element (Secondary) */}
                     <BentoCard
                         className="md:col-span-3 lg:col-span-4"
-                        icon={Cpu}
+                        icon={<Cpu size={24} weight="duotone" />}
                         tag="DevOps"
                         title="Performance Extrema"
-                        desc="Carregamento em milissegundos e 100% SEO-friendly por padrão."
+                        desc="Carregamento em milissegundos e SEO forte por padrao."
                     />
 
-                    {/* Code/Niche Bento Element (Secondary) */}
                     <BentoCard
                         className="md:col-span-3 lg:col-span-4"
-                        icon={Code}
+                        icon={<Code size={24} weight="duotone" />}
                         tag="Custom"
-                        title="Código Limpo"
-                        desc="Arquitetura moderna e modular para evoluir sem fricção técnica."
+                        title="Codigo Limpo"
+                        desc="Arquitetura modular para evoluir sem friccao tecnica."
                     />
 
-                    {/* Global/Reach Bento Element (Secondary) */}
                     <BentoCard
                         className="md:col-span-3 lg:col-span-4"
-                        icon={Globe}
+                        icon={<Globe size={24} weight="duotone" />}
                         tag="Scalability"
                         title="Escala Global"
-                        desc="Sua infraestrutura pronta para crescer junto com seu faturamento."
+                        desc="Infraestrutura pronta para crescer junto com seu faturamento."
                     />
                 </div>
             </div>

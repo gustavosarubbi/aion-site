@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useMemo, useRef } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 
 import { SignalProvider } from "./hero/SignalContext";
@@ -13,10 +13,41 @@ type Hero3DVizProps = {
 export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
     const containerRef = useRef<HTMLDivElement>(null);
     const mobileOptimized = quality === "mobile";
+    const [isTabVisible, setIsTabVisible] = useState(true);
+    const [isInView, setIsInView] = useState(true);
+
+    useEffect(() => {
+        if (typeof document === "undefined") return;
+
+        const onVisibilityChange = () => {
+            setIsTabVisible(document.visibilityState === "visible");
+        };
+
+        onVisibilityChange();
+        document.addEventListener("visibilitychange", onVisibilityChange);
+
+        return () => document.removeEventListener("visibilitychange", onVisibilityChange);
+    }, []);
+
+    useEffect(() => {
+        if (!containerRef.current || typeof window === "undefined") return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsInView(entry.isIntersecting);
+            },
+            { rootMargin: "200px 0px 200px 0px", threshold: 0.02 }
+        );
+
+        observer.observe(containerRef.current);
+        return () => observer.disconnect();
+    }, []);
+
+    const shouldAnimate = isTabVisible && isInView;
 
     const dprRange = useMemo<[number, number]>(() => {
         if (typeof navigator === "undefined") {
-            return mobileOptimized ? [0.78, 1] : [0.9, 1.3];
+            return mobileOptimized ? [0.6, 0.9] : [0.8, 1.1];
         }
 
         const cores = navigator.hardwareConcurrency ?? 8;
@@ -24,9 +55,9 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
         const lowEnd = cores <= 4 || memory <= 4;
         const midTier = !lowEnd && (cores <= 8 || memory <= 8);
 
-        if (mobileOptimized || lowEnd) return [0.7, 1];
-        if (midTier) return [0.85, 1.2];
-        return [1, 1.6];
+        if (mobileOptimized || lowEnd) return [0.6, 0.9];
+        if (midTier) return [0.75, 1.05];
+        return [0.9, 1.25];
     }, [mobileOptimized]);
 
     return (
@@ -44,13 +75,15 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
 
             <div className="w-full h-full absolute inset-0 overflow-visible pointer-events-auto">
                 <Canvas
+                    frameloop={shouldAnimate ? "always" : "never"}
                     dpr={dprRange}
                     gl={{
-                        antialias: dprRange[1] >= 1.2,
+                        antialias: dprRange[1] >= 1.15,
                         alpha: true,
-                        powerPreference: "high-performance",
+                        powerPreference: "default",
                         stencil: false,
                     }}
+                    performance={{ min: 0.5 }}
                     camera={{ near: 0.1, far: 90 }}
                     style={{ background: "transparent" }}
                 >

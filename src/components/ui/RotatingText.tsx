@@ -1,8 +1,8 @@
 'use client';
 
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import type { Target, TargetAndTransition, Transition } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
+import type { Target, TargetAndTransition, Transition } from 'framer-motion';
 
 function cn(...classes: (string | undefined | false | null)[]) {
     return classes.filter(Boolean).join(' ');

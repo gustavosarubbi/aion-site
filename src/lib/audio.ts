@@ -1,5 +1,9 @@
 "use client";
 
+type AudioWindow = Window & {
+    webkitAudioContext?: typeof AudioContext;
+};
+
 let audioCtx: AudioContext | null = null;
 
 export const playSfx = (type: "hover" | "click") => {
@@ -7,7 +11,9 @@ export const playSfx = (type: "hover" | "click") => {
         if (typeof window === "undefined") return;
 
         if (!audioCtx) {
-            audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+            const AudioContextClass = window.AudioContext || (window as AudioWindow).webkitAudioContext;
+            if (!AudioContextClass) return;
+            audioCtx = new AudioContextClass();
         }
 
         if (audioCtx.state === 'suspended') {
@@ -39,7 +45,7 @@ export const playSfx = (type: "hover" | "click") => {
             osc.start();
             osc.stop(audioCtx.currentTime + 0.15);
         }
-    } catch (e) {
+    } catch {
         // Fail silently if browser blocks audio rendering before interaction
     }
 };

@@ -23,7 +23,7 @@ export default function Testimonials() {
     ];
 
     return (
-        <section className="relative z-10 w-full py-32 bg-gradient-to-b from-[#000000] via-[#030610] to-[#000000]">
+        <section className="cv-auto relative z-10 w-full py-32 bg-gradient-to-b from-[#000000] via-[#030610] to-[#000000]" style={{ containIntrinsicSize: "860px" }}>
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[35%] h-px bg-gradient-to-r from-transparent via-cyan-500/15 to-transparent"></div>
 
             <div className="max-w-6xl mx-auto px-6">

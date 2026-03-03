@@ -34,3 +34,46 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Performance Notes
+
+- The hero 3D is now loaded progressively (idle/interaction first) and can fallback to a static visual on low-power devices.
+- Continuous animations pause when the tab is hidden.
+- Below-the-fold sections use `content-visibility` to reduce initial rendering cost.
+
+### Performance Budget Targets
+
+- Initial JS (home route): <= 220KB gzip
+- Main-thread blocking (initial load): <= 200ms on desktop
+- LCP: <= 2.5s on Fast 4G
+- INP: <= 200ms on real devices
+
+### Web Vitals Debug
+
+To log web-vitals in the browser console, run:
+
+```js
+localStorage.setItem("aion:debug:web-vitals", "1")
+```
+
+Reload the page and inspect the console logs.
+
+### Playwright Performance Benchmark
+
+With the app running, execute:
+
+```bash
+npm run perf:playwright
+```
+
+Strict mode (fails on budget miss):
+
+```bash
+npm run perf:playwright:strict
+```
+
+Custom URL/output examples:
+
+```bash
+node scripts/perf-playwright.mjs --url=http://localhost:4000 --output=reports/perf-local.json
+```
