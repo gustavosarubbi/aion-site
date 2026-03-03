@@ -1,3 +1,5 @@
+"use client";
+
 import ActionNode from "@/components/ActionNode";
 import PortfolioShowcase from "@/components/PortfolioShowcase";
 import ServiceStack from "@/components/ServiceStack";
@@ -8,7 +10,8 @@ import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 import HeroHeadline from "@/components/HeroHeadline";
 import dynamic from "next/dynamic";
-import { Code, ChatCircleDots, RocketLaunch } from "@phosphor-icons/react/dist/ssr";
+import { Code, ChatCircleDots, RocketLaunch, InstagramLogo, EnvelopeSimple, WhatsappLogo, ArrowRight } from "@phosphor-icons/react";
+import { motion } from "framer-motion";
 
 const Squares = dynamic(() => import("@/components/Squares"), {
   loading: () => <div className="w-full h-full" />,
@@ -94,6 +97,15 @@ function ServiceBar() {
 }
 
 export default function Home() {
+  const premiumEntrance = {
+    initial: { opacity: 0, y: 30, scale: 0.98 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+    transition: {
+      duration: 1.2,
+      ease: [0.16, 1, 0.3, 1] as const // Premium Expo-style easing
+    }
+  } as const;
+
   return (
     <main className="min-h-screen relative flex flex-col items-center overflow-x-hidden bg-[#000000]">
 
@@ -119,9 +131,14 @@ export default function Home() {
 
       <section id="inicio" className="relative w-full min-h-[90vh] flex flex-col items-center justify-start overflow-visible pt-16 sm:pt-24 pb-12">
         <div className="absolute inset-0 z-0 pointer-events-none overflow-visible">
-          <div className="w-full h-full relative overflow-visible pointer-events-auto">
+          <motion.div
+            initial={{ opacity: 0, scale: 1.05, filter: "blur(12px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            className="w-full h-full relative overflow-visible pointer-events-auto"
+          >
             <Hero3DWrapper />
-          </div>
+          </motion.div>
           <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-[#000000] to-transparent z-10" />
         </div>
 
@@ -130,39 +147,123 @@ export default function Home() {
             <div className="absolute -inset-10 bg-gradient-to-r from-blue-500/7 via-cyan-500/4 to-blue-500/6 blur-[74px] -z-10 rounded-full opacity-42 pointer-events-none" />
 
 
-            <div className="z-10 mb-0.5">
+            {/* 1. ServiceBar - Top-Down Slide */}
+            <motion.div
+              className="z-10 mb-0.5"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 1.2,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.25
+              }}
+            >
               <ServiceBar />
-            </div>
+            </motion.div>
 
-            <div className="relative z-10 overflow-visible w-full -mt-2">
+            {/* 2. Headline - Lateral Left-to-Right */}
+            <motion.div
+              className="relative z-10 overflow-visible w-full -mt-2"
+              initial={{ opacity: 0, x: -40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                duration: 1.4,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.45
+              }}
+            >
               <HeroHeadline />
-            </div>
+            </motion.div>
 
-            <div className="max-w-2xl">
+            {/* 3. Subtitle - Lateral Right-to-Left */}
+            <motion.div
+              className="max-w-2xl px-4 lg:px-0"
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{
+                duration: 1.4,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.65
+              }}
+            >
               <HeroSubtitle />
-            </div>
+            </motion.div>
 
-            <div className="flex flex-col items-center lg:items-start gap-4 pt-2 w-full sm:w-auto pointer-events-auto">
-              <p
-                style={montserrat}
-                className="text-[9px] sm:text-[10px] tracking-[0.16em] sm:tracking-[0.2em] text-white/55 uppercase font-semibold flex items-center justify-center lg:justify-start gap-2"
-              >
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_8px_rgba(59,130,246,0.9)]" />
-                Atendimento personalizado · Resultados mensuráveis
-              </p>
+            <motion.div
+              className="flex flex-col items-center lg:items-start gap-4 -mt-3.5 w-full sm:w-auto pointer-events-auto"
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{
+                duration: 1,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.85
+              }}
+            >
+              <div className="flex flex-col items-center lg:items-start -mb-1">
+                <div className="h-[2px] w-[130px] bg-white/45 lg:block hidden mb-1.5" />
+                <div className="flex items-center gap-2.5">
+                  {[
+                    {
+                      Icon: InstagramLogo,
+                      href: "https://instagram.com",
+                      baseColor: "text-pink-500",
+                      borderColor: "border-pink-500/30",
+                      glowColor: "shadow-[0_0_12px_rgba(236,72,153,0.3)]",
+                      hoverGlow: "hover:shadow-[0_0_20px_rgba(236,72,153,0.5)]"
+                    },
+                    {
+                      Icon: EnvelopeSimple,
+                      href: "mailto:contato@aion.digital",
+                      baseColor: "text-blue-400",
+                      borderColor: "border-blue-400/30",
+                      glowColor: "shadow-[0_0_12px_rgba(96,165,250,0.3)]",
+                      hoverGlow: "hover:shadow-[0_0_20px_rgba(96,165,250,0.5)]"
+                    },
+                    {
+                      Icon: WhatsappLogo,
+                      href: "https://wa.me/message/SEULINKAQUI",
+                      baseColor: "text-emerald-400",
+                      borderColor: "border-emerald-400/30",
+                      glowColor: "shadow-[0_0_12px_rgba(52,211,153,0.3)]",
+                      hoverGlow: "hover:shadow-[0_0_20px_rgba(52,211,153,0.5)]"
+                    }
+                  ].map((social, idx) => (
+                    <a
+                      key={idx}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`w-9 h-9 flex items-center justify-center rounded-xl bg-white/[0.04] border ${social.borderColor} transition-all duration-300 hover:scale-110 hover:bg-white/[0.1] ${social.baseColor} ${social.glowColor} ${social.hoverGlow}`}
+                    >
+                      <social.Icon size={19} weight="duotone" />
+                    </a>
+                  ))}
+                </div>
+              </div>
 
-              <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto mt-1">
+              <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto mt-2">
                 <ActionNode />
                 <a
                   href="#services"
-                  className="group w-full sm:w-auto inline-flex items-center justify-center gap-2 h-[46px] px-6 sm:px-7 rounded-full bg-[#3475f3] text-[12px] sm:text-[13px] font-semibold text-white transition-colors duration-200 hover:bg-[#3f81ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-200/45 focus-visible:ring-offset-2 focus-visible:ring-offset-black pointer-events-auto shadow-[0_0_22px_rgba(52,117,243,0.55)]"
+                  className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-3 h-[52px] px-8 rounded-2xl bg-sky-500/10 backdrop-blur-3xl border border-sky-400/25 text-[13px] font-semibold text-white transition-all duration-500 hover:bg-sky-500/20 hover:border-sky-400/50 hover:scale-[1.03] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 pointer-events-auto shadow-[0_0_20px_rgba(56,189,248,0.08)] hover:shadow-[0_0_35px_rgba(56,189,248,0.2)] overflow-hidden"
                   style={montserrat}
                 >
-                  Ver Serviços
-                  <ArrowIcon />
+                  {/* 1. High-Definition Glass: Edge Highlight */}
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+
+                  {/* 2. Soft Light Pulse: Hover Aura */}
+                  <div className="absolute inset-0 bg-white/0 group-hover:bg-white/[0.03] transition-colors duration-500" />
+
+                  {/* 3. Subtle HUD Shimmer: Natural Leak */}
+                  <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out bg-gradient-to-r from-transparent via-white/[0.05] to-transparent pointer-events-none" />
+
+                  <span className="relative z-10 flex items-center gap-2.5 uppercase tracking-[0.16em] drop-shadow-[0_1px_4px_rgba(0,0,0,0.1)] group-hover:text-white transition-all duration-500">
+                    Ver soluções
+                    <ArrowRight size={18} weight="bold" className="transition-transform duration-500 group-hover:translate-x-1 text-sky-300 group-hover:text-white" />
+                  </span>
                 </a>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>

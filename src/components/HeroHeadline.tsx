@@ -6,21 +6,46 @@ import { useEffect, useState } from "react";
 const montserrat = { fontFamily: "var(--font-montserrat)" } as const;
 
 const heroContent = [
-  { service: "SITES", outcome: "RESULTADOS" },
-  { service: "CHATBOTS", outcome: "ATENDIMENTO" },
-  { service: "AUTOMAÇÃO", outcome: "ESCALA" },
-  { service: "FUNIS", outcome: "CONVERSÃO" },
+  {
+    service: "WEBDESIGN",
+    outcome: "RESULTADOS",
+    colors: {
+      text: "from-[#99e9ff] via-[#57c9ff] to-[#357dff]",
+      glow: "rgba(56,189,248,0.36)",
+      underline: "from-cyan-300/85 via-sky-300/70 to-blue-400/35",
+      underlineShadow: "rgba(34,211,238,0.55)",
+      outcomeGradient: "from-[#98e7ff] via-[#4eb8ff] to-[#2b67e9]",
+      outcomeShadow: "rgba(56,189,248,0.32)"
+    }
+  },
+  {
+    service: "CHATBOTS",
+    outcome: "ATENDIMENTO",
+    colors: {
+      text: "from-[#d8b4fe] via-[#a855f7] to-[#7c3aed]",
+      glow: "rgba(168,85,247,0.36)",
+      underline: "from-purple-300/85 via-fuchsia-300/70 to-violet-400/35",
+      underlineShadow: "rgba(168,85,247,0.55)",
+      outcomeGradient: "from-[#e9d5ff] via-[#c084fc] to-[#9333ea]",
+      outcomeShadow: "rgba(168,85,247,0.32)"
+    }
+  },
+  {
+    service: "AUTOMAÇÃO",
+    outcome: "ESCALA",
+    colors: {
+      text: "from-[#fdba74] via-[#f97316] to-[#ea580c]",
+      glow: "rgba(249,115,22,0.36)",
+      underline: "from-orange-300/85 via-amber-300/70 to-orange-400/35",
+      underlineShadow: "rgba(249,115,22,0.55)",
+      outcomeGradient: "from-[#fed7aa] via-[#fb923c] to-[#f97316]",
+      outcomeShadow: "rgba(249,115,22,0.32)"
+    }
+  },
 ];
 
-const longestService = heroContent.reduce(
-  (longest, item) => (item.service.length > longest.length ? item.service : longest),
-  ""
-);
-
-const longestOutcome = heroContent.reduce(
-  (longest, item) => (item.outcome.length > longest.length ? item.outcome : longest),
-  ""
-);
+const longestService = "AUTOMAÇÃO";
+const longestOutcome = "ATENDIMENTO";
 
 export default function HeroHeadline() {
   const [index, setIndex] = useState(0);
@@ -56,6 +81,8 @@ export default function HeroHeadline() {
     };
   }, []);
 
+  const current = heroContent[index] || heroContent[0];
+
   return (
     <div
       style={montserrat}
@@ -71,21 +98,29 @@ export default function HeroHeadline() {
             {longestService}
           </span>
           <AnimatePresence mode="popLayout" initial={false}>
-            <motion.span
-              key={heroContent[index].service}
-              initial={{ opacity: 0, filter: "blur(2px)", y: 8 }}
-              animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
-              exit={{ opacity: 0, filter: "blur(2px)", y: -8 }}
-              transition={{ duration: 0.28, ease: "easeOut" }}
-              className="absolute inset-x-0 lg:inset-x-auto lg:left-0 flex justify-center lg:justify-start"
-            >
-              <span className="inline-flex flex-col items-center lg:items-start w-fit">
-                <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-[#99e9ff] via-[#57c9ff] to-[#357dff] drop-shadow-[0_0_8px_rgba(56,189,248,0.36)] text-center lg:text-left text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] tracking-tight leading-none pt-0.5 uppercase">
-                  {heroContent[index].service}
+            {current && (
+              <motion.span
+                key={current.service}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.28, ease: "easeOut" }}
+                className="absolute inset-x-0 lg:inset-x-auto lg:left-0 flex justify-center lg:justify-start"
+              >
+                <span className="inline-flex flex-col items-center lg:items-start w-fit">
+                  <span
+                    className={`font-black text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.text || "from-blue-400"} text-center lg:text-left text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] tracking-tight leading-none pt-0.5 uppercase`}
+                    style={{ filter: `drop-shadow(0 0 8px ${current.colors?.glow || "rgba(0,0,0,0)"})` }}
+                  >
+                    {current.service}
+                  </span>
+                  <span
+                    className={`mt-0.5 h-[2px] w-full bg-gradient-to-r ${current.colors?.underline || "from-white"}`}
+                    style={{ boxShadow: `0 0 12px ${current.colors?.underlineShadow || "transparent"}` }}
+                  />
                 </span>
-                <span className="mt-0.5 h-[2px] w-full bg-gradient-to-r from-cyan-300/85 via-sky-300/70 to-blue-400/35 shadow-[0_0_12px_rgba(34,211,238,0.55)]" />
-              </span>
-            </motion.span>
+              </motion.span>
+            )}
           </AnimatePresence>
         </div>
       </h1>
@@ -101,16 +136,19 @@ export default function HeroHeadline() {
           </span>
 
           <AnimatePresence mode="popLayout" initial={false}>
-            <motion.div
-              key={heroContent[index].outcome}
-              initial={{ opacity: 0, y: 8, filter: "blur(2px)" }}
-              animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: -8, filter: "blur(2px)" }}
-              transition={{ duration: 0.28, ease: "easeOut", delay: 0.04 }}
-              className="absolute inset-x-0 lg:inset-x-auto lg:left-0 text-transparent bg-clip-text bg-gradient-to-r from-[#98e7ff] via-[#4eb8ff] to-[#2b67e9] drop-shadow-[0_0_9px_rgba(56,189,248,0.32)] font-black tracking-tight text-center lg:text-left text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] leading-none whitespace-nowrap pt-0.5 uppercase"
-            >
-              {heroContent[index].outcome}
-            </motion.div>
+            {current && (
+              <motion.div
+                key={current.outcome}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.28, ease: "easeOut", delay: 0.04 }}
+                className={`absolute inset-x-0 lg:inset-x-auto lg:left-0 text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.outcomeGradient || "from-blue-400"} font-black tracking-tight text-center lg:text-left text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] leading-none whitespace-nowrap pt-0.5 uppercase`}
+                style={{ filter: `drop-shadow(0 0 9px ${current.colors?.outcomeShadow || "rgba(0,0,0,0)"})` }}
+              >
+                {current.outcome}
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
       </h1>

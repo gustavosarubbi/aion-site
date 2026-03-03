@@ -92,10 +92,10 @@ export default function Header() {
                         {/* CTA App & Mobile Toggle */}
                         <div className="flex items-center gap-4">
                             <a
-                                href="https://wa.me/message/SEULINKAQUI" // Add the correct link or logic
+                                href="https://wa.me/message/SEULINKAQUI"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="hidden md:flex items-center justify-center h-10 px-6 rounded-full bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] text-[12px] font-bold tracking-wide uppercase text-white shadow-[0_0_15px_rgba(37,99,235,0.3)] hover:shadow-[0_0_25px_rgba(37,99,235,0.5)] hover:scale-[1.02] transition-all duration-300 font-[family-name:var(--font-montserrat)]"
+                                className="hidden md:flex items-center justify-center h-10 px-6 rounded-full bg-blue-600/25 backdrop-blur-xl border border-blue-400/20 text-[11px] font-bold tracking-[0.1em] uppercase text-white shadow-[0_0_20px_rgba(37,99,235,0.2)] hover:bg-blue-600/35 hover:border-blue-300/40 hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] transition-all duration-300 saturate-[1.6] font-[family-name:var(--font-montserrat)]"
                             >
                                 Falar com Especialista
                             </a>
@@ -155,7 +155,7 @@ export default function Header() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={() => setMobileMenuOpen(false)}
-                                className="flex items-center justify-center h-14 w-full rounded-2xl bg-[#2563EB] text-sm font-bold tracking-wide uppercase text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] font-[family-name:var(--font-montserrat)]"
+                                className="flex items-center justify-center h-14 w-full rounded-2xl bg-blue-600/40 backdrop-blur-xl border border-blue-400/30 text-sm font-bold tracking-widest uppercase text-white shadow-[0_0_25px_rgba(37,99,235,0.3)] saturate-[1.6] font-[family-name:var(--font-montserrat)]"
                             >
                                 Falar com Especialista
                             </a>
