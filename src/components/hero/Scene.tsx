@@ -80,7 +80,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                 {!mobileOptimized && (
                     <UICard
                         id="code-card"
-                        position={[-1.5, 1.1, -4.0]}
+                        position={[-1.5, 1.3, -4.0]}
                         initialRotation={[-0.1, -0.5, 0.1]}
                         color="#3b82f6"
                         type="code"
@@ -100,7 +100,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
 
                 <UICard
                     id="flow-card"
-                    position={mobileOptimized ? [1.4, -0.1, -1.8] : [2.0, -0.1, -1.8]}
+                    position={mobileOptimized ? [1.4, 0.1, -1.8] : [2.0, 0.1, -1.8]}
                     initialRotation={[0.05, 0.3, -0.05]}
                     color="#ffff00"
                     type="flow"
@@ -119,7 +119,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
 
                 <UICard
                     id="preview-card"
-                    position={mobileOptimized ? [-1.0, -1.2, 1.5] : [-1.3, -1.2, 1.5]}
+                    position={mobileOptimized ? [-1.0, -1.0, 1.5] : [-1.3, -1.0, 1.5]}
                     initialRotation={[-0.05, -0.1, 0.02]}
                     color="#ff00ea"
                     type="preview"

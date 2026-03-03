@@ -47,13 +47,17 @@ const serviceItems = [
 
 function HeroSubtitle() {
   return (
-    <p
-      style={montserrat}
-      className="text-white/82 text-sm sm:text-base lg:text-[17px] leading-relaxed font-medium max-w-[46ch] mt-1 sm:mt-2"
-    >
-      Da visita ao fechamento, criamos sites, chatbots e automações para gerar
-      mais conversão com menos atrito.
-    </p>
+    <div className="flex flex-col gap-4 mt-3 sm:mt-4">
+      <p
+        style={montserrat}
+        className="text-white/85 text-sm sm:text-base lg:text-[18px] leading-relaxed font-medium max-w-[52ch] tracking-tight"
+      >
+        Potencializamos sua escala digital com ecossistemas de alta performance:
+        <span className="text-blue-300 font-bold"> Sites magnéticos</span>,
+        <span className="text-violet-300 font-bold font-semibold"> chatbots de conversão</span> e
+        <span className="text-orange-300 font-bold font-semibold"> automações voltadas para o lucro</span>.
+      </p>
+    </div>
   );
 }
 

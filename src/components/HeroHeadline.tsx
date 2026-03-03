@@ -8,8 +8,8 @@ const montserrat = { fontFamily: "var(--font-montserrat)" } as const;
 const heroContent = [
   { service: "SITES", outcome: "RESULTADOS" },
   { service: "CHATBOTS", outcome: "ATENDIMENTO" },
-  { service: "AUTOMACAO", outcome: "ESCALA" },
-  { service: "FUNIS", outcome: "CONVERSAO" },
+  { service: "AUTOMAÇÃO", outcome: "ESCALA" },
+  { service: "FUNIS", outcome: "CONVERSÃO" },
 ];
 
 const longestService = heroContent.reduce(

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
-export const CLUSTER_CENTER = new THREE.Vector3(4.5, -0.4, 0);
+export const CLUSTER_CENTER = new THREE.Vector3(4.5, -0.1, 0);
 
 function seededUnit(index: number, channel: number) {
     const x = Math.sin((index + 1) * 12.9898 + (channel + 1) * 78.233) * 43758.5453;
