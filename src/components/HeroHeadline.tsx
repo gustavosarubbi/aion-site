@@ -10,11 +10,11 @@ const heroContent = [
     service: "WEBDESIGN",
     outcome: "RESULTADOS",
     colors: {
-      text: "from-[#99e9ff] via-[#57c9ff] to-[#357dff]",
+      text: "from-[#b8f3ff] via-[#67dcff] to-[#2f94ff]",
       glow: "rgba(56,189,248,0.36)",
       underline: "from-cyan-300/85 via-sky-300/70 to-blue-400/35",
       underlineShadow: "rgba(34,211,238,0.55)",
-      outcomeGradient: "from-[#98e7ff] via-[#4eb8ff] to-[#2b67e9]",
+      outcomeGradient: "from-[#c6f6ff] via-[#6fd7ff] to-[#348bff]",
       outcomeShadow: "rgba(56,189,248,0.32)"
     }
   },
@@ -22,24 +22,24 @@ const heroContent = [
     service: "CHATBOTS",
     outcome: "ATENDIMENTO",
     colors: {
-      text: "from-[#d8b4fe] via-[#a855f7] to-[#7c3aed]",
-      glow: "rgba(168,85,247,0.36)",
-      underline: "from-purple-300/85 via-fuchsia-300/70 to-violet-400/35",
-      underlineShadow: "rgba(168,85,247,0.55)",
-      outcomeGradient: "from-[#e9d5ff] via-[#c084fc] to-[#9333ea]",
-      outcomeShadow: "rgba(168,85,247,0.32)"
+      text: "from-[#d2f7ff] via-[#7ae0ff] to-[#37a8ff]",
+      glow: "rgba(34,211,238,0.34)",
+      underline: "from-cyan-300/85 via-sky-300/70 to-blue-400/35",
+      underlineShadow: "rgba(34,211,238,0.52)",
+      outcomeGradient: "from-[#d9f9ff] via-[#8be4ff] to-[#4d9bff]",
+      outcomeShadow: "rgba(34,211,238,0.3)"
     }
   },
   {
     service: "AUTOMAÇÃO",
     outcome: "ESCALA",
     colors: {
-      text: "from-[#fdba74] via-[#f97316] to-[#ea580c]",
-      glow: "rgba(249,115,22,0.36)",
-      underline: "from-orange-300/85 via-amber-300/70 to-orange-400/35",
-      underlineShadow: "rgba(249,115,22,0.55)",
-      outcomeGradient: "from-[#fed7aa] via-[#fb923c] to-[#f97316]",
-      outcomeShadow: "rgba(249,115,22,0.32)"
+      text: "from-[#c7f5ff] via-[#74d5ff] to-[#3a8dff]",
+      glow: "rgba(59,130,246,0.34)",
+      underline: "from-sky-300/85 via-cyan-300/70 to-blue-400/35",
+      underlineShadow: "rgba(56,189,248,0.52)",
+      outcomeGradient: "from-[#d3f8ff] via-[#7fdfff] to-[#4a88ff]",
+      outcomeShadow: "rgba(59,130,246,0.3)"
     }
   },
 ];
@@ -49,6 +49,7 @@ const longestOutcome = "ATENDIMENTO";
 
 export default function HeroHeadline() {
   const [index, setIndex] = useState(0);
+  const displaySize = "text-[clamp(1.95rem,9.5vw,2.7rem)] sm:text-[clamp(2.15rem,6.9vw,3rem)] md:text-[clamp(2.3rem,5.8vw,3.2rem)] lg:text-[clamp(2.45rem,4.25vw,3.45rem)] xl:text-[clamp(2.75rem,3.85vw,4rem)]";
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -86,15 +87,15 @@ export default function HeroHeadline() {
   return (
     <div
       style={montserrat}
-      className="w-full lg:max-w-[720px] flex flex-col items-center lg:items-start gap-1 sm:gap-1 overflow-visible"
+      className="w-full lg:max-w-[740px] xl:max-w-[780px] flex flex-col items-center lg:items-start gap-0.5 overflow-visible"
     >
       <h1 className="flex flex-wrap items-center justify-center lg:justify-start gap-x-1 sm:gap-x-2 gap-y-0 w-full">
-        <span className="block font-black text-blue-200/80 tracking-tight text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] uppercase">
+        <span className={`block font-black text-blue-200/85 tracking-tight leading-[0.95] ${displaySize} uppercase`}>
           TRANSFORMAMOS
         </span>
 
         <div className="relative inline-flex items-end pb-0.5 sm:pb-1">
-          <span className="invisible font-black text-transparent text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] tracking-tight leading-none pt-0.5 uppercase">
+          <span className={`invisible font-black text-transparent ${displaySize} tracking-tight leading-[0.95] pt-0.5 uppercase`}>
             {longestService}
           </span>
           <AnimatePresence mode="popLayout" initial={false}>
@@ -109,14 +110,14 @@ export default function HeroHeadline() {
               >
                 <span className="inline-flex flex-col items-center lg:items-start w-fit">
                   <span
-                    className={`font-black text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.text || "from-blue-400"} text-center lg:text-left text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] tracking-tight leading-none pt-0.5 uppercase`}
-                    style={{ filter: `drop-shadow(0 0 8px ${current.colors?.glow || "rgba(0,0,0,0)"})` }}
+                    className={`font-black text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.text || "from-blue-400"} text-center lg:text-left ${displaySize} tracking-tight leading-[0.95] pt-0.5 uppercase`}
+                    style={{ filter: `drop-shadow(0 0 5px ${current.colors?.glow || "rgba(0,0,0,0)"})` }}
                   >
                     {current.service}
                   </span>
                   <span
                     className={`mt-0.5 h-[2px] w-full bg-gradient-to-r ${current.colors?.underline || "from-white"}`}
-                    style={{ boxShadow: `0 0 12px ${current.colors?.underlineShadow || "transparent"}` }}
+                    style={{ boxShadow: `0 0 6px ${current.colors?.underlineShadow || "transparent"}` }}
                   />
                 </span>
               </motion.span>
@@ -125,13 +126,13 @@ export default function HeroHeadline() {
         </div>
       </h1>
 
-      <h1 className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 sm:gap-3.5 w-full -mt-2 sm:-mt-3">
-        <span className="block font-black text-blue-200/80 tracking-tight text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] mt-1 uppercase">
+      <h1 className="flex flex-wrap items-center justify-center lg:justify-start gap-1 sm:gap-2 w-full -mt-0.5 sm:-mt-1">
+        <span className={`block font-black text-blue-200/85 tracking-tight leading-[0.95] ${displaySize} uppercase`}>
           EM
         </span>
 
-        <div className="relative h-[2.2rem] sm:h-[3rem] lg:h-[3.8rem] inline-flex items-center overflow-visible">
-          <span className="invisible font-black text-transparent tracking-tight text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] leading-none whitespace-nowrap pt-0.5 uppercase">
+        <div className="relative h-[2.3rem] sm:h-[3.15rem] lg:h-[3.85rem] inline-flex items-center overflow-visible">
+          <span className={`invisible font-black text-transparent tracking-tight ${displaySize} leading-[0.95] whitespace-nowrap pt-0.5 uppercase`}>
             {longestOutcome}
           </span>
 
@@ -143,8 +144,8 @@ export default function HeroHeadline() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.28, ease: "easeOut", delay: 0.04 }}
-                className={`absolute inset-x-0 lg:inset-x-auto lg:left-0 text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.outcomeGradient || "from-blue-400"} font-black tracking-tight text-center lg:text-left text-[1.8rem] sm:text-[2.5rem] lg:text-[3rem] leading-none whitespace-nowrap pt-0.5 uppercase`}
-                style={{ filter: `drop-shadow(0 0 9px ${current.colors?.outcomeShadow || "rgba(0,0,0,0)"})` }}
+                className={`absolute inset-x-0 lg:inset-x-auto lg:left-0 text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.outcomeGradient || "from-blue-400"} font-black tracking-tight text-center lg:text-left ${displaySize} leading-[0.95] whitespace-nowrap pt-0.5 uppercase`}
+                style={{ filter: `drop-shadow(0 0 6px ${current.colors?.outcomeShadow || "rgba(0,0,0,0)"})` }}
               >
                 {current.outcome}
               </motion.div>

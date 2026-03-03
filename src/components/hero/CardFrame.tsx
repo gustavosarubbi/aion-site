@@ -24,9 +24,9 @@ export function CardFrame({
         }
         // Pulsating border glow
         if (borderMatRef.current) {
-            const pulse = 0.4 + Math.sin(state.clock.elapsedTime * 1.5) * 0.35;
+            const pulse = 0.22 + Math.sin(state.clock.elapsedTime * 1.5) * 0.18;
             borderMatRef.current.emissiveIntensity = pulse;
-            borderMatRef.current.opacity = 0.1 + Math.sin(state.clock.elapsedTime * 1.5) * 0.08;
+            borderMatRef.current.opacity = 0.06 + Math.sin(state.clock.elapsedTime * 1.5) * 0.04;
         }
     });
 
@@ -39,9 +39,9 @@ export function CardFrame({
                         ref={borderMatRef}
                         color={color}
                         transparent
-                        opacity={0.15}
+                        opacity={0.1}
                         emissive={color}
-                        emissiveIntensity={reducedMotion ? 0.38 : 0.6}
+                        emissiveIntensity={reducedMotion ? 0.24 : 0.34}
                         metalness={reducedDetail ? 0.7 : 1}
                         roughness={reducedDetail ? 0.18 : 0}
                     />
@@ -85,12 +85,12 @@ export function CardFrame({
                 </mesh>
                 <mesh position={[0, -0.15, 0.001]}>
                     <planeGeometry args={[3.6, 0.01]} />
-                    <meshBasicMaterial color={color} transparent opacity={0.2} />
+                    <meshBasicMaterial color={color} transparent opacity={0.14} />
                 </mesh>
             </group>
 
             {/* Window Buttons */}
-            {(["#ff5f57", "#febc2e", "#28c840"] as const).map((c, i) => (
+            {(["#67e8f9", "#38bdf8", "#60a5fa"] as const).map((c, i) => (
                 <mesh key={i} position={[-1.5 + i * 0.2, 0.95, 0.075]}>
                     <sphereGeometry args={[0.055, reducedDetail ? 10 : 16, reducedDetail ? 10 : 16]} />
                     <meshStandardMaterial color={c} emissive={c} emissiveIntensity={1.2} />
@@ -104,7 +104,7 @@ export function CardFrame({
             {/* Technical Detail: Scanner Line / Pulse */}
             <mesh position={[0, 0, 0.06]}>
                 <planeGeometry args={[3.6, 0.02]} />
-                <meshBasicMaterial color={color} transparent opacity={0.1} />
+                <meshBasicMaterial color={color} transparent opacity={0.06} />
             </mesh>
         </group>
     );

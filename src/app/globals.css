@@ -16,6 +16,7 @@
   :root {
     --background: #000000;
     --foreground: #FFFFFF;
+    --header-height: 88px;
   }
   * {
     @apply border-border outline-ring/50;

@@ -15,6 +15,7 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
     const mobileOptimized = quality === "mobile";
     const [isTabVisible, setIsTabVisible] = useState(true);
     const [isInView, setIsInView] = useState(true);
+    const [viewportWidth, setViewportWidth] = useState(1600);
 
     useEffect(() => {
         if (typeof document === "undefined") return;
@@ -43,6 +44,14 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
         return () => observer.disconnect();
     }, []);
 
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        const onResize = () => setViewportWidth(window.innerWidth);
+        onResize();
+        window.addEventListener("resize", onResize, { passive: true });
+        return () => window.removeEventListener("resize", onResize);
+    }, []);
+
     const shouldAnimate = isTabVisible && isInView;
 
     const dprRange = useMemo<[number, number]>(() => {
@@ -60,32 +69,57 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
         return [0.9, 1.25];
     }, [mobileOptimized]);
 
+    const desktopGlow = useMemo(() => {
+        if (viewportWidth <= 1366) {
+            return { left: "47%", size: 340, opacity: "bg-cyan-500/8", blur: "blur-[74px]" };
+        }
+
+        if (viewportWidth <= 1536) {
+            return { left: "50%", size: 390, opacity: "bg-cyan-500/9", blur: "blur-[86px]" };
+        }
+
+        if (viewportWidth >= 1850) {
+            return { left: "54%", size: 560, opacity: "bg-cyan-500/11", blur: "blur-[106px]" };
+        }
+
+        return { left: "52%", size: 450, opacity: "bg-cyan-500/10", blur: "blur-[92px]" };
+    }, [viewportWidth]);
+
     return (
         <div
             ref={containerRef}
-            className="w-full h-full relative overflow-hidden flex items-center justify-center"
+            className="w-full h-full relative flex items-center justify-center overflow-visible"
         >
             <div
                 className={
                     mobileOptimized
-                        ? "absolute left-[62%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[260px] h-[260px] bg-cyan-500/8 rounded-full blur-[72px] pointer-events-none"
-                        : "absolute left-[65%] top-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-cyan-500/10 rounded-full blur-[80px] pointer-events-none"
+                        ? "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[220px] h-[220px] bg-cyan-500/8 rounded-full blur-[64px] pointer-events-none"
+                        : `absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none ${desktopGlow.opacity} ${desktopGlow.blur}`
+                }
+                style={
+                    mobileOptimized
+                        ? undefined
+                        : {
+                            left: desktopGlow.left,
+                            width: `${desktopGlow.size}px`,
+                            height: `${desktopGlow.size}px`,
+                        }
                 }
             />
 
-            <div className="w-full h-full absolute inset-0 overflow-visible pointer-events-auto">
+            <div className={`w-full h-full absolute inset-0 overflow-visible ${mobileOptimized ? "pointer-events-none" : "pointer-events-auto"}`}>
                 <Canvas
                     frameloop={shouldAnimate ? "always" : "never"}
                     dpr={dprRange}
                     gl={{
-                        antialias: dprRange[1] >= 1.15,
+                        antialias: !mobileOptimized && dprRange[1] >= 1.15,
                         alpha: true,
                         powerPreference: "default",
                         stencil: false,
                     }}
-                    performance={{ min: 0.5 }}
+                    performance={{ min: mobileOptimized ? 0.35 : 0.5 }}
                     camera={{ near: 0.1, far: 90 }}
-                    style={{ background: "transparent" }}
+                    style={{ background: "transparent", overflow: "visible" }}
                 >
                     <Suspense fallback={null}>
                         <SignalProvider>

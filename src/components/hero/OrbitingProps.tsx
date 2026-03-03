@@ -16,14 +16,18 @@ export function OrbitingProps({
     speed = 0.15,
     count = 12,
     reducedMotion = false,
+    centerOffsetX = 0,
+    centerOffsetY = 0,
 }: {
     radius?: number;
     speed?: number;
     count?: number;
     reducedMotion?: boolean;
+    centerOffsetX?: number;
+    centerOffsetY?: number;
 }) {
     const groupRef = useRef<THREE.Group>(null!);
-    const colors = useMemo(() => ["#06b6d4", "#3b82f6", "#a855f7", "#0ea5e9", "#8b5cf6", "#22d3ee"], []);
+    const colors = useMemo(() => ["#06b6d4", "#0ea5e9", "#38bdf8", "#3b82f6", "#22d3ee", "#60a5fa"], []);
 
     const geometries = useMemo(
         () => ({
@@ -76,9 +80,9 @@ export function OrbitingProps({
         groupRef.current.children.forEach((child, i) => {
             const p = props[i];
             const angle = t * p.speedMult + p.phase;
-            child.position.x = CLUSTER_CENTER.x + Math.cos(angle) * p.orbitRadius;
+            child.position.x = CLUSTER_CENTER.x + centerOffsetX + Math.cos(angle) * p.orbitRadius;
             child.position.z = CLUSTER_CENTER.z + Math.sin(angle) * p.orbitRadius * 0.65;
-            child.position.y = CLUSTER_CENTER.y + Math.sin(t * 0.35 + p.offset) * 2.2 * p.vertDir;
+            child.position.y = CLUSTER_CENTER.y + centerOffsetY + Math.sin(t * 0.35 + p.offset) * 2.2 * p.vertDir;
             if (!reducedMotion) {
                 child.rotation.x += 0.012;
                 child.rotation.y += 0.009;

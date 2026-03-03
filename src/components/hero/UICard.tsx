@@ -40,6 +40,15 @@ export type UICardProps = {
     onActiveCardChange: (id: string | null) => void;
     reducedMotion: boolean;
     labelPosition?: "top" | "right";
+    labelOffset?: [number, number, number];
+    labelConnector?: {
+        start: [number, number, number];
+        mid: [number, number, number];
+        end: [number, number, number];
+    };
+    labelScale?: number;
+    labelCompact?: boolean;
+    labelDistanceFactor?: number;
     baseScale?: number;
     qualityTier?: "high" | "medium" | "low";
 };
@@ -58,6 +67,11 @@ export const UICard = ({
     onActiveCardChange,
     reducedMotion,
     labelPosition = "top",
+    labelOffset,
+    labelConnector,
+    labelScale = 1,
+    labelCompact = false,
+    labelDistanceFactor = 10,
     baseScale = 1,
     qualityTier = "high",
 }: UICardProps) => {
@@ -89,6 +103,38 @@ export const UICard = ({
     const pointerTiltTarget = useRef({ x: 0, y: 0 });
 
     const isSecondary = activeCardId !== null && activeCardId !== id;
+
+    const defaultLabelOffset: [number, number, number] =
+        labelPosition === "right" ? [2.72, 0, 0.15] : [0, 2.4, 0.15];
+    const resolvedLabelOffset = labelOffset ?? defaultLabelOffset;
+
+    const defaultConnector =
+        labelPosition === "right"
+            ? {
+                start: [1.78, 0, 0.15] as [number, number, number],
+                end: [2.72, 0, 0.15] as [number, number, number],
+                mid: [2.24, 0.23, 0.15] as [number, number, number],
+            }
+            : {
+                start: [0, 1.27, 0.15] as [number, number, number],
+                end: [0, 2.4, 0.15] as [number, number, number],
+                mid: [0.35, 1.85, 0.15] as [number, number, number],
+            };
+
+    const resolvedConnector = labelConnector ?? defaultConnector;
+    const compactPadding = labelCompact ? "7px 14px 7px 12px" : "9px 17px 9px 15px";
+    const compactGap = labelCompact ? "8px" : "10px";
+    const compactFontSize = labelCompact ? "11px" : "12px";
+    const compactTracking = labelCompact ? "0.11em" : "0.13em";
+    const compactDot = labelCompact ? "5px" : "6px";
+    const connectorMid: [number, number, number] =
+        labelPosition === "top"
+            ? [resolvedConnector.mid[0], resolvedConnector.mid[1] - 0.04, resolvedConnector.mid[2]]
+            : resolvedConnector.mid;
+    const connectorEnd: [number, number, number] =
+        labelPosition === "top"
+            ? [resolvedConnector.end[0], resolvedConnector.end[1] - (labelCompact ? 0.16 : 0.2), resolvedConnector.end[2]]
+            : resolvedConnector.end;
 
     useEffect(() => {
         return () => {
@@ -319,9 +365,9 @@ export const UICard = ({
 
                 {title && (
                     <Html
-                        position={labelPosition === "right" ? [3.0, 0, 0.15] : [0, 2.4, 0.15]}
+                        position={resolvedLabelOffset}
                         center={labelPosition !== "right"}
-                        distanceFactor={10}
+                        distanceFactor={labelDistanceFactor}
                         zIndexRange={[100, 0]}
                         className="pointer-events-none select-none"
                         style={{
@@ -329,17 +375,24 @@ export const UICard = ({
                             pointerEvents: 'none',
                         }}
                     >
-                        <div style={{ transform: labelPosition === "right" ? 'translateX(0)' : 'translateX(-50%)' }}>
+                        <div
+                            style={{
+                                transform: labelPosition === "right"
+                                    ? `translateX(0) scale(${labelScale})`
+                                    : `translateX(-50%) scale(${labelScale})`,
+                                transformOrigin: labelPosition === "right" ? "left center" : "center center",
+                            }}
+                        >
                             <div style={{
                                 background: `linear-gradient(145deg, rgba(8,12,28,0.95), rgba(15,23,42,0.90))`,
                                 border: `1px solid ${color}55`,
                                 borderRadius: '6px',
-                                padding: '8px 16px 8px 14px',
+                                padding: compactPadding,
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: '9px',
+                                gap: compactGap,
                                 whiteSpace: 'nowrap' as const,
-                                boxShadow: `0 0 18px ${color}15, 0 4px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)`,
+                                boxShadow: `0 0 10px ${color}12, 0 4px 16px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.03)`,
                                 position: 'relative' as const,
                                 overflow: 'hidden',
                             }}>
@@ -363,9 +416,9 @@ export const UICard = ({
 
                                 {/* Title */}
                                 <span style={{
-                                    fontSize: '10px',
+                                    fontSize: compactFontSize,
                                     fontWeight: 700,
-                                    letterSpacing: '0.15em',
+                                    letterSpacing: compactTracking,
                                     textTransform: 'uppercase' as const,
                                     color: 'rgba(255,255,255,0.92)',
                                 }}>
@@ -374,9 +427,9 @@ export const UICard = ({
 
                                 {/* Status dot */}
                                 <div style={{
-                                    width: '5px', height: '5px', borderRadius: '50%',
+                                    width: compactDot, height: compactDot, borderRadius: '50%',
                                     backgroundColor: color,
-                                    boxShadow: `0 0 6px ${color}, 0 0 12px ${color}66`,
+                                    boxShadow: `0 0 4px ${color}, 0 0 8px ${color}55`,
                                     flexShrink: 0,
                                     animation: 'pulse 2s ease-in-out infinite',
                                 }} />
@@ -386,20 +439,22 @@ export const UICard = ({
                 )}
 
                 <QuadraticBezierLine
-                    start={labelPosition === "right" ? [1.9, 0, 0.15] : [0, 1.27, 0.15]}
-                    end={labelPosition === "right" ? [3.0, 0, 0.15] : [0, 2.4, 0.15]}
-                    mid={labelPosition === "right" ? [2.4, 0.25, 0.15] : [0.35, 1.85, 0.15]}
+                    start={resolvedConnector.start}
+                    end={connectorEnd}
+                    mid={connectorMid}
                     color={color}
                     transparent
-                    opacity={0.6}
-                    lineWidth={1.8}
+                    opacity={0.62}
+                    lineWidth={2.2}
+                    depthTest={false}
+                    renderOrder={120}
                 />
 
                 {/* Pulse orb traveling along the bezier */}
                 <PulseOrb
-                    start={labelPosition === "right" ? [1.9, 0, 0.15] : [0, 1.27, 0.15]}
-                    end={labelPosition === "right" ? [3.0, 0, 0.15] : [0, 2.4, 0.15]}
-                    mid={labelPosition === "right" ? [2.4, 0.25, 0.15] : [0.35, 1.85, 0.15]}
+                    start={resolvedConnector.start}
+                    end={connectorEnd}
+                    mid={connectorMid}
                     color={color}
                 />
 
@@ -436,11 +491,11 @@ function PulseOrb({ start, end, mid, color }: { start: [number, number, number];
             <mesh ref={ref}>
                 <sphereGeometry args={[0.03, 12, 12]} />
                 <meshBasicMaterial color={color} />
-                <pointLight distance={0.6} intensity={1.5} color={color} />
+                <pointLight distance={0.6} intensity={1.1} color={color} />
             </mesh>
             <mesh ref={glowRef}>
                 <sphereGeometry args={[0.09, 12, 12]} />
-                <meshBasicMaterial color={color} transparent opacity={0.25} />
+                <meshBasicMaterial color={color} transparent opacity={0.18} />
             </mesh>
         </group>
     );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { List, X } from "@phosphor-icons/react";
@@ -16,6 +16,7 @@ const navLinks = [
 export default function Header() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const headerRef = useRef<HTMLElement | null>(null);
 
     useEffect(() => {
         let ticking = false;
@@ -36,10 +37,31 @@ export default function Header() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    useEffect(() => {
+        if (typeof window === "undefined" || !headerRef.current) return;
+
+        const updateHeaderHeight = () => {
+            const h = Math.ceil(headerRef.current?.getBoundingClientRect().height ?? 88);
+            document.documentElement.style.setProperty("--header-height", `${h}px`);
+        };
+
+        updateHeaderHeight();
+
+        const resizeObserver = new ResizeObserver(() => updateHeaderHeight());
+        resizeObserver.observe(headerRef.current);
+        window.addEventListener("resize", updateHeaderHeight, { passive: true });
+
+        return () => {
+            resizeObserver.disconnect();
+            window.removeEventListener("resize", updateHeaderHeight);
+        };
+    }, [isScrolled]);
+
     return (
         <>
             <header
-                className={`fixed top-0 left-0 right-0 z-50 flex justify-center py-4 transition-all duration-300 ${isScrolled ? "py-2" : "py-4 sm:py-6"
+                ref={headerRef}
+                className={`fixed top-0 left-0 right-0 z-50 flex justify-center pt-[2px] pb-2 transition-all duration-300 ${isScrolled ? "pb-1.5 sm:pb-2" : "pb-2 sm:pb-3"
                     }`}
             >
                 <div className="w-full max-w-7xl px-4 sm:px-6 flex justify-center">
@@ -47,7 +69,7 @@ export default function Header() {
                         initial={{ y: -100, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                        className={`w-full flex items-center justify-between px-5 sm:px-8 py-3 sm:py-3.5 rounded-full transition-all duration-500 border ${isScrolled
+                        className={`w-full flex items-center justify-between px-5 sm:px-8 py-2.5 sm:py-3 rounded-full transition-all duration-500 border ${isScrolled
                             ? "bg-[#020510]/80 backdrop-blur-xl border-white/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
                             : "bg-white/[0.02] backdrop-blur-md border-white/[0.05] shadow-lg"
                             }`}
@@ -101,7 +123,7 @@ export default function Header() {
                             </a>
 
                             <button
-                                className="md:hidden flex items-center justify-center h-10 w-10 rounded-full bg-white/[0.05] border border-white/[0.05] text-white/80 hover:text-white transition-colors"
+                                className="md:hidden flex items-center justify-center h-11 w-11 rounded-full bg-white/[0.05] border border-white/[0.05] text-white/80 hover:text-white transition-colors"
                                 onClick={() => setMobileMenuOpen(true)}
                             >
                                 <List size={22} weight="duotone" />
