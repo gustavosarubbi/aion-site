@@ -14,10 +14,11 @@ function seededUnit(index: number, channel: number) {
 export function OrbitingProps({
     radius = 5.0,
     speed = 0.15,
-    count = 12,
+    count = 14,
     reducedMotion = false,
     centerOffsetX = 0,
     centerOffsetY = 0,
+    zMultiplier = 0.65,
 }: {
     radius?: number;
     speed?: number;
@@ -25,6 +26,7 @@ export function OrbitingProps({
     reducedMotion?: boolean;
     centerOffsetX?: number;
     centerOffsetY?: number;
+    zMultiplier?: number;
 }) {
     const groupRef = useRef<THREE.Group>(null!);
     const colors = useMemo(() => ["#06b6d4", "#0ea5e9", "#38bdf8", "#3b82f6", "#22d3ee", "#60a5fa"], []);
@@ -44,7 +46,8 @@ export function OrbitingProps({
                 color,
                 wireframe: true,
                 transparent: true,
-                opacity: 0.6,
+                opacity: 0.35,
+                depthWrite: false,
             });
             return acc;
         }, {});
@@ -64,7 +67,7 @@ export function OrbitingProps({
         return [...Array(count)].map((_, i) => ({
             phase: (i / count) * Math.PI * 2 + (seededUnit(i, 1) - 0.5) * 0.5,
             offset: (i / count) * Math.PI * 2 + seededUnit(i, 2) * 0.6,
-            size: 0.18 + seededUnit(i, 3) * 0.18,
+            size: 0.12 + seededUnit(i, 3) * 0.12,
             type: types[i % types.length],
             color: colors[i % colors.length],
             speedMult: 0.3 + (i % 4) * 0.2 + seededUnit(i, 4) * 0.3,
@@ -81,7 +84,7 @@ export function OrbitingProps({
             const p = props[i];
             const angle = t * p.speedMult + p.phase;
             child.position.x = CLUSTER_CENTER.x + centerOffsetX + Math.cos(angle) * p.orbitRadius;
-            child.position.z = CLUSTER_CENTER.z + Math.sin(angle) * p.orbitRadius * 0.65;
+            child.position.z = CLUSTER_CENTER.z + Math.sin(angle) * p.orbitRadius * zMultiplier;
             child.position.y = CLUSTER_CENTER.y + centerOffsetY + Math.sin(t * 0.35 + p.offset) * 2.2 * p.vertDir;
             if (!reducedMotion) {
                 child.rotation.x += 0.012;

@@ -49,7 +49,7 @@ const longestOutcome = "ATENDIMENTO";
 
 export default function HeroHeadline() {
   const [index, setIndex] = useState(0);
-  const displaySize = "text-[clamp(1.95rem,9.5vw,2.7rem)] sm:text-[clamp(2.15rem,6.9vw,3rem)] md:text-[clamp(2.3rem,5.8vw,3.2rem)] lg:text-[clamp(2.45rem,4.25vw,3.45rem)] xl:text-[clamp(2.75rem,3.85vw,4rem)]";
+  const displaySize = "text-[clamp(1.7rem,1.1rem+2.2vw,4rem)]";
 
   useEffect(() => {
     if (typeof document === "undefined") return;

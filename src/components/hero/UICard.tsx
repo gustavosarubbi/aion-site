@@ -39,7 +39,7 @@ export type UICardProps = {
     activeCardId: string | null;
     onActiveCardChange: (id: string | null) => void;
     reducedMotion: boolean;
-    labelPosition?: "top" | "right";
+    labelPosition?: "top" | "right" | "bottom" | "left";
     labelOffset?: [number, number, number];
     labelConnector?: {
         start: [number, number, number];
@@ -105,7 +105,7 @@ export const UICard = ({
     const isSecondary = activeCardId !== null && activeCardId !== id;
 
     const defaultLabelOffset: [number, number, number] =
-        labelPosition === "right" ? [2.72, 0, 0.15] : [0, 2.4, 0.15];
+        labelPosition === "right" ? [2.72, 0, 0.15] : labelPosition === "bottom" ? [0, -2.4, 0.15] : [0, 2.4, 0.15];
     const resolvedLabelOffset = labelOffset ?? defaultLabelOffset;
 
     const defaultConnector =
@@ -127,14 +127,32 @@ export const UICard = ({
     const compactFontSize = labelCompact ? "11px" : "12px";
     const compactTracking = labelCompact ? "0.11em" : "0.13em";
     const compactDot = labelCompact ? "5px" : "6px";
-    const connectorMid: [number, number, number] =
-        labelPosition === "top"
-            ? [resolvedConnector.mid[0], resolvedConnector.mid[1] - 0.04, resolvedConnector.mid[2]]
-            : resolvedConnector.mid;
-    const connectorEnd: [number, number, number] =
-        labelPosition === "top"
-            ? [resolvedConnector.end[0], resolvedConnector.end[1] - (labelCompact ? 0.16 : 0.2), resolvedConnector.end[2]]
-            : resolvedConnector.end;
+
+    // We now use precision CSS anchoring, so the 3D connector touches exactly the `end` point,
+    // and the HTML label offsets itself away from this point automatically.
+    const connectorMid: [number, number, number] = resolvedConnector.mid;
+    const connectorEnd: [number, number, number] = resolvedConnector.end;
+
+    const getLabelAnchorStyles = (): React.CSSProperties => {
+        const gap = "0px";
+        const base: React.CSSProperties = {
+            position: 'absolute',
+            transform: `scale(${labelScale})`,
+            transition: 'transform 0.3s ease-out',
+        };
+        switch (labelPosition) {
+            case "right":
+                return { ...base, left: gap, top: '50%', transform: `translateY(-50%) scale(${labelScale})`, transformOrigin: "left center" };
+            case "left":
+                return { ...base, right: gap, top: '50%', transform: `translateY(-50%) scale(${labelScale})`, transformOrigin: "right center" };
+            case "top":
+                return { ...base, bottom: gap, left: '50%', transform: `translateX(-50%) scale(${labelScale})`, transformOrigin: "bottom center" };
+            case "bottom":
+                return { ...base, top: gap, left: '50%', transform: `translateX(-50%) scale(${labelScale})`, transformOrigin: "top center" };
+            default:
+                return base;
+        }
+    };
 
     useEffect(() => {
         return () => {
@@ -366,7 +384,7 @@ export const UICard = ({
                 {title && (
                     <Html
                         position={resolvedLabelOffset}
-                        center={labelPosition !== "right"}
+                        center={true}
                         distanceFactor={labelDistanceFactor}
                         zIndexRange={[100, 0]}
                         className="pointer-events-none select-none"
@@ -375,64 +393,59 @@ export const UICard = ({
                             pointerEvents: 'none',
                         }}
                     >
-                        <div
-                            style={{
-                                transform: labelPosition === "right"
-                                    ? `translateX(0) scale(${labelScale})`
-                                    : `translateX(-50%) scale(${labelScale})`,
-                                transformOrigin: labelPosition === "right" ? "left center" : "center center",
-                            }}
-                        >
-                            <div style={{
-                                background: `linear-gradient(145deg, rgba(8,12,28,0.95), rgba(15,23,42,0.90))`,
-                                border: `1px solid ${color}55`,
-                                borderRadius: '6px',
-                                padding: compactPadding,
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: compactGap,
-                                whiteSpace: 'nowrap' as const,
-                                boxShadow: `0 0 10px ${color}12, 0 4px 16px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.03)`,
-                                position: 'relative' as const,
-                                overflow: 'hidden',
-                            }}>
-                                {/* Top accent glow line */}
+                        <div style={{ position: 'relative', width: 0, height: 0 }}>
+                            <div style={getLabelAnchorStyles()}>
                                 <div style={{
-                                    position: 'absolute', top: 0, left: 0, width: '100%', height: '1px',
-                                    background: `linear-gradient(90deg, transparent, ${color}44, transparent)`,
-                                }} />
-                                {/* Bottom accent glow line */}
-                                <div style={{
-                                    position: 'absolute', bottom: 0, left: '20%', width: '60%', height: '1px',
-                                    background: `linear-gradient(90deg, transparent, ${color}22, transparent)`,
-                                }} />
-
-                                {/* Icon */}
-                                <div style={{ color: color, opacity: 0.9, display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-                                    {type === "code" && <Code2 size={13} strokeWidth={2} />}
-                                    {type === "flow" && <Bot size={13} strokeWidth={2} />}
-                                    {type === "preview" && <Globe size={13} strokeWidth={2} />}
-                                </div>
-
-                                {/* Title */}
-                                <span style={{
-                                    fontSize: compactFontSize,
-                                    fontWeight: 700,
-                                    letterSpacing: compactTracking,
-                                    textTransform: 'uppercase' as const,
-                                    color: 'rgba(255,255,255,0.92)',
+                                    background: `linear-gradient(145deg, rgba(8,12,28,0.95), rgba(15,23,42,0.90))`,
+                                    border: `1px solid ${color}55`,
+                                    borderRadius: '6px',
+                                    padding: compactPadding,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: compactGap,
+                                    whiteSpace: 'nowrap' as const,
+                                    boxShadow: `0 0 10px ${color}12, 0 4px 16px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.03)`,
+                                    position: 'relative' as const,
+                                    overflow: 'hidden',
                                 }}>
-                                    {title}
-                                </span>
+                                    {/* Top accent glow line */}
+                                    <div style={{
+                                        position: 'absolute', top: 0, left: 0, width: '100%', height: '1px',
+                                        background: `linear-gradient(90deg, transparent, ${color}44, transparent)`,
+                                    }} />
+                                    {/* Bottom accent glow line */}
+                                    <div style={{
+                                        position: 'absolute', bottom: 0, left: '20%', width: '60%', height: '1px',
+                                        background: `linear-gradient(90deg, transparent, ${color}22, transparent)`,
+                                    }} />
 
-                                {/* Status dot */}
-                                <div style={{
-                                    width: compactDot, height: compactDot, borderRadius: '50%',
-                                    backgroundColor: color,
-                                    boxShadow: `0 0 4px ${color}, 0 0 8px ${color}55`,
-                                    flexShrink: 0,
-                                    animation: 'pulse 2s ease-in-out infinite',
-                                }} />
+                                    {/* Icon */}
+                                    <div style={{ color: color, opacity: 0.9, display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                                        {type === "code" && <Code2 size={13} strokeWidth={2} />}
+                                        {type === "flow" && <Bot size={13} strokeWidth={2} />}
+                                        {type === "preview" && <Globe size={13} strokeWidth={2} />}
+                                    </div>
+
+                                    {/* Title */}
+                                    <span style={{
+                                        fontSize: compactFontSize,
+                                        fontWeight: 700,
+                                        letterSpacing: compactTracking,
+                                        textTransform: 'uppercase' as const,
+                                        color: 'rgba(255,255,255,0.92)',
+                                    }}>
+                                        {title}
+                                    </span>
+
+                                    {/* Status dot */}
+                                    <div style={{
+                                        width: compactDot, height: compactDot, borderRadius: '50%',
+                                        backgroundColor: color,
+                                        boxShadow: `0 0 4px ${color}, 0 0 8px ${color}55`,
+                                        flexShrink: 0,
+                                        animation: 'pulse 2s ease-in-out infinite',
+                                    }} />
+                                </div>
                             </div>
                         </div>
                     </Html>
@@ -465,10 +478,11 @@ export const UICard = ({
 };
 
 
-// Pulse orb that travels along a quadratic bezier curve
+// High-intensity "Sparkle" pulse that travels along a curve
 function PulseOrb({ start, end, mid, color }: { start: [number, number, number]; end: [number, number, number]; mid: [number, number, number]; color: string }) {
-    const ref = useRef<THREE.Mesh>(null!);
-    const glowRef = useRef<THREE.Mesh>(null!);
+    const lightRef = useRef<THREE.PointLight>(null!);
+    const meshRef = useRef<THREE.Mesh>(null!);
+
     const curve = useMemo(() => {
         return new THREE.QuadraticBezierCurve3(
             new THREE.Vector3(...start),
@@ -478,26 +492,49 @@ function PulseOrb({ start, end, mid, color }: { start: [number, number, number];
     }, [start, mid, end]);
 
     useFrame((state) => {
-        if (!ref.current) return;
-        // Faster pulse speed: 0.65 instead of 0.25
-        const raw = (state.clock.getElapsedTime() * 0.65) % 2;
-        const t = raw <= 1 ? raw : 2 - raw; // ping-pong 0→1→0
+        if (!meshRef.current) return;
+        const time = state.clock.getElapsedTime();
+        const raw = (time * 0.8) % 2;
+        const t = raw <= 1 ? raw : 2 - raw;
+
         const point = curve.getPoint(t);
-        ref.current.position.copy(point);
-        if (glowRef.current) glowRef.current.position.copy(point);
+        meshRef.current.position.copy(point);
+
+        if (lightRef.current) {
+            lightRef.current.position.copy(point);
+            // High-frequency intensity flicker for a true "sparkle" feel
+            lightRef.current.intensity = 4.0 + Math.sin(time * 40) * 2.0;
+        }
+
+        // Random-ish scale jitter to break the "geometric sphere" look
+        const s = 0.02 + Math.abs(Math.sin(time * 50)) * 0.015;
+        meshRef.current.scale.set(s, s, s);
     });
 
     return (
         <group>
-            <mesh ref={ref}>
-                <sphereGeometry args={[0.06, 12, 12]} />
-                <meshBasicMaterial color={color} />
-                <pointLight distance={0.8} intensity={1.5} color={color} />
+            {/* The "Spark" - tiny and jittery */}
+            <mesh ref={meshRef}>
+                <sphereGeometry args={[1, 8, 8]} />
+                <meshBasicMaterial color="#ffffff" />
             </mesh>
-            <mesh ref={glowRef}>
-                <sphereGeometry args={[0.15, 12, 12]} />
-                <meshBasicMaterial color={color} transparent opacity={0.22} />
-            </mesh>
+
+            {/* Focused light source - creates the visual glow through engine bloom */}
+            <pointLight
+                ref={lightRef}
+                distance={0.7}
+                intensity={5}
+                color={color}
+                decay={2}
+            />
+
+            {/* Subtle secondary light for broader ambiance */}
+            <pointLight
+                position={meshRef.current?.position}
+                distance={1.5}
+                intensity={0.5}
+                color={color}
+            />
         </group>
     );
 }

@@ -53,7 +53,7 @@ function HeroSubtitle() {
     <div className="flex flex-col">
       <p
         style={montserrat}
-        className="text-white/82 text-[15px] sm:text-[16px] lg:text-[18px] leading-[1.55] font-medium max-w-[42ch] tracking-tight"
+        className="text-white/82 text-[15px] sm:text-[16px] lg:text-[17px] 2xl:text-[18px] leading-[1.55] font-medium max-w-[42ch] tracking-tight"
       >
         Potencializamos sua escala digital com ecossistemas de alta performance:
         <span className="text-cyan-300 font-bold"> Sites magnéticos</span>,
@@ -76,7 +76,7 @@ function ServiceBar() {
             </span>
             <span
               style={montserrat}
-              className={`text-[11px] sm:text-[12px] font-extrabold tracking-[0.12em] ${color} uppercase whitespace-nowrap`}
+              className={`text-[10px] sm:text-[11px] xl:text-[11.5px] 2xl:text-[12px] font-extrabold tracking-[0.1em] xl:tracking-[0.11em] 2xl:tracking-[0.12em] ${color} uppercase whitespace-nowrap`}
             >
               {label}
             </span>
@@ -117,7 +117,7 @@ export default function Home() {
       <section id="inicio" className="relative w-full overflow-visible md:h-[100dvh]">
         <div className="absolute inset-x-0 top-[10%] h-[68%] bg-[radial-gradient(ellipse_at_center,rgba(14,165,233,0.08)_0%,rgba(0,0,0,0)_72%)] pointer-events-none z-0" />
 
-        <div className="relative z-10 w-full md:h-full max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
+        <div className="relative z-10 w-full md:h-full max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 lg:pl-32 xl:pl-44 2xl:pl-8 overflow-visible">
 
           {/* ── MOBILE LAYOUT (< md) ── stacked: text → 3D → buttons */}
           <div className="md:hidden flex flex-col pt-[calc(var(--header-height,76px)-12px)] min-h-[100dvh]">
@@ -242,7 +242,7 @@ export default function Home() {
           >
 
             {/* Left: text content — vertically centered within the grid row */}
-            <div className="relative h-full flex flex-col items-start text-left justify-start pt-[7vh] gap-3 lg:gap-4">
+            <div className="relative h-full flex flex-col items-start text-left justify-start pt-[7vh] 2xl:pt-[10vh] gap-3 lg:gap-4 2xl:gap-7">
               <div className="absolute -inset-8 bg-gradient-to-r from-blue-500/6 via-cyan-500/3 to-blue-500/5 blur-[58px] -z-10 rounded-full opacity-30 pointer-events-none" />
 
               <motion.div
@@ -272,7 +272,7 @@ export default function Home() {
               </motion.div>
 
               <motion.div
-                className="flex flex-col items-start gap-6 w-full pointer-events-auto"
+                className="flex flex-col items-start gap-4 lg:gap-5 2xl:gap-8 w-full pointer-events-auto"
                 initial={{ opacity: 0, y: 30, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.78 }}
@@ -316,25 +316,28 @@ export default function Home() {
                   ))}
                 </div>
 
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex items-center gap-3 lg:gap-4 pointer-events-auto">
                   <ActionNode />
                   <a
                     href="#services"
-                    className="group relative inline-flex items-center justify-center gap-3 h-[52px] px-6 lg:px-7 rounded-2xl bg-sky-500/10 backdrop-blur-xl border border-sky-400/20 text-[13px] font-semibold text-white transition-all duration-500 hover:bg-sky-500/15 hover:border-sky-400/35 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 pointer-events-auto shadow-[0_0_14px_rgba(56,189,248,0.06)] hover:shadow-[0_0_22px_rgba(56,189,248,0.12)] overflow-hidden"
+                    className="group relative inline-flex items-center justify-center gap-1.5 h-[46px] lg:h-[48px] xl:h-[48.5px] 2xl:h-[52px] px-2.5 lg:px-3.5 xl:px-3 2xl:px-8 rounded-2xl bg-sky-500/10 backdrop-blur-xl border border-sky-400/20 text-[10.5px] lg:text-[11.5px] xl:text-[12px] 2xl:text-[13px] font-semibold text-white transition-all duration-500 hover:bg-sky-500/15 hover:border-sky-400/35 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 pointer-events-auto shadow-[0_0_14px_rgba(56,189,248,0.06)] hover:shadow-[0_0_22px_rgba(56,189,248,0.12)] overflow-hidden"
                     style={montserrat}
                   >
                     <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
                     <div className="absolute inset-0 bg-white/0 group-hover:bg-white/[0.02] transition-colors duration-500" />
                     <span className="relative z-10 flex items-center gap-2.5 uppercase tracking-[0.14em] drop-shadow-[0_1px_4px_rgba(0,0,0,0.1)] group-hover:text-white transition-all duration-500">
                       Ver soluções
-                      <ArrowRight size={18} weight="bold" className="transition-transform duration-500 group-hover:translate-x-1 text-sky-300 group-hover:text-white" />
+                      <ArrowRight size={14} weight="bold" className="transition-transform duration-500 group-hover:translate-x-1 text-sky-300 group-hover:text-white" />
                     </span>
                   </a>
                 </div>
 
-                <p style={montserrat} className="text-[11px] lg:text-[11.5px] uppercase tracking-[0.08em] text-cyan-200/70">
-                  Diagnóstico estratégico em até 24h úteis.
-                </p>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-2 h-[2px] bg-sky-400 opacity-80" />
+                  <p style={montserrat} className="text-[10px] lg:text-[10.5px] 2xl:text-[12px] uppercase tracking-[0.1em] text-cyan-200/60">
+                    Diagnóstico estratégico em até 24h úteis.
+                  </p>
+                </div>
               </motion.div>
             </div>
 
@@ -345,7 +348,8 @@ export default function Home() {
               transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
               className="relative self-stretch w-full overflow-visible pointer-events-none md:pointer-events-auto"
             >
-              <div className="w-full h-full min-h-[480px] overflow-visible">
+              {/* Added horizontal bleed wrapper to prevent WebGL clipping without shifting the center */}
+              <div className="absolute inset-y-0 -left-[30%] w-[160%] min-h-[480px] overflow-visible">
                 <Hero3DWrapper />
               </div>
               <div className="absolute inset-x-0 bottom-0 h-16 lg:h-24 bg-gradient-to-t from-[#000000] to-transparent pointer-events-none" />
