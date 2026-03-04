@@ -107,7 +107,7 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
                 }
             />
 
-            <div className={`w-full h-full absolute inset-0 overflow-visible ${mobileOptimized ? "pointer-events-none" : "pointer-events-auto"}`}>
+            <div className={`w-full h-full absolute inset-0 !overflow-visible ${mobileOptimized ? "pointer-events-none" : "pointer-events-auto"}`}>
                 <Canvas
                     frameloop={shouldAnimate ? "always" : "never"}
                     dpr={dprRange}

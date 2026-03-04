@@ -54,17 +54,18 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
     const visualMediumMode = !visualLowMode && performanceTier === "medium";
     const isCompactDesktop = !mobileOptimized && viewportWidth <= 1100;
     const isNarrowDesktop = !mobileOptimized && viewportWidth <= 1366;
-    const isMidDesktop = !mobileOptimized && viewportWidth > 1366 && viewportWidth <= 1700;
-    const isWideDesktop = !mobileOptimized && viewportWidth > 1700;
-    const desktopScale = mobileOptimized ? 1.05 : isCompactDesktop ? 1.05 : isNarrowDesktop ? 1.15 : isMidDesktop ? 1.3 : 1.45;
+    const isMidDesktop = viewportWidth >= 1440 && viewportWidth < 1600;
+    const isWideDesktop = viewportWidth >= 1600;
+
+    const desktopScale = mobileOptimized ? 1.05 : isCompactDesktop ? 1.15 : isNarrowDesktop ? 1.25 : isMidDesktop ? 1.38 : 1.48;
     // clusterOffsetX coordinates with CLUSTER_CENTER.x = 4.5.
     // Normalized to keep the scene comfortably within the camera frustum at all resolutions.
-    const clusterOffsetX = mobileOptimized ? -4.5 : isCompactDesktop ? -4.0 : isNarrowDesktop ? -3.9 : isMidDesktop ? -3.7 : -3.5;
-    const clusterOffsetY = mobileOptimized ? 0.35 : isCompactDesktop ? 0.55 : isNarrowDesktop ? 0.65 : 0.88;
+    const clusterOffsetX = mobileOptimized ? -4.5 : -4.5;
+    const clusterOffsetY = mobileOptimized ? 0.35 : 1.2;
     const orbitCount = mobileOptimized ? 4 : visualLowMode ? 4 : visualMediumMode ? (isWideDesktop ? 11 : 8) : (isWideDesktop ? 14 : 10);
-    const orbitRadius = mobileOptimized ? 3.4 : isCompactDesktop ? 4.0 : isNarrowDesktop ? 4.4 : isMidDesktop ? 4.6 : 4.8;
+    const orbitRadius = mobileOptimized ? 3.4 : isCompactDesktop ? 4.2 : isNarrowDesktop ? 4.4 : isMidDesktop ? 4.5 : 4.6;
     // Camera Z: increased further to accommodate larger cards and higher position
-    const desktopCameraZ = isCompactDesktop ? 21.5 : isWideDesktop ? 21.0 : isMidDesktop ? 20.5 : 21.0;
+    const desktopCameraZ = 42.0;
 
     const codeLabel = mobileOptimized
         ? {
@@ -87,7 +88,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                 mid: [0.2, 1.74, 0.15] as [number, number, number],
                 end: [0.14, 2.18, 0.15] as [number, number, number],
             },
-            labelScale: isCompactDesktop ? 1.0 : isNarrowDesktop ? 1.08 : 1.15,
+            labelScale: isCompactDesktop ? 1.45 : isNarrowDesktop ? 1.55 : 1.65,
             labelCompact: true,
             labelDistanceFactor: 9.2,
         };
@@ -113,7 +114,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                 mid: [0.48, 1.72, 0.15] as [number, number, number],
                 end: [0.66, 2.12, 0.15] as [number, number, number],
             },
-            labelScale: isCompactDesktop ? 1.0 : isNarrowDesktop ? 1.08 : 1.15,
+            labelScale: isCompactDesktop ? 1.45 : isNarrowDesktop ? 1.55 : 1.65,
             labelCompact: true,
             labelDistanceFactor: 9.2,
         };
@@ -163,7 +164,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                                 ? 17.8
                                 : desktopCameraZ,
                 ]}
-                fov={mobileOptimized ? 27 : 36}
+                fov={mobileOptimized ? 27 : 42}
             />
             <ambientLight intensity={mobileOptimized ? 0.45 : visualLowMode ? 0.42 : visualMediumMode ? 0.46 : 0.5} />
             <spotLight
@@ -208,11 +209,11 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
             >
                 <UICard
                     id="code-card"
-                    position={mobileOptimized ? [-0.14, 0.88, -2.1] : isCompactDesktop ? [-0.72, 0.9, -2.9] : isNarrowDesktop ? [-0.88, 1.0, -3.2] : isMidDesktop ? [-1.1, 1.14, -3.6] : [-1.42, 1.28, -4.0]}
+                    position={mobileOptimized ? [-0.14, 0.88, -2.1] : isCompactDesktop ? [-0.95, 1.15, -3.2] : isNarrowDesktop ? [-1.15, 1.3, -3.5] : isMidDesktop ? [-1.45, 1.5, -4.0] : [-1.85, 1.7, -4.5]}
                     initialRotation={mobileOptimized ? [-0.08, -0.38, 0.06] : [-0.1, -0.48, 0.1]}
                     color="#3b82f6"
                     type="code"
-                    title="Automação Inteligente"
+                    title="SISTEMAS IA"
                     onRef={(r) => {
                         codeCardRef.current = r;
                     }}
@@ -221,7 +222,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     activeCardId={activeCardId}
                     onActiveCardChange={setActiveCardId}
                     reducedMotion={reducedMotion}
-                    baseScale={mobileOptimized ? 1.0 : 1.0 * desktopScale}
+                    baseScale={mobileOptimized ? 1.0 : 1.15 * desktopScale}
                     labelPosition={codeLabel.labelPosition}
                     labelOffset={codeLabel.labelOffset}
                     labelConnector={codeLabel.labelConnector}
@@ -233,11 +234,11 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
 
                 <UICard
                     id="flow-card"
-                    position={mobileOptimized ? [0.84, 0.0, -1.15] : isCompactDesktop ? [0.76, -0.04, -1.18] : isNarrowDesktop ? [1.0, 0.0, -1.28] : isMidDesktop ? [1.44, 0.06, -1.5] : [1.84, 0.12, -1.82]}
+                    position={mobileOptimized ? [0.84, 0.0, -1.15] : isCompactDesktop ? [1.12, -0.04, -1.45] : isNarrowDesktop ? [1.38, 0.0, -1.62] : isMidDesktop ? [1.88, 0.06, -1.95] : [2.35, 0.12, -2.4]}
                     initialRotation={mobileOptimized ? [0.04, 0.22, -0.04] : [0.05, 0.28, -0.05]}
                     color="#22d3ee"
                     type="flow"
-                    title="Conversão Digital"
+                    title="ALTA CONVERSÃO"
                     onRef={(r) => {
                         flowCardRef.current = r;
                     }}
@@ -246,7 +247,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     activeCardId={activeCardId}
                     onActiveCardChange={setActiveCardId}
                     reducedMotion={reducedMotion}
-                    baseScale={mobileOptimized ? 0.98 : 0.88 * desktopScale}
+                    baseScale={mobileOptimized ? 0.98 : 1.05 * desktopScale}
                     labelPosition={flowLabel.labelPosition}
                     labelOffset={flowLabel.labelOffset}
                     labelConnector={flowLabel.labelConnector}
@@ -258,11 +259,11 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
 
                 <UICard
                     id="preview-card"
-                    position={mobileOptimized ? [-1.0, -0.78, 0.96] : isCompactDesktop ? [-0.68, -0.66, 0.82] : isNarrowDesktop ? [-0.8, -0.74, 0.94] : isMidDesktop ? [-1.0, -0.84, 1.14] : [-1.24, -0.96, 1.48]}
-                    initialRotation={mobileOptimized ? [-0.04, -0.08, 0.02] : [-0.05, -0.1, 0.02]}
-                    color="#60a5fa"
+                    position={mobileOptimized ? [-1.3, -1.15, 0.5] : isCompactDesktop ? [-0.65, -1.65, 1.8] : isNarrowDesktop ? [-0.75, -1.85, 2.1] : isMidDesktop ? [-0.95, -2.05, 2.4] : [-1.15, -2.25, 2.85]}
+                    initialRotation={mobileOptimized ? [0.1, 0.34, -0.02] : [0.12, 0.42, -0.04]}
+                    color="#38bdf8"
                     type="preview"
-                    title="Web Design"
+                    title="DESIGN PREMIUM"
                     onRef={(r) => {
                         previewCardRef.current = r;
                     }}
@@ -271,7 +272,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     activeCardId={activeCardId}
                     onActiveCardChange={setActiveCardId}
                     reducedMotion={reducedMotion}
-                    baseScale={mobileOptimized ? 0.96 : 0.84 * desktopScale}
+                    baseScale={mobileOptimized ? 0.96 : 0.88 * desktopScale}
                     labelPosition={previewLabel.labelPosition}
                     labelOffset={previewLabel.labelOffset}
                     labelConnector={previewLabel.labelConnector}

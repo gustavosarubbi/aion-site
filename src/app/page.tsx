@@ -117,13 +117,13 @@ export default function Home() {
       <section id="inicio" className="relative w-full overflow-visible md:h-[100dvh]">
         <div className="absolute inset-x-0 top-[10%] h-[68%] bg-[radial-gradient(ellipse_at_center,rgba(14,165,233,0.08)_0%,rgba(0,0,0,0)_72%)] pointer-events-none z-0" />
 
-        <div className="relative z-10 w-full md:h-full max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative z-10 w-full md:h-full max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
 
           {/* ── MOBILE LAYOUT (< md) ── stacked: text → 3D → buttons */}
-          <div className="md:hidden flex flex-col pt-[calc(var(--header-height,76px)+8px)] min-h-[100dvh]">
+          <div className="md:hidden flex flex-col pt-[calc(var(--header-height,76px)-12px)] min-h-[100dvh]">
 
             {/* Text block: ServiceBar + Headline + Subtitle */}
-            <div className="relative flex flex-col items-center text-center gap-2.5 px-1 pb-1">
+            <div className="relative flex flex-col items-center text-center gap-1.5 px-1 pb-1">
               <div className="absolute -inset-8 bg-gradient-to-r from-blue-500/6 via-cyan-500/3 to-blue-500/5 blur-[58px] -z-10 rounded-full opacity-30 pointer-events-none" />
 
               <motion.div
@@ -167,12 +167,12 @@ export default function Home() {
 
             {/* Buttons + social — below cards */}
             <motion.div
-              className="flex flex-col items-center gap-2 w-full pointer-events-auto pb-8 pt-2"
+              className="flex flex-col items-center gap-6 w-full pointer-events-auto pb-8 pt-2"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.55 }}
             >
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-3">
                 {[
                   {
                     Icon: InstagramLogo,
@@ -234,15 +234,15 @@ export default function Home() {
 
           {/* ── DESKTOP LAYOUT (≥ md) ── side-by-side 2-column grid, full viewport height */}
           <div
-            className="hidden md:grid h-full md:items-center md:gap-x-4 lg:gap-x-8
+            className="hidden md:grid h-full md:items-start md:gap-x-4 lg:gap-x-8
               md:grid-cols-[minmax(0,1fr)_minmax(360px,50%)]
               lg:grid-cols-[minmax(0,1fr)_minmax(480px,54%)]
               xl:grid-cols-[minmax(0,1fr)_minmax(580px,56%)]"
-            style={{ paddingTop: "var(--header-height, 88px)" }}
+            style={{ paddingTop: "calc(var(--header-height, 88px) - 32px)" }}
           >
 
             {/* Left: text content — vertically centered within the grid row */}
-            <div className="relative h-full flex flex-col items-start text-left justify-center gap-3 lg:gap-4">
+            <div className="relative h-full flex flex-col items-start text-left justify-start pt-[7vh] gap-3 lg:gap-4">
               <div className="absolute -inset-8 bg-gradient-to-r from-blue-500/6 via-cyan-500/3 to-blue-500/5 blur-[58px] -z-10 rounded-full opacity-30 pointer-events-none" />
 
               <motion.div
@@ -272,12 +272,12 @@ export default function Home() {
               </motion.div>
 
               <motion.div
-                className="flex flex-col items-start gap-2 w-full pointer-events-auto"
+                className="flex flex-col items-start gap-6 w-full pointer-events-auto"
                 initial={{ opacity: 0, y: 30, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.78 }}
               >
-                <div className="flex items-center gap-2.5">
+                <div className="flex items-center gap-3">
                   {[
                     {
                       Icon: InstagramLogo,

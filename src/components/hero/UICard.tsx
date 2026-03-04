@@ -464,6 +464,7 @@ export const UICard = ({
     );
 };
 
+
 // Pulse orb that travels along a quadratic bezier curve
 function PulseOrb({ start, end, mid, color }: { start: [number, number, number]; end: [number, number, number]; mid: [number, number, number]; color: string }) {
     const ref = useRef<THREE.Mesh>(null!);
@@ -489,13 +490,13 @@ function PulseOrb({ start, end, mid, color }: { start: [number, number, number];
     return (
         <group>
             <mesh ref={ref}>
-                <sphereGeometry args={[0.03, 12, 12]} />
+                <sphereGeometry args={[0.06, 12, 12]} />
                 <meshBasicMaterial color={color} />
-                <pointLight distance={0.6} intensity={1.1} color={color} />
+                <pointLight distance={0.8} intensity={1.5} color={color} />
             </mesh>
             <mesh ref={glowRef}>
-                <sphereGeometry args={[0.09, 12, 12]} />
-                <meshBasicMaterial color={color} transparent opacity={0.18} />
+                <sphereGeometry args={[0.15, 12, 12]} />
+                <meshBasicMaterial color={color} transparent opacity={0.22} />
             </mesh>
         </group>
     );

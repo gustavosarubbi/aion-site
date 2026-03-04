@@ -64,7 +64,7 @@ export function OrbitingProps({
         return [...Array(count)].map((_, i) => ({
             phase: (i / count) * Math.PI * 2 + (seededUnit(i, 1) - 0.5) * 0.5,
             offset: (i / count) * Math.PI * 2 + seededUnit(i, 2) * 0.6,
-            size: 0.08 + seededUnit(i, 3) * 0.10,
+            size: 0.18 + seededUnit(i, 3) * 0.18,
             type: types[i % types.length],
             color: colors[i % colors.length],
             speedMult: 0.3 + (i % 4) * 0.2 + seededUnit(i, 4) * 0.3,

@@ -22,36 +22,33 @@ export function CardFrame({
         if (gridRef.current) {
             gridRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.02;
         }
-        // Pulsating border glow
-        if (borderMatRef.current) {
-            const pulse = 0.22 + Math.sin(state.clock.elapsedTime * 1.5) * 0.18;
-            borderMatRef.current.emissiveIntensity = pulse;
-            borderMatRef.current.opacity = 0.06 + Math.sin(state.clock.elapsedTime * 1.5) * 0.04;
-        }
     });
 
     return (
         <group>
-            {/* Glowing Border Frame */}
-            <group scale={1.002}>
+            {/* Premium Volumetric Glass Border - Sharp & Minimal */}
+            <group scale={1.005}>
+                {/* Main Volumetric Shell */}
                 <RoundedBox args={[3.94, 2.54, 0.13]} radius={0.18} smoothness={reducedDetail ? 8 : 12}>
                     <meshStandardMaterial
                         ref={borderMatRef}
                         color={color}
                         transparent
-                        opacity={0.1}
+                        opacity={0.24}
                         emissive={color}
-                        emissiveIntensity={reducedMotion ? 0.24 : 0.34}
-                        metalness={reducedDetail ? 0.7 : 1}
-                        roughness={reducedDetail ? 0.18 : 0}
+                        emissiveIntensity={0.6}
+                        metalness={1}
+                        roughness={0.1}
                     />
-                    <Edges color={color} threshold={15} />
-                    {!reducedDetail && (
-                        <group scale={1.005}>
-                            <Edges color={color} threshold={10} />
-                        </group>
-                    )}
+                    <Edges color={color} threshold={15} lineWidth={1.8} />
                 </RoundedBox>
+
+                {/* Exterior Light Catching Edge - Razor Thin */}
+                {!reducedDetail && (
+                    <group scale={1.007}>
+                        <Edges color={color} threshold={10} lineWidth={1.0} />
+                    </group>
+                )}
             </group>
 
             {/* Premium Grid Pattern Surface */}
