@@ -51,6 +51,7 @@ export type UICardProps = {
     labelDistanceFactor?: number;
     baseScale?: number;
     qualityTier?: "high" | "medium" | "low";
+    showConnector?: boolean;
 };
 
 export const UICard = ({
@@ -74,6 +75,7 @@ export const UICard = ({
     labelDistanceFactor = 10,
     baseScale = 1,
     qualityTier = "high",
+    showConnector = true,
 }: UICardProps) => {
     const outerRef = useRef<THREE.Group>(null!);
     const innerRef = useRef<THREE.Group>(null!);
@@ -451,25 +453,29 @@ export const UICard = ({
                     </Html>
                 )}
 
-                <QuadraticBezierLine
-                    start={resolvedConnector.start}
-                    end={connectorEnd}
-                    mid={connectorMid}
-                    color={color}
-                    transparent
-                    opacity={0.62}
-                    lineWidth={2.2}
-                    depthTest={false}
-                    renderOrder={120}
-                />
+                {showConnector && (
+                    <>
+                        <QuadraticBezierLine
+                            start={resolvedConnector.start}
+                            end={connectorEnd}
+                            mid={connectorMid}
+                            color={color}
+                            transparent
+                            opacity={0.62}
+                            lineWidth={2.2}
+                            depthTest={false}
+                            renderOrder={120}
+                        />
 
-                {/* Pulse orb traveling along the bezier */}
-                <PulseOrb
-                    start={resolvedConnector.start}
-                    end={connectorEnd}
-                    mid={connectorMid}
-                    color={color}
-                />
+                        {/* Pulse orb traveling along the bezier */}
+                        <PulseOrb
+                            start={resolvedConnector.start}
+                            end={connectorEnd}
+                            mid={connectorMid}
+                            color={color}
+                        />
+                    </>
+                )}
 
 
             </group>
@@ -481,6 +487,7 @@ export const UICard = ({
 // High-intensity "Sparkle" pulse that travels along a curve
 function PulseOrb({ start, end, mid, color }: { start: [number, number, number]; end: [number, number, number]; mid: [number, number, number]; color: string }) {
     const lightRef = useRef<THREE.PointLight>(null!);
+    const secondaryLightRef = useRef<THREE.PointLight>(null!);
     const meshRef = useRef<THREE.Mesh>(null!);
 
     const curve = useMemo(() => {
@@ -504,6 +511,10 @@ function PulseOrb({ start, end, mid, color }: { start: [number, number, number];
             lightRef.current.position.copy(point);
             // High-frequency intensity flicker for a true "sparkle" feel
             lightRef.current.intensity = 4.0 + Math.sin(time * 40) * 2.0;
+        }
+
+        if (secondaryLightRef.current) {
+            secondaryLightRef.current.position.copy(point);
         }
 
         // Random-ish scale jitter to break the "geometric sphere" look
@@ -530,7 +541,7 @@ function PulseOrb({ start, end, mid, color }: { start: [number, number, number];
 
             {/* Subtle secondary light for broader ambiance */}
             <pointLight
-                position={meshRef.current?.position}
+                ref={secondaryLightRef}
                 distance={1.5}
                 intensity={0.5}
                 color={color}

@@ -9,7 +9,7 @@ export default function ServiceStack() {
     ];
 
     return (
-        <section id="services" className="cv-auto relative z-10 w-full py-32 bg-gradient-to-b from-transparent via-[#020510] to-transparent" style={{ containIntrinsicSize: "900px" }}>
+        <section id="services" className="cv-auto relative z-10 w-full py-16 md:py-32 bg-gradient-to-b from-transparent via-[#020510] to-transparent" style={{ containIntrinsicSize: "900px" }}>
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[45%] h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
 
             <div className="max-w-6xl mx-auto px-6">

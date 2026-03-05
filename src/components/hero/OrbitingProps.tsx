@@ -19,6 +19,8 @@ export function OrbitingProps({
     centerOffsetX = 0,
     centerOffsetY = 0,
     zMultiplier = 0.65,
+    sizeMultiplier = 1.0,
+    verticalAmplitude = 2.2,
 }: {
     radius?: number;
     speed?: number;
@@ -27,6 +29,8 @@ export function OrbitingProps({
     centerOffsetX?: number;
     centerOffsetY?: number;
     zMultiplier?: number;
+    sizeMultiplier?: number;
+    verticalAmplitude?: number;
 }) {
     const groupRef = useRef<THREE.Group>(null!);
     const colors = useMemo(() => ["#06b6d4", "#0ea5e9", "#38bdf8", "#3b82f6", "#22d3ee", "#60a5fa"], []);
@@ -85,7 +89,7 @@ export function OrbitingProps({
             const angle = t * p.speedMult + p.phase;
             child.position.x = CLUSTER_CENTER.x + centerOffsetX + Math.cos(angle) * p.orbitRadius;
             child.position.z = CLUSTER_CENTER.z + Math.sin(angle) * p.orbitRadius * zMultiplier;
-            child.position.y = CLUSTER_CENTER.y + centerOffsetY + Math.sin(t * 0.35 + p.offset) * 2.2 * p.vertDir;
+            child.position.y = CLUSTER_CENTER.y + centerOffsetY + Math.sin(t * 0.35 + p.offset) * verticalAmplitude * p.vertDir;
             if (!reducedMotion) {
                 child.rotation.x += 0.012;
                 child.rotation.y += 0.009;
@@ -100,7 +104,7 @@ export function OrbitingProps({
                     key={i}
                     geometry={geometries[p.type as keyof typeof geometries]}
                     material={materials[p.color]}
-                    scale={p.size}
+                    scale={p.size * sizeMultiplier}
                 />
             ))}
         </group>

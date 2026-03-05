@@ -45,7 +45,7 @@ function BentoCard({
 
 export default function CommercialExpertise() {
     return (
-        <section id="services" className="cv-auto relative z-10 w-full py-32" style={{ containIntrinsicSize: "1000px" }}>
+        <section id="services" className="cv-auto relative z-10 w-full py-16 md:py-32" style={{ containIntrinsicSize: "1000px" }}>
             <div className="max-w-6xl mx-auto px-6">
                 <div className="flex flex-col items-center gap-4 text-center mb-20">
                     <span className="text-[10px] font-bold tracking-[0.3em] text-cyan-400 uppercase">

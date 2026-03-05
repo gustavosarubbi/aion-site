@@ -141,7 +141,7 @@ export default function Header() {
                         animate={{ opacity: 1, backdropFilter: "blur(16px)" }}
                         exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
                         transition={{ duration: 0.3 }}
-                        className="fixed inset-0 z-[60] bg-[#020510]/80 flex flex-col pt-24 px-6 pb-6"
+                        className="fixed inset-0 z-[60] bg-[#020510]/80 flex flex-col pt-24 px-6 pb-6 overflow-y-auto"
                     >
                         <button
                             className="absolute top-6 right-6 flex items-center justify-center h-12 w-12 rounded-full bg-white/[0.05] border border-white/[0.05] text-white/80 hover:text-white transition-colors"

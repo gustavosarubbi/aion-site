@@ -11,6 +11,159 @@ type SceneProps = {
 };
 
 type PerformanceTier = "high" | "medium" | "low";
+type Vec3 = [number, number, number];
+type MobileBand = "phone" | "tablet" | "laptop";
+type MobileLayout = {
+    cameraY: number;
+    cameraZ: number;
+    fov: number;
+    cardScaleBoost: number;
+    orbitRadius: number;
+    clusterOffsetY: number;
+    positions: {
+        code: Vec3;
+        flow: Vec3;
+        preview: Vec3;
+    };
+    scaleMultipliers: {
+        code: number;
+        flow: number;
+        preview: number;
+    };
+};
+
+const DESKTOP_MIN_WIDTH = 1280;
+const DESKTOP_BASELINE_WIDTH = 1366;
+const DESKTOP_MAX_WIDTH = 1920;
+const MID_DESKTOP_STANDARD_MAX = 1536;
+const MID_DESKTOP_STANDARD_LOCK = 1378;
+const MID_DESKTOP_START = 1536;
+const MID_DESKTOP_END = 1650;
+
+const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
+const lerp = (start: number, end: number, t: number) => start + (end - start) * t;
+const lerp3 = (a: Vec3, b: Vec3, t: number): Vec3 => [
+    Math.round(lerp(a[0], b[0], t) * 1000) / 1000,
+    Math.round(lerp(a[1], b[1], t) * 1000) / 1000,
+    Math.round(lerp(a[2], b[2], t) * 1000) / 1000,
+];
+
+function getViewportBands(mobileOptimized: boolean, viewportWidth: number) {
+    const isPhoneBand = mobileOptimized && viewportWidth < 768;
+    const isTabletBand = mobileOptimized && viewportWidth >= 768 && viewportWidth < 1024;
+    const isLaptopBand = mobileOptimized && viewportWidth >= 1024;
+
+    return {
+        isPhoneBand,
+        isTabletBand,
+        isLaptopBand,
+        phoneProgress: clamp01((viewportWidth - 320) / 447),
+        tabletProgress: clamp01((viewportWidth - 768) / 255),
+        laptopProgress: clamp01((viewportWidth - 1024) / 255),
+        desktopProgress: mobileOptimized ? 0 : clamp01((viewportWidth - DESKTOP_MIN_WIDTH) / (DESKTOP_MAX_WIDTH - DESKTOP_MIN_WIDTH)),
+    };
+}
+
+function getDesktopAnchors(mobileOptimized: boolean, viewportWidth: number) {
+    const responsiveProgress = clamp01((viewportWidth - DESKTOP_MIN_WIDTH) / (DESKTOP_MAX_WIDTH - DESKTOP_MIN_WIDTH));
+    const desktopAnchorProgress = mobileOptimized ? 0 : clamp01((viewportWidth - DESKTOP_BASELINE_WIDTH) / (DESKTOP_MAX_WIDTH - DESKTOP_BASELINE_WIDTH));
+    const desktopAnchorEase = desktopAnchorProgress * desktopAnchorProgress * (3 - 2 * desktopAnchorProgress);
+    const preAnchorProgress = mobileOptimized ? 0 : clamp01((viewportWidth - DESKTOP_MIN_WIDTH) / (DESKTOP_BASELINE_WIDTH - DESKTOP_MIN_WIDTH));
+
+    const isMidDesktopBand = !mobileOptimized && viewportWidth >= MID_DESKTOP_START && viewportWidth <= MID_DESKTOP_END;
+    const midDesktopProgress = isMidDesktopBand ? clamp01((viewportWidth - MID_DESKTOP_START) / (MID_DESKTOP_END - MID_DESKTOP_START)) : 0;
+    const midDesktopBump = isMidDesktopBand ? Math.sin(Math.PI * midDesktopProgress) : 0;
+
+    const scaleBoost1366 = mobileOptimized
+        ? 0
+        : viewportWidth < DESKTOP_BASELINE_WIDTH
+            ? lerp(0.14, 0.18, preAnchorProgress)
+            : lerp(0.18, 0.0, desktopAnchorEase) + 0.02 * midDesktopBump;
+
+    const cameraPull1366 = mobileOptimized
+        ? 0
+        : viewportWidth < DESKTOP_BASELINE_WIDTH
+            ? lerp(1.6, 2.2, preAnchorProgress)
+            : lerp(2.2, 0.0, desktopAnchorEase) + 0.35 * midDesktopBump;
+
+    const dropBoost1366 = mobileOptimized
+        ? 0
+        : viewportWidth < DESKTOP_BASELINE_WIDTH
+            ? lerp(0.48, 0.58, preAnchorProgress)
+            : lerp(0.58, 0.0, desktopAnchorEase) + 0.08 * midDesktopBump;
+
+    return {
+        responsiveProgress,
+        scaleBoost1366,
+        cameraPull1366,
+        dropBoost1366,
+        premiumLabelFocus1366: mobileOptimized ? 0 : clamp01(1 - Math.abs(viewportWidth - DESKTOP_BASELINE_WIDTH) / 48),
+        desktopLift: lerp(0.45, 0.0, responsiveProgress),
+    };
+}
+
+function getMobileLayout(band: MobileBand, progress: number): MobileLayout {
+    if (band === "laptop") {
+        return {
+            cameraY: lerp(0.16, 0.22, progress),
+            cameraZ: lerp(14.4, 13.9, progress),
+            fov: 33,
+            cardScaleBoost: lerp(1.24, 1.34, progress),
+            orbitRadius: lerp(3.0, 3.35, progress),
+            clusterOffsetY: lerp(0.18, 0.26, progress),
+            positions: {
+                code: [0.0, 0.62, 0.62],
+                flow: [3.95, 0.28, -0.44],
+                preview: [-3.95, 0.24, -0.5],
+            },
+            scaleMultipliers: {
+                code: 1.24,
+                flow: 1.08,
+                preview: 1.08,
+            },
+        };
+    }
+
+    if (band === "tablet") {
+        return {
+            cameraY: lerp(0.12, 0.18, progress),
+            cameraZ: lerp(14.9, 14.4, progress),
+            fov: 32,
+            cardScaleBoost: lerp(1.18, 1.28, progress),
+            orbitRadius: lerp(2.65, 2.95, progress),
+            clusterOffsetY: lerp(0.12, 0.2, progress),
+            positions: {
+                code: [0.0, 0.54, 0.56],
+                flow: [3.6, 0.2, -0.4],
+                preview: [-3.6, 0.16, -0.46],
+            },
+            scaleMultipliers: {
+                code: 1.22,
+                flow: 1.06,
+                preview: 1.06,
+            },
+        };
+    }
+
+    return {
+        cameraY: lerp(0.08, 0.14, progress),
+        cameraZ: lerp(15.2, 14.7, progress),
+        fov: 31,
+        cardScaleBoost: lerp(1.14, 1.22, progress),
+        orbitRadius: lerp(2.35, 2.6, progress),
+        clusterOffsetY: lerp(0.06, 0.14, progress),
+        positions: {
+            code: [0.0, 0.46, 0.5],
+            flow: [3.2, 0.12, -0.32],
+            preview: [-3.2, 0.08, -0.38],
+        },
+        scaleMultipliers: {
+            code: 1.2,
+            flow: 1.04,
+            preview: 1.04,
+        },
+    };
+}
 
 export function Scene({ mobileOptimized = false }: SceneProps) {
     const codeCardRef = useRef<THREE.Group>(null!);
@@ -49,52 +202,97 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
         return () => window.removeEventListener("resize", onResize);
     }, []);
 
-    const desktopProgress = mobileOptimized ? 0 : Math.max(0, Math.min(1, (viewportWidth - 1000) / 920));
+    const normalizedDesktopWidth = !mobileOptimized && viewportWidth >= DESKTOP_MIN_WIDTH && viewportWidth <= MID_DESKTOP_STANDARD_MAX
+        ? MID_DESKTOP_STANDARD_LOCK
+        : viewportWidth;
+
+    const {
+        isPhoneBand,
+        isTabletBand,
+        isLaptopBand,
+        phoneProgress,
+        tabletProgress,
+        laptopProgress,
+        desktopProgress,
+    } = getViewportBands(mobileOptimized, normalizedDesktopWidth);
+
+    const mobileBand: MobileBand = isLaptopBand ? "laptop" : isTabletBand ? "tablet" : "phone";
+    const mobileProgress = mobileBand === "laptop" ? laptopProgress : mobileBand === "tablet" ? tabletProgress : phoneProgress;
+    const mobileLayout = getMobileLayout(mobileBand, mobileProgress);
+
     const reducedMotion = prefersReducedMotion || performanceTier === "low";
-    const visualLowMode = mobileOptimized || reducedMotion;
-    const visualMediumMode = !visualLowMode && performanceTier === "medium";
-    const isWideDesktop = viewportWidth >= 1600;
+    const visualLowMode = reducedMotion || isPhoneBand;
+    const visualMediumMode = !visualLowMode && (performanceTier === "medium" || mobileOptimized);
+    const isWideDesktop = normalizedDesktopWidth >= 1600;
 
-    const lerp = (start: number, end: number, t: number) => start + (end - start) * t;
-    const lerp3 = (a: number[], b: number[], t: number) => [Math.round(lerp(a[0], b[0], t) * 1000) / 1000, Math.round(lerp(a[1], b[1], t) * 1000) / 1000, Math.round(lerp(a[2], b[2], t) * 1000) / 1000] as [number, number, number];
+    const {
+        responsiveProgress,
+        scaleBoost1366,
+        cameraPull1366,
+        dropBoost1366,
+        premiumLabelFocus1366,
+        desktopLift,
+    } = getDesktopAnchors(mobileOptimized, normalizedDesktopWidth);
 
-    // responsiveProgress: 0 at 1366px, 1 at 1920px
-    const responsiveProgress = Math.max(0, Math.min(1, (viewportWidth - 1366) / 554));
-
-    // SCALE: 1.65 (xl) -> 1.48 (2xl/GitHub)
-    const desktopScale = mobileOptimized ? 1.05 : lerp(1.65, 1.85, responsiveProgress);
+    // SCALE: tuned for xl+ while keeping continuity with tablet/laptop stacks
+    const desktopScale = mobileOptimized
+        ? 1.05
+        : lerp(1.62, 1.84, responsiveProgress) * (1 + scaleBoost1366);
 
     // CAMERA: 56.0 (xl) -> 42.0 (2xl/GitHub)
-    const desktopCameraZ = lerp(56.0, 42.0, responsiveProgress);
+    const desktopCameraZ = lerp(56.0, 42.0, responsiveProgress) - cameraPull1366;
 
-    const orbitCount = mobileOptimized ? 4 : visualLowMode ? 4 : visualMediumMode ? (isWideDesktop ? 11 : 8) : (isWideDesktop ? 14 : 10);
-    const orbitRadius = mobileOptimized ? 3.4 : lerp(4.0, 4.6, desktopProgress);
+    const mobileCardScaleBoost = mobileLayout.cardScaleBoost;
 
-    const clusterOffsetX = mobileOptimized ? -4.5 : -4.5;
-    const clusterOffsetY = mobileOptimized ? 0.35 : lerp(1.2, 1.8, responsiveProgress);
+    const orbitCount = mobileOptimized
+        ? isLaptopBand
+            ? 5
+            : isTabletBand
+                ? 4
+                : 3
+        : visualLowMode
+            ? 4
+            : visualMediumMode
+                ? (isWideDesktop ? 11 : 8)
+                : (isWideDesktop ? 14 : 10);
+
+    const orbitRadius = mobileOptimized ? mobileLayout.orbitRadius : lerp(2.8, 3.4, desktopProgress);
+
+    const clusterOffsetX = -4.5;
+    const clusterOffsetY = mobileOptimized
+        ? mobileLayout.clusterOffsetY
+        : lerp(0.0, 0.6, responsiveProgress) + desktopLift - dropBoost1366;
 
     const codeLabel = mobileOptimized
         ? {
             labelPosition: "top" as const,
-            labelOffset: [0.08, 2.05, 0.15] as [number, number, number],
+            labelOffset: isLaptopBand
+                ? [0, 1.62, 0.15] as [number, number, number]
+                : isTabletBand
+                    ? [0, 1.56, 0.15] as [number, number, number]
+                    : [0, 1.48, 0.15] as [number, number, number],
             labelConnector: {
                 start: [0.02, 1.27, 0.15] as [number, number, number],
                 mid: [0.12, 1.66, 0.15] as [number, number, number],
-                end: [0.08, 2.05, 0.15] as [number, number, number],
+                end: isLaptopBand
+                    ? [0.14, 2.2, 0.15] as [number, number, number]
+                    : isTabletBand
+                        ? [0.1, 2.12, 0.15] as [number, number, number]
+                        : [0.08, 2.02, 0.15] as [number, number, number],
             },
-            labelScale: 0.84,
+            labelScale: isLaptopBand ? 0.86 : isTabletBand ? 0.8 : 0.74,
             labelCompact: true,
-            labelDistanceFactor: 8,
+            labelDistanceFactor: isLaptopBand ? 7.4 : isTabletBand ? 7 : 6.6,
         }
         : {
             labelPosition: "right" as const,
-            labelOffset: [2.47, 0.5, 0.15] as [number, number, number],
+            labelOffset: [2.47, 0.45, 0.15] as [number, number, number],
             labelConnector: {
-                start: [2.0, 0.4, 0.15] as [number, number, number],
+                start: [2.0, 0.45, 0.15] as [number, number, number],
                 mid: [2.2, 0.45, 0.15] as [number, number, number],
-                end: [2.47, 0.5, 0.15] as [number, number, number],
+                end: [2.47, 0.45, 0.15] as [number, number, number],
             },
-            labelScale: lerp(1.42, 1.65, desktopProgress),
+            labelScale: lerp(1.75, 1.85, desktopProgress),
             labelCompact: true,
             labelDistanceFactor: 9.2,
         };
@@ -102,25 +300,33 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
     const flowLabel = mobileOptimized
         ? {
             labelPosition: "top" as const,
-            labelOffset: [0.66, 1.95, 0.15] as [number, number, number],
+            labelOffset: isLaptopBand
+                ? [0, 1.6, 0.15] as [number, number, number]
+                : isTabletBand
+                    ? [0, 1.54, 0.15] as [number, number, number]
+                    : [0, 1.46, 0.15] as [number, number, number],
             labelConnector: {
                 start: [0.16, 1.23, 0.15] as [number, number, number],
                 mid: [0.46, 1.62, 0.15] as [number, number, number],
-                end: [0.66, 1.95, 0.15] as [number, number, number],
+                end: isLaptopBand
+                    ? [0.74, 2.12, 0.15] as [number, number, number]
+                    : isTabletBand
+                        ? [0.7, 2.02, 0.15] as [number, number, number]
+                        : [0.66, 1.95, 0.15] as [number, number, number],
             },
-            labelScale: 0.84,
+            labelScale: isLaptopBand ? 0.86 : isTabletBand ? 0.8 : 0.74,
             labelCompact: true,
-            labelDistanceFactor: 8,
+            labelDistanceFactor: isLaptopBand ? 7.4 : isTabletBand ? 7 : 6.6,
         }
         : {
             labelPosition: "bottom" as const,
             labelOffset: [0.0, -1.63, 0.15] as [number, number, number],
             labelConnector: {
                 start: [0.0, -1.29, 0.15] as [number, number, number],
-                mid: [0.15, -1.44, 0.15] as [number, number, number],
+                mid: [0.0, -1.45, 0.15] as [number, number, number],
                 end: [0.0, -1.63, 0.15] as [number, number, number],
             },
-            labelScale: lerp(1.42, 1.65, desktopProgress),
+            labelScale: lerp(1.75, 1.85, desktopProgress),
             labelCompact: true,
             labelDistanceFactor: 9.2,
         };
@@ -128,28 +334,37 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
     const previewLabel = mobileOptimized
         ? {
             labelPosition: "top" as const,
-            labelOffset: [-0.68, 1.9, 0.15] as [number, number, number],
+            labelOffset: isLaptopBand
+                ? [0, 1.52, 0.15] as [number, number, number]
+                : isTabletBand
+                    ? [0, 1.46, 0.15] as [number, number, number]
+                    : [0, 1.38, 0.15] as [number, number, number],
             labelConnector: {
                 start: [-0.06, 1.2, 0.15] as [number, number, number],
                 mid: [-0.36, 1.56, 0.15] as [number, number, number],
-                end: [-0.68, 1.9, 0.15] as [number, number, number],
+                end: isLaptopBand
+                    ? [-0.78, 2.06, 0.15] as [number, number, number]
+                    : isTabletBand
+                        ? [-0.72, 1.98, 0.15] as [number, number, number]
+                        : [-0.68, 1.9, 0.15] as [number, number, number],
             },
-            labelScale: 0.84,
+            labelScale: isLaptopBand ? 0.84 : isTabletBand ? 0.79 : 0.73,
             labelCompact: true,
-            labelDistanceFactor: 8,
+            labelDistanceFactor: isLaptopBand ? 7.2 : isTabletBand ? 6.9 : 6.4,
         }
         : {
-            labelPosition: responsiveProgress < 0.75 ? ("left" as const) : ("top" as const),
-            labelOffset: lerp3([-1.4, 1.9, 0.15], [-1.42, 1.59, 0.15], responsiveProgress),
+            labelPosition: "left" as const,
+            labelOffset: lerp3([-1.54, 1.71, 0.15], [-1.4, 1.6, 0.15], responsiveProgress),
             labelConnector: {
-                start: lerp3([-1.0, 1.45, 0.15], [-1.42, 1.29, 0.15], responsiveProgress),
-                mid: lerp3([-1.1, 1.7, 0.15], [-1.48, 1.44, 0.15], responsiveProgress),
-                end: lerp3([-1.4, 1.9, 0.15], [-1.42, 1.59, 0.15], responsiveProgress),
+                start: lerp3([-1.22, 1.27, 0.15], [-1.42, 1.33, 0.15], responsiveProgress),
+                mid: lerp3([-1.38, 1.5, 0.15], [-1.42, 1.5, 0.15], responsiveProgress),
+                end: lerp3([-1.54, 1.71, 0.15], [-1.4, 1.6, 0.15], responsiveProgress),
             },
-            labelScale: lerp(0.9, 1.15, desktopProgress),
+            labelScale: lerp(0.9, 1.35, desktopProgress),
             labelCompact: true,
             labelDistanceFactor: 9.2,
         };
+    const premiumLabelScale = previewLabel.labelScale * (1 + 0.18 * premiumLabelFocus1366);
 
     return (
         <>
@@ -157,53 +372,65 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                 makeDefault
                 position={[
                     0,
-                    mobileOptimized ? 0.1 : 0,
                     mobileOptimized
-                        ? visualLowMode
-                            ? 15.2
-                            : visualMediumMode
-                                ? 14.8
-                                : 14.4
+                        ? mobileLayout.cameraY
+                        : 0,
+                    mobileOptimized
+                        ? mobileLayout.cameraZ
                         : visualLowMode
                             ? 18.4
                             : visualMediumMode
                                 ? 17.8
                                 : desktopCameraZ,
                 ]}
-                fov={mobileOptimized ? 27 : 44}
+                fov={mobileOptimized ? mobileLayout.fov : 44}
             />
-            <ambientLight intensity={mobileOptimized ? 0.45 : visualLowMode ? 0.42 : visualMediumMode ? 0.46 : 0.5} />
+            <ambientLight intensity={mobileOptimized ? (isLaptopBand ? 0.48 : isTabletBand ? 0.45 : 0.42) : visualLowMode ? 0.42 : visualMediumMode ? 0.46 : 0.5} />
             <spotLight
                 position={[10, 10, 10]}
                 angle={0.15}
                 penumbra={1}
-                intensity={mobileOptimized ? 0.68 : visualLowMode ? 0.72 : visualMediumMode ? 0.86 : 1}
+                intensity={mobileOptimized ? (isLaptopBand ? 0.72 : isTabletBand ? 0.67 : 0.62) : visualLowMode ? 0.72 : visualMediumMode ? 0.86 : 1}
                 color="#06b6d4"
             />
             <pointLight
                 position={[-10, -5, -10]}
-                intensity={mobileOptimized ? 0.26 : visualLowMode ? 0.3 : visualMediumMode ? 0.4 : 0.5}
+                intensity={mobileOptimized ? (isLaptopBand ? 0.27 : isTabletBand ? 0.24 : 0.2) : visualLowMode ? 0.3 : visualMediumMode ? 0.4 : 0.5}
                 color="#3b82f6"
             />
             {!visualLowMode && !visualMediumMode && <Environment preset="night" />}
             <Stars
                 radius={100}
                 depth={50}
-                count={mobileOptimized ? 44 : visualLowMode ? 64 : visualMediumMode ? 140 : 240}
-                factor={mobileOptimized ? 1.5 : visualLowMode ? 1.8 : visualMediumMode ? 2.8 : 3.6}
+                count={
+                    mobileOptimized
+                        ? isLaptopBand
+                            ? 56
+                            : isTabletBand
+                                ? 42
+                                : 28
+                        : visualLowMode
+                            ? 64
+                            : visualMediumMode
+                                ? 140
+                                : 240
+                }
+                factor={mobileOptimized ? (isLaptopBand ? 1.8 : isTabletBand ? 1.55 : 1.3) : visualLowMode ? 1.8 : visualMediumMode ? 2.8 : 3.6}
                 saturation={0}
                 fade
-                speed={mobileOptimized ? 0.008 : visualLowMode ? 0.01 : visualMediumMode ? 0.02 : 0.04}
+                speed={mobileOptimized ? (isLaptopBand ? 0.011 : isTabletBand ? 0.009 : 0.007) : visualLowMode ? 0.01 : visualMediumMode ? 0.02 : 0.04}
             />
 
             <OrbitingProps
                 count={orbitCount}
-                radius={mobileOptimized ? 3.4 : lerp(4.4, 5.8, desktopProgress)}
-                speed={mobileOptimized ? 0.05 : visualLowMode ? 0.06 : visualMediumMode ? 0.1 : 0.14}
+                radius={mobileOptimized ? orbitRadius : lerp(4.5, 5.2, desktopProgress)}
+                speed={mobileOptimized ? (isLaptopBand ? 0.066 : isTabletBand ? 0.054 : 0.042) : visualLowMode ? 0.06 : visualMediumMode ? 0.1 : 0.14}
                 reducedMotion={visualLowMode}
                 centerOffsetX={clusterOffsetX}
                 centerOffsetY={clusterOffsetY}
-                zMultiplier={1.5}
+                zMultiplier={mobileOptimized ? 0.95 : 1.5}
+                sizeMultiplier={mobileOptimized ? (isLaptopBand ? 0.95 : isTabletBand ? 1 : 1.08) : lerp(1.8, 1.0, desktopProgress)}
+                verticalAmplitude={mobileOptimized ? (isLaptopBand ? 1.1 : isTabletBand ? 0.95 : 0.82) : 1.6}
             />
 
             <group
@@ -216,20 +443,24 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
             >
                 <UICard
                     id="code-card"
-                    position={mobileOptimized ? [-0.14, 0.88, -2.1] : lerp3([-3.8, 2.7, -7.5], [-2.4, 2.8, -4.5], responsiveProgress)}
-                    initialRotation={mobileOptimized ? [-0.08, -0.38, 0.06] : [-0.1, -0.48, 0.1]}
+                    position={
+                        mobileOptimized
+                            ? mobileLayout.positions.code
+                            : lerp3([-3.8, 2.7, -7.5], [-2.4, 2.8, -4.5], responsiveProgress)
+                    }
+                    initialRotation={mobileOptimized ? [0.02, -0.22, 0.05] : [-0.1, -0.48, 0.1]}
                     color="#3b82f6"
                     type="code"
                     title="SISTEMAS IA"
                     onRef={(r) => {
                         codeCardRef.current = r;
                     }}
-                    speed={mobileOptimized ? 0.1 : 0.14}
+                    speed={mobileOptimized ? 0.075 : 0.14}
                     delay={1}
                     activeCardId={activeCardId}
                     onActiveCardChange={setActiveCardId}
                     reducedMotion={reducedMotion}
-                    baseScale={mobileOptimized ? 1.0 : lerp(1.50, 1.15, responsiveProgress) * desktopScale}
+                    baseScale={mobileOptimized ? mobileLayout.scaleMultipliers.code * mobileCardScaleBoost : lerp(1.50, 1.15, responsiveProgress) * desktopScale}
                     labelPosition={codeLabel.labelPosition}
                     labelOffset={codeLabel.labelOffset}
                     labelConnector={codeLabel.labelConnector}
@@ -237,24 +468,29 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     labelCompact={codeLabel.labelCompact}
                     labelDistanceFactor={codeLabel.labelDistanceFactor}
                     qualityTier={performanceTier}
+                    showConnector={!mobileOptimized}
                 />
 
                 <UICard
                     id="flow-card"
-                    position={mobileOptimized ? [0.84, 0.0, -1.15] : lerp3([4.2, 0.8, -4.5], [3.15, 0.12, -2.4], responsiveProgress)}
-                    initialRotation={mobileOptimized ? [0.04, 0.22, -0.04] : [0.05, 0.28, -0.05]}
+                    position={
+                        mobileOptimized
+                            ? mobileLayout.positions.flow
+                            : lerp3([4.2, 0.8, -4.5], [2.9, 0.12, -2.4], responsiveProgress)
+                    }
+                    initialRotation={mobileOptimized ? [0.03, 0.18, -0.03] : [0.05, 0.28, -0.05]}
                     color="#22d3ee"
                     type="flow"
                     title="ALTA CONVERSÃO"
                     onRef={(r) => {
                         flowCardRef.current = r;
                     }}
-                    speed={mobileOptimized ? 0.1 : 0.16}
+                    speed={mobileOptimized ? 0.078 : 0.16}
                     delay={2}
                     activeCardId={activeCardId}
                     onActiveCardChange={setActiveCardId}
                     reducedMotion={reducedMotion}
-                    baseScale={mobileOptimized ? 0.98 : lerp(1.15, 1.05, responsiveProgress) * desktopScale}
+                    baseScale={mobileOptimized ? mobileLayout.scaleMultipliers.flow * mobileCardScaleBoost : lerp(1.15, 1.15, responsiveProgress) * desktopScale}
                     labelPosition={flowLabel.labelPosition}
                     labelOffset={flowLabel.labelOffset}
                     labelConnector={flowLabel.labelConnector}
@@ -262,31 +498,37 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     labelCompact={flowLabel.labelCompact}
                     labelDistanceFactor={flowLabel.labelDistanceFactor}
                     qualityTier={performanceTier}
+                    showConnector={!mobileOptimized}
                 />
 
                 <UICard
                     id="preview-card"
-                    position={mobileOptimized ? [-1.3, -1.15, 0.5] : lerp3([-0.6, -2.8, 3.5], [-1.15, -2.5, 2.85], responsiveProgress)}
-                    initialRotation={mobileOptimized ? [0.1, 0.34, -0.02] : [0.12, 0.42, -0.04]}
+                    position={
+                        mobileOptimized
+                            ? mobileLayout.positions.preview
+                            : lerp3([-0.6, -2.8, 3.5], [-1.15, -2.5, 2.85], responsiveProgress)
+                    }
+                    initialRotation={mobileOptimized ? [0.06, 0.04, -0.01] : [0.12, 0.42, -0.04]}
                     color="#38bdf8"
                     type="preview"
                     title="DESIGN PREMIUM"
                     onRef={(r) => {
                         previewCardRef.current = r;
                     }}
-                    speed={mobileOptimized ? 0.08 : 0.12}
+                    speed={mobileOptimized ? 0.06 : 0.12}
                     delay={0}
                     activeCardId={activeCardId}
                     onActiveCardChange={setActiveCardId}
                     reducedMotion={reducedMotion}
-                    baseScale={mobileOptimized ? 0.96 : lerp(0.90, 0.88, responsiveProgress) * desktopScale}
+                    baseScale={mobileOptimized ? mobileLayout.scaleMultipliers.preview * mobileCardScaleBoost : lerp(0.90, 0.88, responsiveProgress) * desktopScale}
                     labelPosition={previewLabel.labelPosition}
                     labelOffset={previewLabel.labelOffset}
                     labelConnector={previewLabel.labelConnector}
-                    labelScale={previewLabel.labelScale}
+                    labelScale={premiumLabelScale}
                     labelCompact={previewLabel.labelCompact}
                     labelDistanceFactor={previewLabel.labelDistanceFactor}
                     qualityTier={performanceTier}
+                    showConnector={!mobileOptimized}
                 />
             </group>
         </>

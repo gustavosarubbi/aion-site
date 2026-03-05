@@ -53,6 +53,7 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
     }, []);
 
     const shouldAnimate = isTabVisible && isInView;
+    const mobileBand = viewportWidth < 768 ? "phone" : viewportWidth < 1024 ? "tablet" : viewportWidth < 1280 ? "laptop" : "desktop";
 
     const dprRange = useMemo<[number, number]>(() => {
         if (typeof navigator === "undefined") {
@@ -64,10 +65,16 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
         const lowEnd = cores <= 4 || memory <= 4;
         const midTier = !lowEnd && (cores <= 8 || memory <= 8);
 
-        if (mobileOptimized || lowEnd) return [0.6, 0.9];
+        if (mobileOptimized) {
+            if (mobileBand === "laptop") return lowEnd ? [0.65, 0.9] : [0.72, 1.05];
+            if (mobileBand === "tablet") return lowEnd ? [0.62, 0.86] : [0.68, 0.96];
+            return [0.6, 0.9];
+        }
+
+        if (lowEnd) return [0.65, 0.95];
         if (midTier) return [0.75, 1.05];
         return [0.9, 1.25];
-    }, [mobileOptimized]);
+    }, [mobileBand, mobileOptimized]);
 
     const desktopGlow = useMemo(() => {
         if (viewportWidth <= 1366) {
@@ -93,7 +100,11 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
             <div
                 className={
                     mobileOptimized
-                        ? "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[220px] h-[220px] bg-cyan-500/8 rounded-full blur-[64px] pointer-events-none"
+                        ? mobileBand === "laptop"
+                            ? "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[340px] max-w-[100vw] h-[340px] bg-cyan-500/10 rounded-full blur-[86px] pointer-events-none"
+                            : mobileBand === "tablet"
+                                ? "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[285px] max-w-[100vw] h-[285px] bg-cyan-500/9 rounded-full blur-[74px] pointer-events-none"
+                                : "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[220px] max-w-[100vw] h-[220px] bg-cyan-500/8 rounded-full blur-[64px] pointer-events-none"
                         : `absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none ${desktopGlow.opacity} ${desktopGlow.blur}`
                 }
                 style={
@@ -112,12 +123,12 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
                     frameloop={shouldAnimate ? "always" : "never"}
                     dpr={dprRange}
                     gl={{
-                        antialias: !mobileOptimized && dprRange[1] >= 1.15,
+                        antialias: (!mobileOptimized && dprRange[1] >= 1.15) || (mobileOptimized && mobileBand === "laptop" && dprRange[1] >= 1),
                         alpha: true,
                         powerPreference: "default",
                         stencil: false,
                     }}
-                    performance={{ min: mobileOptimized ? 0.35 : 0.5 }}
+                    performance={{ min: mobileOptimized ? (mobileBand === "laptop" ? 0.45 : mobileBand === "tablet" ? 0.4 : 0.35) : 0.5 }}
                     camera={{ near: 0.1, far: 90 }}
                     style={{ background: "transparent", overflow: "visible" }}
                 >

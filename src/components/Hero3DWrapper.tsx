@@ -9,7 +9,7 @@ type Hero3DVizProps = {
 
 const Hero3DViz = dynamic<Hero3DVizProps>(() => import("@/components/Hero3DViz"), {
     ssr: false,
-    loading: () => <div className="w-full h-full min-h-[480px]" />,
+    loading: () => <div className="w-full h-full min-h-[300px] min-[1366px]:min-h-[480px]" />,
 });
 
 export default function Hero3DWrapper() {
@@ -20,7 +20,7 @@ export default function Hero3DWrapper() {
     useEffect(() => {
         if (typeof window === "undefined") return;
 
-        const media = window.matchMedia("(max-width: 767px)");
+        const media = window.matchMedia("(max-width: 1279px)");
         const onChange = () => setIsMobileViewport(media.matches);
 
         onChange();
@@ -101,26 +101,26 @@ export default function Hero3DWrapper() {
     return (
         <>
             {/* Desktop: fills full column height, overflow-visible so labels/orbs never get clipped */}
-            <div className="hidden md:block w-full h-full overflow-visible">
+            <div className="hidden min-[1280px]:block w-full h-full overflow-visible">
                 {allow3D && shouldMount3D ? (
                     <Hero3DViz quality="desktop" />
                 ) : (
                     <div className="relative w-full h-full overflow-visible">
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_62%_42%,rgba(56,189,248,0.12),transparent_48%)]" />
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_68%,rgba(59,130,246,0.09),transparent_54%)]" />
-                        <div className="absolute left-[58%] top-[45%] w-[320px] h-[320px] rounded-full border border-cyan-300/10 blur-[1px]" />
+                        <div className="absolute left-[58%] top-[45%] w-[320px] max-w-[100vw] h-[320px] rounded-full border border-cyan-300/10 blur-[1px]" />
                     </div>
                 )}
             </div>
 
-            <div className="md:hidden relative w-full h-full pointer-events-none">
+            <div className="min-[1280px]:hidden relative w-full h-full pointer-events-none">
                 {allow3D && shouldMount3D ? (
                     <Hero3DViz quality="mobile" />
                 ) : (
                     <>
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_62%_42%,rgba(56,189,248,0.11),transparent_52%)]" />
                         <div className="absolute inset-0 bg-[radial-gradient(circle_at_34%_68%,rgba(59,130,246,0.09),transparent_56%)]" />
-                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[220px] h-[220px] rounded-full border border-cyan-300/12 blur-[1px]" />
+                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[220px] max-w-[100vw] h-[220px] rounded-full border border-cyan-300/12 blur-[1px]" />
                     </>
                 )}
             </div>

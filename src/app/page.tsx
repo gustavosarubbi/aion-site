@@ -18,7 +18,7 @@ const Squares = dynamic(() => import("@/components/Squares"), {
 });
 
 const Hero3DWrapper = dynamic(() => import("@/components/Hero3DWrapper"), {
-  loading: () => <div className="w-full h-[260px] sm:h-[320px] md:h-[390px] lg:h-[560px]" />,
+  loading: () => <div className="w-full h-[240px] sm:h-[290px] md:h-[340px] min-[1280px]:h-[560px]" />,
 });
 
 // Montserrat font class applied consistently
@@ -48,12 +48,20 @@ const serviceItems = [
   },
 ] as const;
 
+const HERO_SECTION_CLASS = "relative w-full overflow-x-clip overflow-y-visible min-[1280px]:min-h-[min(85dvh,780px)]";
+const HERO_SHELL_CLASS = "relative z-10 w-full min-[1280px]:h-full max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 lg:pl-32 min-[1280px]:pl-44 2xl:pl-44 min-[1600px]:!pl-9 overflow-visible";
+const HERO_DESKTOP_GRID_CLASS = "hidden min-[1280px]:grid h-full min-[1280px]:items-start min-[1280px]:gap-x-8 min-[1280px]:grid-cols-[minmax(0,1fr)_minmax(520px,54%)] 2xl:grid-cols-[minmax(0,1fr)_minmax(580px,56%)]";
+const HERO_DESKTOP_LEFT_CLASS = "relative h-full flex flex-col items-start text-left justify-start pt-[7vh] pb-12 min-[1280px]:pb-20 gap-3 lg:gap-4 transform-gpu min-[1280px]:max-[1599px]:pt-[9vh] min-[1280px]:max-[1599px]:translate-y-6 min-[1600px]:pt-[10vh] min-[1600px]:gap-7 min-[1600px]:-translate-x-1";
+const HERO_DESKTOP_ACTIONS_CLASS = "relative z-10 flex flex-col items-start gap-5 w-full pointer-events-auto min-[1280px]:mt-[16px] min-[1601px]:mt-[8px] min-[1601px]:ml-0";
+const HERO_DESKTOP_RIGHT_CLASS = "relative z-20 self-stretch w-full overflow-visible pointer-events-none min-[1280px]:pointer-events-auto";
+const HERO_DESKTOP_BLEED_CLASS = "absolute inset-y-0 left-1/2 -translate-x-1/2 w-[128%] max-w-[100vw] 2xl:w-[136%] min-h-[480px] overflow-visible";
+
 function HeroSubtitle() {
   return (
     <div className="flex flex-col">
       <p
         style={montserrat}
-        className="text-white/82 text-[15px] sm:text-[16px] lg:text-[17px] 2xl:text-[18px] leading-[1.55] font-medium max-w-[42ch] tracking-tight"
+        className="text-white/84 text-[15.5px] sm:text-[16.5px] lg:text-[17px] 2xl:text-[18px] leading-[1.46] font-medium max-w-[40ch] sm:max-w-[42ch] tracking-tight [text-wrap:balance]"
       >
         Potencializamos sua escala digital com ecossistemas de alta performance:
         <span className="text-cyan-300 font-bold"> Sites magnéticos</span>,
@@ -66,23 +74,23 @@ function HeroSubtitle() {
 
 function ServiceBar() {
   return (
-    <div className="flex flex-wrap items-center justify-center lg:justify-start gap-y-1 overflow-visible">
+    <div className="flex flex-wrap items-center justify-center min-[1280px]:justify-start gap-y-1 overflow-visible max-w-full">
       {serviceItems.map(({ icon: Icon, label, color, halo }, i) => (
         <div key={i} className="flex items-center">
-          <div className="flex items-center gap-1.5 sm:gap-2.5 py-1.5 cursor-default px-1.5 sm:px-2.5 lg:first:pl-0 last:pr-0">
-            <span className="relative inline-flex h-8 w-8 items-center justify-center rounded-full">
+          <div className="flex items-center gap-1 sm:gap-2.5 py-1.5 cursor-default px-0.5 sm:px-2.5 min-[1280px]:first:pl-0 last:pr-0">
+            <span className="relative inline-flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full">
               <span className={`absolute inset-0 rounded-full ${halo} blur-sm opacity-45`} />
-              <Icon size={18} weight="duotone" className={color} />
+              <Icon size={15} weight="duotone" className={color} />
             </span>
             <span
               style={montserrat}
-              className={`text-[10px] sm:text-[11px] xl:text-[11.5px] 2xl:text-[12px] font-extrabold tracking-[0.1em] xl:tracking-[0.11em] 2xl:tracking-[0.12em] ${color} uppercase whitespace-nowrap`}
+              className={`text-[9px] min-[361px]:text-[10px] sm:text-[11px] min-[1280px]:text-[11.5px] 2xl:text-[12px] font-extrabold tracking-[0.07em] sm:tracking-[0.1em] min-[1280px]:tracking-[0.11em] ${color} uppercase whitespace-nowrap`}
             >
               {label}
             </span>
           </div>
           {i !== serviceItems.length - 1 && (
-            <div className="hidden sm:block h-4 w-px bg-white/35 self-center mx-1.5 sm:mx-2" />
+            <div className="hidden sm:block h-3 sm:h-4 w-px bg-white/20 self-center mx-1 sm:mx-2" />
           )}
         </div>
       ))}
@@ -114,16 +122,16 @@ export default function Home() {
       <div className="fixed bottom-[12%] right-[10%] w-[28vw] h-[28vw] rounded-full bg-cyan-500/5 blur-[76px] pointer-events-none mix-blend-screen z-0" />
       <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,transparent_0%,#000000_100%)]" />
 
-      <section id="inicio" className="relative w-full overflow-visible md:h-[100dvh]">
+      <section id="inicio" className={HERO_SECTION_CLASS}>
         <div className="absolute inset-x-0 top-[10%] h-[68%] bg-[radial-gradient(ellipse_at_center,rgba(14,165,233,0.08)_0%,rgba(0,0,0,0)_72%)] pointer-events-none z-0" />
 
-        <div className="relative z-10 w-full md:h-full max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 lg:pl-32 xl:pl-44 2xl:pl-8 overflow-visible">
+        <div className={HERO_SHELL_CLASS}>
 
           {/* ── MOBILE LAYOUT (< md) ── stacked: text → 3D → buttons */}
-          <div className="md:hidden flex flex-col pt-[calc(var(--header-height,76px)-12px)] min-h-[100dvh]">
+          <div className="min-[1280px]:hidden flex flex-col pt-[calc(var(--header-height,76px)-12px)] pb-6">
 
             {/* Text block: ServiceBar + Headline + Subtitle */}
-            <div className="relative flex flex-col items-center text-center gap-1.5 px-1 pb-1">
+            <div className="relative flex flex-col items-center text-center gap-1.5 px-1 pb-0.5">
               <div className="absolute -inset-8 bg-gradient-to-r from-blue-500/6 via-cyan-500/3 to-blue-500/5 blur-[58px] -z-10 rounded-full opacity-30 pointer-events-none" />
 
               <motion.div
@@ -144,7 +152,7 @@ export default function Home() {
               </motion.div>
 
               <motion.div
-                className="w-full max-w-[34ch] px-1"
+                className="w-full max-w-[38ch] sm:max-w-[40ch] px-2 mt-2 sm:mt-2.5"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.42 }}
@@ -159,7 +167,7 @@ export default function Home() {
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
               className="relative overflow-visible pointer-events-none"
-              style={{ width: "calc(100% + 2rem)", marginLeft: "-1rem", height: "clamp(300px, 60vw, 440px)" }}
+              style={{ width: "calc(100% + 2rem)", marginLeft: "-1rem", height: "clamp(340px, 82vw, 640px)" }}
             >
               <Hero3DWrapper />
               <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#000000] to-transparent pointer-events-none" />
@@ -167,7 +175,7 @@ export default function Home() {
 
             {/* Buttons + social — below cards */}
             <motion.div
-              className="flex flex-col items-center gap-6 w-full pointer-events-auto pb-8 pt-2"
+              className="flex flex-col items-center gap-4 sm:gap-6 w-full pointer-events-auto pb-6 pt-3"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.55 }}
@@ -211,15 +219,15 @@ export default function Home() {
                 ))}
               </div>
 
-              <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:gap-2 sm:justify-center">
-                <ActionNode />
+              <div className="flex w-full max-w-[420px] flex-col gap-2.5 sm:gap-3">
+                <ActionNode compact />
                 <a
                   href="#services"
-                  className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-3 h-[48px] px-6 rounded-2xl bg-sky-500/10 backdrop-blur-xl border border-sky-400/20 text-[13px] font-semibold text-white transition-all duration-500 hover:bg-sky-500/15 hover:border-sky-400/35 active:scale-[0.98] pointer-events-auto shadow-[0_0_14px_rgba(56,189,248,0.06)] overflow-hidden"
+                  className="group relative w-full inline-flex items-center justify-center gap-2.5 h-[44px] px-5 rounded-2xl bg-sky-500/10 backdrop-blur-xl border border-sky-400/20 text-[12px] font-semibold text-white transition-all duration-500 hover:bg-sky-500/15 hover:border-sky-400/35 active:scale-[0.98] pointer-events-auto shadow-[0_0_14px_rgba(56,189,248,0.06)] overflow-hidden"
                   style={montserrat}
                 >
                   <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
-                  <span className="relative z-10 flex items-center gap-2.5 uppercase tracking-[0.14em]">
+                  <span className="relative z-10 flex items-center gap-2 uppercase tracking-[0.1em]">
                     Ver soluções
                     <ArrowRight size={16} weight="bold" className="text-sky-300" />
                   </span>
@@ -233,19 +241,14 @@ export default function Home() {
           </div>
 
           {/* ── DESKTOP LAYOUT (≥ md) ── side-by-side 2-column grid, full viewport height */}
-          <div
-            className="hidden md:grid h-full md:items-start md:gap-x-4 lg:gap-x-8
-              md:grid-cols-[minmax(0,1fr)_minmax(360px,50%)]
-              lg:grid-cols-[minmax(0,1fr)_minmax(480px,54%)]
-              xl:grid-cols-[minmax(0,1fr)_minmax(580px,56%)]"
-            style={{ paddingTop: "calc(var(--header-height, 88px) - 32px)" }}
-          >
+          <div className={HERO_DESKTOP_GRID_CLASS} style={{ paddingTop: "calc(var(--header-height, 88px) - 32px)" }}>
 
             {/* Left: text content — vertically centered within the grid row */}
-            <div className="relative h-full flex flex-col items-start text-left justify-start pt-[7vh] 2xl:pt-[10vh] gap-3 lg:gap-4 2xl:gap-7">
+            <div className={HERO_DESKTOP_LEFT_CLASS}>
               <div className="absolute -inset-8 bg-gradient-to-r from-blue-500/6 via-cyan-500/3 to-blue-500/5 blur-[58px] -z-10 rounded-full opacity-30 pointer-events-none" />
 
               <motion.div
+                className="relative z-30"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
@@ -254,7 +257,7 @@ export default function Home() {
               </motion.div>
 
               <motion.div
-                className="relative z-10 w-full"
+                className="relative z-30 w-full"
                 initial={{ opacity: 0, x: -40 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
@@ -263,7 +266,7 @@ export default function Home() {
               </motion.div>
 
               <motion.div
-                className="w-full max-w-[42ch]"
+                className="relative z-30 w-full max-w-[42ch]"
                 initial={{ opacity: 0, x: 40 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
@@ -272,7 +275,7 @@ export default function Home() {
               </motion.div>
 
               <motion.div
-                className="flex flex-col items-start gap-4 lg:gap-5 2xl:gap-8 w-full pointer-events-auto"
+                className={HERO_DESKTOP_ACTIONS_CLASS}
                 initial={{ opacity: 0, y: 30, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.78 }}
@@ -316,7 +319,7 @@ export default function Home() {
                   ))}
                 </div>
 
-                <div className="flex items-center gap-3 lg:gap-4 pointer-events-auto">
+                <div className="flex items-center gap-4 pointer-events-auto">
                   <ActionNode />
                   <a
                     href="#services"
@@ -346,10 +349,10 @@ export default function Home() {
               initial={{ opacity: 0, scale: 1.04, filter: "blur(10px)" }}
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-              className="relative self-stretch w-full overflow-visible pointer-events-none md:pointer-events-auto"
+              className={HERO_DESKTOP_RIGHT_CLASS}
             >
               {/* Added horizontal bleed wrapper to prevent WebGL clipping without shifting the center */}
-              <div className="absolute inset-y-0 -left-[30%] w-[160%] min-h-[480px] overflow-visible">
+              <div className={HERO_DESKTOP_BLEED_CLASS}>
                 <Hero3DWrapper />
               </div>
               <div className="absolute inset-x-0 bottom-0 h-16 lg:h-24 bg-gradient-to-t from-[#000000] to-transparent pointer-events-none" />
