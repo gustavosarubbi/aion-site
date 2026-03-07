@@ -39,6 +39,7 @@ const MID_DESKTOP_STANDARD_MAX = 1536;
 const MID_DESKTOP_STANDARD_LOCK = 1378;
 const MID_DESKTOP_START = 1536;
 const MID_DESKTOP_END = 1650;
+const CODE_CARD_DESKTOP_ANCHOR_WIDTH = MID_DESKTOP_STANDARD_LOCK;
 
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
 const lerp = (start: number, end: number, t: number) => start + (end - start) * t;
@@ -113,8 +114,8 @@ function getMobileLayout(band: MobileBand, progress: number): MobileLayout {
             clusterOffsetY: lerp(0.18, 0.26, progress),
             positions: {
                 code: [0.0, 0.62, 0.62],
-                flow: [3.95, 0.28, -0.44],
-                preview: [-3.95, 0.24, -0.5],
+                flow: [4.4, 0.28, -0.44],
+                preview: [-4.4, 0.24, -0.5],
             },
             scaleMultipliers: {
                 code: 1.24,
@@ -134,8 +135,8 @@ function getMobileLayout(band: MobileBand, progress: number): MobileLayout {
             clusterOffsetY: lerp(0.12, 0.2, progress),
             positions: {
                 code: [0.0, 0.54, 0.56],
-                flow: [3.6, 0.2, -0.4],
-                preview: [-3.6, 0.16, -0.46],
+                flow: [4.1, 0.2, -0.4],
+                preview: [-4.1, 0.16, -0.46],
             },
             scaleMultipliers: {
                 code: 1.22,
@@ -154,8 +155,8 @@ function getMobileLayout(band: MobileBand, progress: number): MobileLayout {
         clusterOffsetY: lerp(0.06, 0.14, progress),
         positions: {
             code: [0.0, 0.46, 0.5],
-            flow: [3.2, 0.12, -0.32],
-            preview: [-3.2, 0.08, -0.38],
+            flow: [3.5, 0.12, -0.32],
+            preview: [-3.5, 0.08, -0.38],
         },
         scaleMultipliers: {
             code: 1.2,
@@ -234,10 +235,21 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
         desktopLift,
     } = getDesktopAnchors(mobileOptimized, normalizedDesktopWidth);
 
+    const codeCardAnchor = getDesktopAnchors(false, CODE_CARD_DESKTOP_ANCHOR_WIDTH);
+
     // SCALE: tuned for xl+ while keeping continuity with tablet/laptop stacks
     const desktopScale = mobileOptimized
         ? 1.05
         : lerp(1.62, 1.84, responsiveProgress) * (1 + scaleBoost1366);
+
+    const codeCardDesktopScale = lerp(1.50, 1.15, codeCardAnchor.responsiveProgress)
+        * (lerp(1.62, 1.84, codeCardAnchor.responsiveProgress) * (1 + codeCardAnchor.scaleBoost1366))
+        * lerp(1.0, 0.85, codeCardAnchor.responsiveProgress);
+
+    const codeCardDesktopPosition = (() => {
+        const [x, , z] = lerp3([-3.8, 2.7, -7.5], [-2.4, 2.8, -4.5], responsiveProgress);
+        return [x, Math.round(lerp(2.7, 2.8, codeCardAnchor.responsiveProgress) * 1000) / 1000, z] as Vec3;
+    })();
 
     // CAMERA: 56.0 (xl) -> 42.0 (2xl/GitHub)
     const desktopCameraZ = lerp(56.0, 42.0, responsiveProgress) - cameraPull1366;
@@ -446,7 +458,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     position={
                         mobileOptimized
                             ? mobileLayout.positions.code
-                            : lerp3([-3.8, 2.7, -7.5], [-2.4, 2.8, -4.5], responsiveProgress)
+                            : codeCardDesktopPosition
                     }
                     initialRotation={mobileOptimized ? [0.02, -0.22, 0.05] : [-0.1, -0.48, 0.1]}
                     color="#3b82f6"
@@ -460,7 +472,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     activeCardId={activeCardId}
                     onActiveCardChange={setActiveCardId}
                     reducedMotion={reducedMotion}
-                    baseScale={mobileOptimized ? mobileLayout.scaleMultipliers.code * mobileCardScaleBoost : lerp(1.50, 1.15, responsiveProgress) * desktopScale}
+                    baseScale={mobileOptimized ? mobileLayout.scaleMultipliers.code * mobileCardScaleBoost : codeCardDesktopScale}
                     labelPosition={codeLabel.labelPosition}
                     labelOffset={codeLabel.labelOffset}
                     labelConnector={codeLabel.labelConnector}

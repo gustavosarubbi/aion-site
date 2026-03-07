@@ -91,12 +91,12 @@ export default function HeroHeadline() {
       style={montserrat}
       className="w-full min-[1280px]:max-w-[740px] 2xl:max-w-[780px] flex flex-col items-center min-[1280px]:items-start gap-0.5 overflow-visible"
     >
-      <div className="min-[1280px]:hidden w-full mx-auto flex flex-col items-center gap-1">
-        <h1 className={`block font-black text-blue-200/88 tracking-[-0.02em] leading-[0.92] ${mobileDisplaySize} uppercase text-center`}>
+      <div className="min-[1280px]:hidden w-full mx-auto flex flex-col items-center md:items-start gap-1">
+        <h1 className={`block font-black text-blue-200/88 tracking-[-0.02em] leading-[0.92] ${mobileDisplaySize} uppercase text-center md:text-left w-full`}>
           TRANSFORMAMOS
         </h1>
 
-        <motion.div layout className="relative flex items-center justify-center overflow-visible">
+        <motion.div layout className="relative flex items-center justify-center md:justify-start overflow-visible w-full">
           <AnimatePresence mode="popLayout" initial={false}>
             {current && (
               <motion.div
@@ -108,9 +108,9 @@ export default function HeroHeadline() {
                 transition={{ duration: 0.28, ease: "easeOut" }}
                 className="flex items-center justify-center py-1"
               >
-                <span className="inline-flex flex-col items-center w-fit">
+                <span className="inline-flex flex-col items-center md:items-start w-fit">
                   <span
-                    className={`font-black text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.text || "from-blue-400"} text-center ${mobileDynamicDisplaySize} tracking-[-0.02em] leading-[0.92] uppercase`}
+                    className={`font-black text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.text || "from-blue-400"} text-center md:text-left ${mobileDynamicDisplaySize} tracking-[-0.02em] leading-[0.92] uppercase`}
                     style={{ filter: `drop-shadow(0 0 6px ${current.colors?.glow || "rgba(0,0,0,0)"})` }}
                   >
                     {current.service}
@@ -125,8 +125,8 @@ export default function HeroHeadline() {
           </AnimatePresence>
         </motion.div>
 
-        <motion.h1 layout className="flex items-baseline justify-center gap-1.5 sm:gap-2 mt-0.5">
-          <motion.span layout className={`block font-black text-blue-200/88 tracking-[-0.015em] leading-[0.92] ${mobileDisplaySize} uppercase`}>
+        <motion.h1 layout className="flex items-baseline justify-center md:justify-start gap-1.5 sm:gap-2 mt-0.5 w-full">
+          <motion.span layout className={`block font-black text-blue-200/88 tracking-[-0.015em] leading-[0.92] ${mobileDisplaySize} uppercase text-center md:text-left`}>
             EM
           </motion.span>
           <div className="relative flex items-baseline overflow-visible">
@@ -139,7 +139,7 @@ export default function HeroHeadline() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.28, ease: "easeOut", delay: 0.04 }}
-                  className={`text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.outcomeGradient || "from-blue-400"} font-black tracking-[-0.015em] text-center ${mobileDynamicDisplaySize} leading-[0.92] whitespace-nowrap uppercase`}
+                  className={`text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.outcomeGradient || "from-blue-400"} font-black tracking-[-0.015em] text-center md:text-left ${mobileDynamicDisplaySize} leading-[0.92] whitespace-nowrap uppercase`}
                   style={{ filter: `drop-shadow(0 0 7px ${current.colors?.outcomeShadow || "rgba(0,0,0,0)"})` }}
                 >
                   {current.outcome}
