@@ -232,10 +232,11 @@ export const UICard = ({
             (Math.sin(t * 1.3 + floatOffset) * (reducedMotion ? 0.16 : 0.22) +
                 Math.sin(t * 0.9) * (reducedMotion ? 0.06 : 0.1)) *
             motionScalar;
+        const isActive = activeCardId === id;
         const targetZ =
             (position[2] || 0) +
             Math.sin(t * wobbleZ) * (reducedMotion ? 0.08 : 0.12) * motionScalar +
-            (isSecondary ? -0.55 : 0);
+            (isActive ? 1.5 : isSecondary ? -1.0 : 0);
 
         outerRef.current.position.x = THREE.MathUtils.damp(outerRef.current.position.x, targetX, 12, delta);
         outerRef.current.position.y = THREE.MathUtils.damp(outerRef.current.position.y, targetY, 12, delta);

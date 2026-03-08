@@ -40,6 +40,7 @@ const MID_DESKTOP_STANDARD_LOCK = 1378;
 const MID_DESKTOP_START = 1536;
 const MID_DESKTOP_END = 1650;
 const CODE_CARD_DESKTOP_ANCHOR_WIDTH = MID_DESKTOP_STANDARD_LOCK;
+const DESKTOP_SCALE_REDUCTION = 0.80; // Reducing desktop card sizes by 20%
 
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
 const lerp = (start: number, end: number, t: number) => start + (end - start) * t;
@@ -107,18 +108,18 @@ function getMobileLayout(band: MobileBand, progress: number): MobileLayout {
     if (band === "laptop") {
         return {
             cameraY: lerp(0.16, 0.22, progress),
-            cameraZ: lerp(14.4, 13.9, progress),
+            cameraZ: lerp(15.4, 14.8, progress),
             fov: 33,
-            cardScaleBoost: lerp(1.24, 1.34, progress),
-            orbitRadius: lerp(3.0, 3.35, progress),
+            cardScaleBoost: lerp(1.4, 1.55, progress),
+            orbitRadius: lerp(2.4, 2.7, progress),
             clusterOffsetY: lerp(0.18, 0.26, progress),
             positions: {
-                code: [0.0, 0.62, 0.62],
-                flow: [4.4, 0.28, -0.44],
-                preview: [-4.4, 0.24, -0.5],
+                code: [0.0, 0.52, 0.62],
+                flow: [3.6, -0.6, -0.44],
+                preview: [-3.6, -0.7, -0.5],
             },
             scaleMultipliers: {
-                code: 1.24,
+                code: 1.10,
                 flow: 1.08,
                 preview: 1.08,
             },
@@ -128,18 +129,18 @@ function getMobileLayout(band: MobileBand, progress: number): MobileLayout {
     if (band === "tablet") {
         return {
             cameraY: lerp(0.12, 0.18, progress),
-            cameraZ: lerp(14.9, 14.4, progress),
+            cameraZ: lerp(15.8, 15.2, progress),
             fov: 32,
-            cardScaleBoost: lerp(1.18, 1.28, progress),
-            orbitRadius: lerp(2.65, 2.95, progress),
+            cardScaleBoost: lerp(1.35, 1.5, progress),
+            orbitRadius: lerp(2.1, 2.4, progress),
             clusterOffsetY: lerp(0.12, 0.2, progress),
             positions: {
-                code: [0.0, 0.54, 0.56],
-                flow: [4.1, 0.2, -0.4],
-                preview: [-4.1, 0.16, -0.46],
+                code: [0.0, 0.44, 0.56],
+                flow: [3.4, -0.7, -0.4],
+                preview: [-3.4, -0.8, -0.46],
             },
             scaleMultipliers: {
-                code: 1.22,
+                code: 1.08,
                 flow: 1.06,
                 preview: 1.06,
             },
@@ -150,13 +151,13 @@ function getMobileLayout(band: MobileBand, progress: number): MobileLayout {
         cameraY: lerp(0.08, 0.14, progress),
         cameraZ: lerp(15.2, 14.7, progress),
         fov: 31,
-        cardScaleBoost: lerp(1.14, 1.22, progress),
+        cardScaleBoost: lerp(1.45, 1.6, progress),
         orbitRadius: lerp(2.35, 2.6, progress),
         clusterOffsetY: lerp(0.06, 0.14, progress),
         positions: {
             code: [0.0, 0.46, 0.5],
-            flow: [3.5, 0.12, -0.32],
-            preview: [-3.5, 0.08, -0.38],
+            flow: [3.5, -0.55, -0.32],
+            preview: [-3.5, -0.65, -0.38],
         },
         scaleMultipliers: {
             code: 1.2,
@@ -203,9 +204,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
         return () => window.removeEventListener("resize", onResize);
     }, []);
 
-    const normalizedDesktopWidth = !mobileOptimized && viewportWidth >= DESKTOP_MIN_WIDTH && viewportWidth <= MID_DESKTOP_STANDARD_MAX
-        ? MID_DESKTOP_STANDARD_LOCK
-        : viewportWidth;
+    const normalizedDesktopWidth = viewportWidth;
 
     const {
         isPhoneBand,
@@ -240,15 +239,16 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
     // SCALE: tuned for xl+ while keeping continuity with tablet/laptop stacks
     const desktopScale = mobileOptimized
         ? 1.05
-        : lerp(1.62, 1.84, responsiveProgress) * (1 + scaleBoost1366);
+        : lerp(2.1, 2.4, responsiveProgress) * (1 + scaleBoost1366) * DESKTOP_SCALE_REDUCTION;
 
-    const codeCardDesktopScale = lerp(1.50, 1.15, codeCardAnchor.responsiveProgress)
-        * (lerp(1.62, 1.84, codeCardAnchor.responsiveProgress) * (1 + codeCardAnchor.scaleBoost1366))
-        * lerp(1.0, 0.85, codeCardAnchor.responsiveProgress);
+    const codeCardDesktopScale = lerp(1.65, 1.35, responsiveProgress)
+        * (lerp(2.1, 2.4, responsiveProgress) * (1 + scaleBoost1366))
+        * lerp(1.0, 0.92, responsiveProgress)
+        * DESKTOP_SCALE_REDUCTION;
 
     const codeCardDesktopPosition = (() => {
-        const [x, , z] = lerp3([-3.8, 2.7, -7.5], [-2.4, 2.8, -4.5], responsiveProgress);
-        return [x, Math.round(lerp(2.7, 2.8, codeCardAnchor.responsiveProgress) * 1000) / 1000, z] as Vec3;
+        const [x, , z] = lerp3([-3.8, 2.3, -8.5], [-2.6, 2.5, -5.5], responsiveProgress);
+        return [x, Math.round(lerp(2.3, 2.5, responsiveProgress) * 1000) / 1000, z] as Vec3;
     })();
 
     // CAMERA: 56.0 (xl) -> 42.0 (2xl/GitHub)
@@ -258,9 +258,9 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
 
     const orbitCount = mobileOptimized
         ? isLaptopBand
-            ? 5
+            ? 4
             : isTabletBand
-                ? 4
+                ? 3
                 : 3
         : visualLowMode
             ? 4
@@ -292,7 +292,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                         ? [0.1, 2.12, 0.15] as [number, number, number]
                         : [0.08, 2.02, 0.15] as [number, number, number],
             },
-            labelScale: isLaptopBand ? 0.86 : isTabletBand ? 0.8 : 0.74,
+            labelScale: isLaptopBand ? 1.05 : isTabletBand ? 0.98 : 0.74,
             labelCompact: true,
             labelDistanceFactor: isLaptopBand ? 7.4 : isTabletBand ? 7 : 6.6,
         }
@@ -326,7 +326,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                         ? [0.7, 2.02, 0.15] as [number, number, number]
                         : [0.66, 1.95, 0.15] as [number, number, number],
             },
-            labelScale: isLaptopBand ? 0.86 : isTabletBand ? 0.8 : 0.74,
+            labelScale: isLaptopBand ? 1.05 : isTabletBand ? 0.98 : 0.74,
             labelCompact: true,
             labelDistanceFactor: isLaptopBand ? 7.4 : isTabletBand ? 7 : 6.6,
         }
@@ -360,7 +360,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                         ? [-0.72, 1.98, 0.15] as [number, number, number]
                         : [-0.68, 1.9, 0.15] as [number, number, number],
             },
-            labelScale: isLaptopBand ? 0.84 : isTabletBand ? 0.79 : 0.73,
+            labelScale: isLaptopBand ? 1.02 : isTabletBand ? 0.95 : 0.73,
             labelCompact: true,
             labelDistanceFactor: isLaptopBand ? 7.2 : isTabletBand ? 6.9 : 6.4,
         }
@@ -488,7 +488,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     position={
                         mobileOptimized
                             ? mobileLayout.positions.flow
-                            : lerp3([4.2, 0.8, -4.5], [2.9, 0.12, -2.4], responsiveProgress)
+                            : lerp3([4.2, -0.4, -4.5], [2.9, -0.85, -2.4], responsiveProgress)
                     }
                     initialRotation={mobileOptimized ? [0.03, 0.18, -0.03] : [0.05, 0.28, -0.05]}
                     color="#22d3ee"
@@ -518,7 +518,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     position={
                         mobileOptimized
                             ? mobileLayout.positions.preview
-                            : lerp3([-0.6, -2.8, 3.5], [-1.15, -2.5, 2.85], responsiveProgress)
+                            : lerp3([-0.6, -3.4, 3.5], [-1.15, -3.2, 2.85], responsiveProgress)
                     }
                     initialRotation={mobileOptimized ? [0.06, 0.04, -0.01] : [0.12, 0.42, -0.04]}
                     color="#38bdf8"
