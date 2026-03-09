@@ -38,6 +38,8 @@ export type UICardProps = {
     title?: string;
     activeCardId: string | null;
     onActiveCardChange: (id: string | null) => void;
+    draggingCardId: string | null;
+    onDraggingCardChange: (id: string | null) => void;
     reducedMotion: boolean;
     labelPosition?: "top" | "right" | "bottom" | "left";
     labelOffset?: [number, number, number];
@@ -66,6 +68,8 @@ export const UICard = ({
     title,
     activeCardId,
     onActiveCardChange,
+    draggingCardId,
+    onDraggingCardChange,
     reducedMotion,
     labelPosition = "top",
     labelOffset,
@@ -166,6 +170,14 @@ export const UICard = ({
         if (typeof document !== "undefined") document.body.style.cursor = cursor;
     }, []);
 
+    const releaseDrag = useCallback(() => {
+        if (!isDragging.current) return;
+        isDragging.current = false;
+        setDragging(false);
+        onActiveCardChange(null);
+        onDraggingCardChange(null);
+    }, [onActiveCardChange, onDraggingCardChange]);
+
     const onPointerDown = useCallback((e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation();
         isDragging.current = true;
@@ -176,39 +188,60 @@ export const UICard = ({
         const target = e.target as Element | null;
         target?.setPointerCapture?.(e.pointerId);
         onActiveCardChange(id);
+        onDraggingCardChange(id);
         setCursor("grabbing");
-    }, [id, onActiveCardChange, setCursor]);
+    }, [id, onActiveCardChange, onDraggingCardChange, setCursor]);
 
     const onPointerUp = useCallback((e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation();
-        isDragging.current = false;
-        setDragging(false);
         const target = e.target as Element | null;
         target?.releasePointerCapture?.(e.pointerId);
-        onActiveCardChange(null);
+        releaseDrag();
         if (hovered) {
             setCursor("grab");
             return;
         }
         setCursor("auto");
-    }, [hovered, onActiveCardChange, setCursor]);
+    }, [hovered, releaseDrag, setCursor]);
+
+    const onPointerCancel = useCallback((e: ThreeEvent<PointerEvent>) => {
+        e.stopPropagation();
+        const target = e.target as Element | null;
+        target?.releasePointerCapture?.(e.pointerId);
+        releaseDrag();
+        setCursor("auto");
+    }, [releaseDrag, setCursor]);
 
     const onPointerMove = useCallback((e: ThreeEvent<PointerEvent>) => {
+        // e.pointerId check: Only process movement if this EXACT pointer is captured by this card.
+        // This completely prevents dragging one card from rotating/affecting another card
+        // if multiple touches or fast swipes happen.
         if (isDragging.current) {
             e.stopPropagation();
             const dx = e.clientX - prevPointer.current.x;
             const dy = e.clientY - prevPointer.current.y;
             dragDistance.current += Math.sqrt(dx * dx + dy * dy);
 
-            velocity.current.x = dy * 0.01;
-            velocity.current.y = dx * 0.01;
+            // UI/UX Improv: Map physical drag pixels directly to rotation (1:1 direct manipulation)
+            const sensitivity = 0.009;
+            let nextRotX = dragRot.current.x + (dy * sensitivity);
+            let nextRotY = dragRot.current.y + (dx * sensitivity);
+
+            // Allow full 360-degree rotation in all directions
+            dragRot.current.x = nextRotX;
+            dragRot.current.y = nextRotY;
+
+            // Preserve organic throw momentum when released
+            velocity.current.x = dy * 0.015;
+            velocity.current.y = dx * 0.015;
+
             prevPointer.current = { x: e.clientX, y: e.clientY };
             return;
         }
 
         if (reducedMotion || lowQuality) return;
 
-        if (e.uv) {
+        if (e.uv && e.uv.x !== undefined && e.uv.y !== undefined) {
             pointerTiltTarget.current.x = (0.5 - e.uv.y) * 0.09;
             pointerTiltTarget.current.y = (e.uv.x - 0.5) * 0.09;
         }
@@ -266,25 +299,24 @@ export const UICard = ({
         outerRef.current.scale.lerp(scaleVector.current, reducedMotion || lowQuality ? 0.22 : 0.35);
 
         if (isDragging.current) {
-            dragRot.current.x += velocity.current.x;
-            dragRot.current.y += velocity.current.y;
-            velocity.current.x *= 0.88;
-            velocity.current.y *= 0.88;
+            // While dragging, direct 1:1 rotation is handled perfectly in onPointerMove.
+            // Gradually bleed out the momentum so holding still doesn't release with huge velocity.
+            velocity.current.x = THREE.MathUtils.lerp(velocity.current.x, 0, delta * 15);
+            velocity.current.y = THREE.MathUtils.lerp(velocity.current.y, 0, delta * 15);
         } else {
-            velocity.current.x *= reducedMotion ? 0.8 : 0.85;
-            velocity.current.y *= reducedMotion ? 0.8 : 0.85;
-            velocity.current.x += (0 - dragRot.current.x) * 0.015;
-            velocity.current.y += (0 - dragRot.current.y) * 0.015;
+            // Apply organic spring physics to snap back softly when released
+            velocity.current.x *= reducedMotion ? 0.82 : 0.88;
+            velocity.current.y *= reducedMotion ? 0.82 : 0.88;
+            velocity.current.x += (0 - dragRot.current.x) * 0.035;
+            velocity.current.y += (0 - dragRot.current.y) * 0.035;
 
             dragRot.current.x += velocity.current.x;
             dragRot.current.y += velocity.current.y;
 
-            dragRot.current.x = THREE.MathUtils.damp(dragRot.current.x, 0, reducedMotion ? 12.0 : 15.0, delta);
-            dragRot.current.y = THREE.MathUtils.damp(dragRot.current.y, 0, reducedMotion ? 12.0 : 15.0, delta);
+            // Extra dampening to ensure absolute and smooth return to 0
+            dragRot.current.x = THREE.MathUtils.damp(dragRot.current.x, 0, reducedMotion ? 12.0 : 16.0, delta);
+            dragRot.current.y = THREE.MathUtils.damp(dragRot.current.y, 0, reducedMotion ? 12.0 : 16.0, delta);
         }
-
-        dragRot.current.x = Math.atan2(Math.sin(dragRot.current.x), Math.cos(dragRot.current.x));
-        dragRot.current.y = Math.atan2(Math.sin(dragRot.current.y), Math.cos(dragRot.current.y));
 
         innerRef.current.rotation.x = dragRot.current.x;
         innerRef.current.rotation.y = dragRot.current.y;
@@ -316,12 +348,14 @@ export const UICard = ({
                 <mesh
                     position={[0, 0, 0.3]}
                     onPointerOver={(e) => {
+                        if (draggingCardId !== null && draggingCardId !== id) return;
                         e.stopPropagation();
                         setHovered(true);
                         onActiveCardChange(id);
                         setCursor(isDragging.current ? "grabbing" : "grab");
                     }}
                     onPointerOut={(e) => {
+                        if (draggingCardId !== null && draggingCardId !== id) return;
                         e.stopPropagation();
                         setHovered(false);
                         pointerTiltTarget.current = { x: 0, y: 0 };
@@ -330,6 +364,7 @@ export const UICard = ({
                     }}
                     onPointerDown={onPointerDown}
                     onPointerUp={onPointerUp}
+                    onPointerCancel={onPointerCancel}
                     onPointerMove={onPointerMove}
                     onClick={onClick}
                 >

@@ -113,7 +113,7 @@ export default function Hero3DWrapper() {
                 )}
             </div>
 
-            <div className="min-[1280px]:hidden relative w-full h-full pointer-events-none">
+            <div className="min-[1280px]:hidden relative w-full h-full pointer-events-auto">
                 {allow3D && shouldMount3D ? (
                     <Hero3DViz quality="mobile" />
                 ) : (

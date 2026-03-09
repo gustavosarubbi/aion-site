@@ -152,12 +152,12 @@ function getMobileLayout(band: MobileBand, progress: number): MobileLayout {
         cameraZ: lerp(15.2, 14.7, progress),
         fov: 31,
         cardScaleBoost: lerp(1.45, 1.6, progress),
-        orbitRadius: lerp(2.35, 2.6, progress),
+        orbitRadius: lerp(2.1, 2.6, progress),
         clusterOffsetY: lerp(0.06, 0.14, progress),
         positions: {
             code: [0.0, 0.46, 0.5],
-            flow: [3.5, -0.55, -0.32],
-            preview: [-3.5, -0.65, -0.38],
+            flow: [lerp(3.1, 3.5, progress), -0.55, -0.32],
+            preview: [lerp(-3.1, -3.5, progress), -0.65, -0.38],
         },
         scaleMultipliers: {
             code: 1.2,
@@ -173,6 +173,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
     const previewCardRef = useRef<THREE.Group>(null!);
 
     const [activeCardId, setActiveCardId] = useState<string | null>(null);
+    const [draggingCardId, setDraggingCardId] = useState<string | null>(null);
     const [performanceTier] = useState<PerformanceTier>(() => {
         if (typeof navigator === "undefined") return mobileOptimized ? "low" : "medium";
 
@@ -282,7 +283,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                 ? [0, 1.62, 0.15] as [number, number, number]
                 : isTabletBand
                     ? [0, 1.56, 0.15] as [number, number, number]
-                    : [0, 1.48, 0.15] as [number, number, number],
+                    : [0, lerp(1.3, 1.48, mobileProgress), 0.15] as [number, number, number],
             labelConnector: {
                 start: [0.02, 1.27, 0.15] as [number, number, number],
                 mid: [0.12, 1.66, 0.15] as [number, number, number],
@@ -290,11 +291,11 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     ? [0.14, 2.2, 0.15] as [number, number, number]
                     : isTabletBand
                         ? [0.1, 2.12, 0.15] as [number, number, number]
-                        : [0.08, 2.02, 0.15] as [number, number, number],
+                        : [0.08, lerp(1.8, 2.02, mobileProgress), 0.15] as [number, number, number],
             },
-            labelScale: isLaptopBand ? 1.05 : isTabletBand ? 0.98 : 0.74,
+            labelScale: isLaptopBand ? 1.45 : isTabletBand ? 1.35 : lerp(0.85, 1.15, mobileProgress),
             labelCompact: true,
-            labelDistanceFactor: isLaptopBand ? 7.4 : isTabletBand ? 7 : 6.6,
+            labelDistanceFactor: isLaptopBand ? 8.2 : isTabletBand ? 7.8 : 7.4,
         }
         : {
             labelPosition: "right" as const,
@@ -316,7 +317,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                 ? [0, 1.6, 0.15] as [number, number, number]
                 : isTabletBand
                     ? [0, 1.54, 0.15] as [number, number, number]
-                    : [0, 1.46, 0.15] as [number, number, number],
+                    : [0, lerp(1.28, 1.46, mobileProgress), 0.15] as [number, number, number],
             labelConnector: {
                 start: [0.16, 1.23, 0.15] as [number, number, number],
                 mid: [0.46, 1.62, 0.15] as [number, number, number],
@@ -324,11 +325,11 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     ? [0.74, 2.12, 0.15] as [number, number, number]
                     : isTabletBand
                         ? [0.7, 2.02, 0.15] as [number, number, number]
-                        : [0.66, 1.95, 0.15] as [number, number, number],
+                        : [0.66, lerp(1.75, 1.95, mobileProgress), 0.15] as [number, number, number],
             },
-            labelScale: isLaptopBand ? 1.05 : isTabletBand ? 0.98 : 0.74,
+            labelScale: isLaptopBand ? 1.45 : isTabletBand ? 1.35 : lerp(0.85, 1.15, mobileProgress),
             labelCompact: true,
-            labelDistanceFactor: isLaptopBand ? 7.4 : isTabletBand ? 7 : 6.6,
+            labelDistanceFactor: isLaptopBand ? 8.2 : isTabletBand ? 7.8 : 7.4,
         }
         : {
             labelPosition: "bottom" as const,
@@ -350,7 +351,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                 ? [0, 1.52, 0.15] as [number, number, number]
                 : isTabletBand
                     ? [0, 1.46, 0.15] as [number, number, number]
-                    : [0, 1.38, 0.15] as [number, number, number],
+                    : [0, lerp(1.22, 1.38, mobileProgress), 0.15] as [number, number, number],
             labelConnector: {
                 start: [-0.06, 1.2, 0.15] as [number, number, number],
                 mid: [-0.36, 1.56, 0.15] as [number, number, number],
@@ -358,11 +359,11 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     ? [-0.78, 2.06, 0.15] as [number, number, number]
                     : isTabletBand
                         ? [-0.72, 1.98, 0.15] as [number, number, number]
-                        : [-0.68, 1.9, 0.15] as [number, number, number],
+                        : [-0.68, lerp(1.7, 1.9, mobileProgress), 0.15] as [number, number, number],
             },
-            labelScale: isLaptopBand ? 1.02 : isTabletBand ? 0.95 : 0.73,
+            labelScale: isLaptopBand ? 1.42 : isTabletBand ? 1.32 : lerp(0.82, 1.12, mobileProgress),
             labelCompact: true,
-            labelDistanceFactor: isLaptopBand ? 7.2 : isTabletBand ? 6.9 : 6.4,
+            labelDistanceFactor: isLaptopBand ? 8.0 : isTabletBand ? 7.6 : 7.2,
         }
         : {
             labelPosition: "left" as const,
@@ -471,6 +472,8 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     delay={1}
                     activeCardId={activeCardId}
                     onActiveCardChange={setActiveCardId}
+                    draggingCardId={draggingCardId}
+                    onDraggingCardChange={setDraggingCardId}
                     reducedMotion={reducedMotion}
                     baseScale={mobileOptimized ? mobileLayout.scaleMultipliers.code * mobileCardScaleBoost : codeCardDesktopScale}
                     labelPosition={codeLabel.labelPosition}
@@ -501,6 +504,8 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     delay={2}
                     activeCardId={activeCardId}
                     onActiveCardChange={setActiveCardId}
+                    draggingCardId={draggingCardId}
+                    onDraggingCardChange={setDraggingCardId}
                     reducedMotion={reducedMotion}
                     baseScale={mobileOptimized ? mobileLayout.scaleMultipliers.flow * mobileCardScaleBoost : lerp(1.15, 1.15, responsiveProgress) * desktopScale}
                     labelPosition={flowLabel.labelPosition}
@@ -531,6 +536,8 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     delay={0}
                     activeCardId={activeCardId}
                     onActiveCardChange={setActiveCardId}
+                    draggingCardId={draggingCardId}
+                    onDraggingCardChange={setDraggingCardId}
                     reducedMotion={reducedMotion}
                     baseScale={mobileOptimized ? mobileLayout.scaleMultipliers.preview * mobileCardScaleBoost : lerp(0.90, 0.88, responsiveProgress) * desktopScale}
                     labelPosition={previewLabel.labelPosition}

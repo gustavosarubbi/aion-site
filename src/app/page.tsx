@@ -61,7 +61,7 @@ function HeroSubtitle() {
     <div className="flex flex-col">
       <p
         style={montserrat}
-        className="text-white/84 text-[15.5px] sm:text-[16.5px] md:text-[clamp(1.05rem,0.7rem+0.8vw,1.38rem)] md:leading-[1.28] min-[1280px]:text-[18px] leading-[1.46] font-medium max-w-[40ch] sm:max-w-[42ch] md:max-w-[36ch] min-[1100px]:max-w-[44ch] tracking-tight [text-wrap:balance]"
+        className="text-white/84 text-[15.5px] sm:text-[16.5px] md:text-[clamp(1.05rem,0.4rem+1.8vw,1.45rem)] min-[1280px]:text-[18px] leading-[1.46] md:leading-[1.55] min-[1280px]:leading-[1.46] font-medium max-w-[40ch] md:max-w-[50ch] lg:max-w-none tracking-tight [text-wrap:balance] md:text-wrap"
       >
         Potencializamos sua escala digital com ecossistemas de alta performance:
         <span className="text-cyan-300 font-bold"> Sites magnéticos</span>,
@@ -74,17 +74,18 @@ function HeroSubtitle() {
 
 function ServiceBar() {
   return (
-    <div className="flex flex-nowrap items-center justify-center gap-y-1 overflow-auto max-w-full scrollbar-hide">
+    <div className="flex flex-nowrap items-center justify-center gap-x-0.5 sm:gap-x-1 max-w-full">
       {serviceItems.map(({ icon: Icon, label, color, halo }, i) => (
         <div key={i} className="flex items-center">
-          <div className="flex items-center gap-1 sm:gap-2.5 py-1.5 cursor-default px-0.5 sm:px-2.5 min-[1280px]:first:pl-0 last:pr-0">
-            <span className="relative inline-flex h-6 w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full">
+          <div className="flex items-center gap-1 sm:gap-2.5 py-1.5 cursor-default px-1 sm:px-2.5 min-[1280px]:first:pl-0 last:pr-0">
+            <span className="relative inline-flex h-5 w-5 min-[360px]:h-6 min-[360px]:w-6 sm:h-8 sm:w-8 items-center justify-center rounded-full">
               <span className={`absolute inset-0 rounded-full ${halo} blur-sm opacity-45`} />
-              <Icon size={15} weight="duotone" className={color} />
+              <Icon size={14} weight="duotone" className={`${color} sm:hidden`} />
+              <Icon size={15} weight="duotone" className={`${color} hidden sm:block`} />
             </span>
             <span
               style={montserrat}
-              className={`text-[9px] min-[361px]:text-[10px] sm:text-[11px] min-[1280px]:text-[12px] font-extrabold tracking-[0.07em] sm:tracking-[0.1em] min-[1280px]:tracking-[0.11em] ${color} uppercase whitespace-nowrap`}
+              className={`text-[8.5px] min-[360px]:text-[10px] sm:text-[11px] min-[1280px]:text-[12px] font-extrabold tracking-[0.05em] sm:tracking-[0.1em] min-[1280px]:tracking-[0.11em] ${color} uppercase whitespace-nowrap`}
             >
               {label}
             </span>
@@ -131,12 +132,12 @@ export default function Home() {
           <div className="min-[1280px]:hidden flex flex-col pt-[calc(var(--header-height,76px)+24px)] pb-6">
 
             {/* Text block: ServiceBar + Headline + Subtitle */}
-            <div className="relative flex flex-col items-center justify-center gap-4 md:gap-4 px-4 sm:px-12 pb-0.5 mx-auto w-full max-w-5xl">
+            <div className="relative flex flex-col items-center justify-center gap-4 md:gap-4 px-4 sm:px-4 pb-0.5 mx-auto w-full max-w-5xl">
               <div className="absolute -inset-8 bg-gradient-to-r from-blue-500/6 via-cyan-500/3 to-blue-500/5 blur-[58px] -z-10 rounded-full opacity-30 pointer-events-none" />
 
-              {/* ServiceBar: Restored to top and lowered via container padding */}
+              {/* ServiceBar: Centered for Tablet */}
               <motion.div
-                className="flex justify-center w-full mb-2 md:mb-2 md:pl-14"
+                className="flex justify-center w-full mb-2 md:mb-2"
                 initial={{ opacity: 0, y: -12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
@@ -144,10 +145,10 @@ export default function Home() {
                 <ServiceBar />
               </motion.div>
 
-              {/* Unified Block: Headline | Divider | Subtitle */}
-              <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10 mx-auto w-fit md:pl-20">
+              {/* Unified Block: Headline | Divider | Subtitle - Perfect Vertical Harmony */}
+              <div className="flex flex-col md:flex-row items-center md:items-center justify-center gap-6 md:gap-6 lg:gap-10 mx-auto w-full md:px-0">
                 <motion.div
-                  className="flex flex-col items-center md:items-start select-none"
+                  className="flex flex-col items-center md:items-start select-none md:flex-shrink-0"
                   initial={{ opacity: 0, x: -16 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1], delay: 0.28 }}
@@ -155,11 +156,11 @@ export default function Home() {
                   <HeroHeadline tabletSide="left" />
                 </motion.div>
 
-                {/* Vertical Divider: Thicker with Glow */}
-                <div className="hidden md:block w-[2px] h-32 md:h-36 bg-white/30 self-center shadow-[0_0_12px_rgba(255,255,255,0.45)]" />
+                {/* Vertical Divider: Perfectly Centered */}
+                <div className="hidden md:block w-[1.5px] h-[120px] md:h-[130px] lg:h-[140px] bg-white/30 shadow-[0_0_10px_rgba(255,255,255,0.3)]" />
 
                 <motion.div
-                  className="px-2 md:mt-0 text-center md:text-left flex flex-col justify-center min-h-[120px] max-w-[420px]"
+                  className="px-2 md:px-0 text-center md:text-left flex flex-col justify-center flex-1 md:max-w-[580px]"
                   initial={{ opacity: 0, x: 16 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.42 }}

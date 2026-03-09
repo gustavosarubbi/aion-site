@@ -118,7 +118,7 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
                 }
             />
 
-            <div className={`w-full h-full absolute inset-0 !overflow-visible ${mobileOptimized ? "pointer-events-none" : "pointer-events-auto"}`}>
+            <div className="w-full h-full absolute inset-0 !overflow-visible pointer-events-auto">
                 <Canvas
                     frameloop={shouldAnimate ? "always" : "never"}
                     dpr={dprRange}
@@ -130,7 +130,7 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
                     }}
                     performance={{ min: mobileOptimized ? (mobileBand === "laptop" ? 0.45 : mobileBand === "tablet" ? 0.4 : 0.35) : 0.5 }}
                     camera={{ near: 0.1, far: 90 }}
-                    style={{ background: "transparent", overflow: "visible" }}
+                    style={{ background: "transparent", overflow: "visible", touchAction: "none" }}
                 >
                     <Suspense fallback={null}>
                         <SignalProvider>

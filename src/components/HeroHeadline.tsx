@@ -53,8 +53,9 @@ export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "ri
   const mobileDynamicDisplaySize = "text-[clamp(1.69rem,1.36rem+2.06vw,2.62rem)]";
 
   // Specific scaling for the 768-1279 range where it's split in a 2-column block
-  const tabletDisplaySize = "md:text-[clamp(1.55rem,0.6rem+2.1vw,2.75rem)]";
-  const tabletDynamicSize = "md:text-[clamp(1.6rem,0.7rem+2.2vw,2.88rem)]";
+  // More modest headline for tablet to allow right column to breathe and balance
+  const tabletDisplaySize = "md:text-[clamp(1.85rem,1rem+2vw,2.75rem)]";
+  const tabletDynamicSize = "md:text-[clamp(1.95rem,1.1rem+2.1vw,2.9rem)]";
 
   const desktopDisplaySize = "text-[clamp(1.85rem,1.2rem+1.95vw,4rem)]";
 
@@ -94,11 +95,11 @@ export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "ri
   return (
     <div
       style={montserrat}
-      className={`w-full min-[1280px]:max-w-[780px] flex flex-col items-center min-[1280px]:items-start gap-0.5 overflow-visible ${tabletSide === "left" ? "md:items-start" : "md:items-center"}`}
+      className={`w-full md:w-fit min-[1280px]:w-full min-[1280px]:max-w-[780px] flex flex-col items-center min-[1280px]:items-start gap-0.5 overflow-visible ${tabletSide === "left" ? "md:items-start" : "md:items-center"}`}
     >
       {/* MOBILE / TABLET (< 1280px): Stacked layout */}
       <div className={`min-[1280px]:hidden flex flex-col items-center gap-1 ${tabletSide === "left" ? "md:items-start" : "md:items-center"}`}>
-        <h1 className={`block font-black text-blue-200/88 tracking-[-0.02em] leading-[0.92] ${mobileDisplaySize} ${tabletDisplaySize} uppercase text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"}`}>
+        <h1 className={`block font-black text-blue-200/88 tracking-[-0.02em] leading-[0.92] md:leading-[0.9] ${mobileDisplaySize} ${tabletDisplaySize} uppercase text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"}`}>
           TRANSFORMAMOS
         </h1>
 
@@ -116,7 +117,7 @@ export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "ri
               >
                 <span className={`inline-flex flex-col items-center w-fit ${tabletSide === "left" ? "md:items-start" : "md:items-center"}`}>
                   <span
-                    className={`font-black text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.text || "from-blue-400"} text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"} ${mobileDynamicDisplaySize} ${tabletDynamicSize} tracking-[-0.02em] leading-[0.92] uppercase`}
+                    className={`font-black text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.text || "from-blue-400"} text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"} ${mobileDynamicDisplaySize} ${tabletDynamicSize} tracking-[-0.02em] leading-[0.92] md:leading-[0.9] uppercase`}
                     style={{ filter: `drop-shadow(0 0 6px ${current.colors?.glow || "rgba(0,0,0,0)"})` }}
                   >
                     {current.service}
@@ -132,7 +133,7 @@ export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "ri
         </motion.div>
 
         <motion.h1 layout className={`flex items-baseline justify-center gap-1.5 sm:gap-2 mt-0.5 ${tabletSide === "left" ? "md:justify-start" : "md:justify-center"}`}>
-          <motion.span layout className={`block font-black text-blue-200/88 tracking-[-0.015em] leading-[0.92] ${mobileDisplaySize} ${tabletDisplaySize} uppercase text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"}`}>
+          <motion.span layout className={`block font-black text-blue-200/88 tracking-[-0.015em] leading-[0.92] md:leading-[0.9] ${mobileDisplaySize} ${tabletDisplaySize} uppercase text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"}`}>
             EM
           </motion.span>
           <div className="relative flex items-baseline overflow-visible">
@@ -143,9 +144,7 @@ export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "ri
                   layout
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.28, ease: "easeOut", delay: 0.04 }}
-                  className={`text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.outcomeGradient || "from-blue-400"} font-black tracking-[-0.015em] text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"} ${mobileDynamicDisplaySize} ${tabletDynamicSize} leading-[0.92] whitespace-nowrap uppercase`}
+                  className={`text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.outcomeGradient || "from-blue-400"} font-black tracking-[-0.015em] text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"} ${mobileDynamicDisplaySize} ${tabletDynamicSize} leading-[0.92] md:leading-[0.9] whitespace-nowrap uppercase`}
                   style={{ filter: `drop-shadow(0 0 7px ${current.colors?.outcomeShadow || "rgba(0,0,0,0)"})` }}
                 >
                   {current.outcome}
