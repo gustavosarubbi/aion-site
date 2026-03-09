@@ -7,7 +7,7 @@ const montserrat = { fontFamily: "var(--font-montserrat)" } as const;
 
 const heroContent = [
   {
-    service: "WEBDESIGN",
+    service: "DESIGN ELITE",
     outcome: "RESULTADOS",
     colors: {
       text: "from-[#b8f3ff] via-[#67dcff] to-[#2f94ff]",
@@ -19,7 +19,7 @@ const heroContent = [
     }
   },
   {
-    service: "CHATBOTS",
+    service: "ROBÔS I.A.",
     outcome: "ATENDIMENTO",
     colors: {
       text: "from-[#d2f7ff] via-[#7ae0ff] to-[#37a8ff]",
@@ -44,7 +44,7 @@ const heroContent = [
   },
 ];
 
-const longestService = "AUTOMAÇÃO";
+const longestService = "DESIGN ELITE";
 const longestOutcome = "ATENDIMENTO";
 
 export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "right" }) {

@@ -1,108 +1,171 @@
-import { Globe, WhatsappLogo, ChartLineUp, ArrowRight, Code, Cpu, Layout } from "@phosphor-icons/react/dist/ssr";
-import type { ReactNode } from "react";
+"use client";
 
-function BentoCard({
+import { motion } from "framer-motion";
+import {
+    ShieldCheck,
+    Target,
+    Headset,
+    Gear,
+    ArrowUpRight,
+    CodeBlock,
+    Lightning
+} from "@phosphor-icons/react";
+
+const montserrat = { fontFamily: "var(--font-montserrat)" } as const;
+
+function CardAutoridade({
     title,
     desc,
-    icon,
+    icon: Icon,
     tag,
     className = "",
+    delay = 0
 }: {
     title: string;
     desc: string;
-    icon: ReactNode;
+    icon: any;
     tag: string;
     className?: string;
+    delay?: number;
 }) {
     return (
-        <article className={`group relative overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.02] p-8 transition-all hover:bg-white/[0.04] ${className}`}>
-            <div className="pointer-events-none absolute inset-0 rounded-3xl bg-[radial-gradient(circle_at_30%_20%,rgba(6,182,212,0.14),transparent_45%)] opacity-0 transition duration-300 group-hover:opacity-100" />
+        <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay, duration: 0.5 }}
+            className={`group relative overflow-hidden rounded-[32px] border border-white/[0.06] bg-white/[0.02] p-8 transition-all hover:bg-white/[0.04] hover:border-blue-500/20 ${className}`}
+        >
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-            <div className="relative z-10 flex h-full flex-col justify-between gap-6">
+            <div className="relative z-10 flex flex-col h-full justify-between gap-6">
                 <div className="flex items-start justify-between">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-500/10 text-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.1)] transition-transform group-hover:scale-110">
-                        {icon}
+                    <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
+                        <Icon size={24} weight="duotone" />
                     </div>
-                    <span className="rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1 text-[10px] font-bold tracking-widest text-white/40 uppercase">
+                    <span className="text-[10px] font-bold tracking-[0.2em] text-white/30 uppercase py-1 px-3 bg-white/5 rounded-full border border-white/5">
                         {tag}
                     </span>
                 </div>
 
                 <div>
-                    <h3 className="mb-2 text-xl font-bold tracking-tight text-white">{title}</h3>
-                    <p className="text-sm leading-relaxed text-white/40 group-hover:text-white/60 transition-colors">
+                    <h3 style={montserrat} className="text-xl font-bold text-white mb-3 tracking-tight">{title}</h3>
+                    <p className="text-white/40 text-sm leading-relaxed group-hover:text-white/60 transition-colors">
                         {desc}
                     </p>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs font-bold text-cyan-400 opacity-0 transition-all group-hover:opacity-100 group-hover:translate-x-1">
-                    Saber mais <ArrowRight size={14} weight="bold" />
+                <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+                    <span className="text-[10px] font-bold tracking-[0.1em] text-white/20 uppercase">Padrão AION</span>
+                    <ArrowUpRight size={18} className="text-blue-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
                 </div>
             </div>
-        </article>
+        </motion.div>
     );
 }
 
-export default function CommercialExpertise() {
+export default function AutoridadeTecnica() {
     return (
-        <section id="services" className="cv-auto relative z-10 w-full py-16 md:py-32" style={{ containIntrinsicSize: "1000px" }}>
-            <div className="max-w-6xl mx-auto px-6">
-                <div className="flex flex-col items-center gap-4 text-center mb-20">
-                    <span className="text-[10px] font-bold tracking-[0.3em] text-cyan-400 uppercase">
-                        Nossa Expertise
-                    </span>
-                    <h2 className="text-4xl md:text-5xl font-bold tracking-tighter text-white">
-                        Criamos a <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">vanguarda digital.</span>
-                    </h2>
+        <section className="relative z-10 w-full py-24 md:py-40 overflow-hidden border-t border-white/[0.05]"
+            style={{ background: "linear-gradient(180deg, #000000 0%, #06091c 35%, #080c22 55%, #000000 100%)" }}
+        >
+            {/* ── Rich Background Elements ── */}
+            <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-600/[0.05] blur-[140px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-indigo-500/[0.04] blur-[100px] rounded-full pointer-events-none" />
+
+            {/* Dot Grid */}
+            <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
+                style={{
+                    backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
+                    backgroundSize: "40px 40px"
+                }}
+            />
+
+            {/* Corner Accent */}
+            <div className="absolute bottom-16 right-16 w-24 h-24 opacity-[0.06] pointer-events-none">
+                <div className="absolute inset-0 border border-white/30 rotate-45" />
+                <div className="absolute inset-3 border border-white/20 rotate-45" />
+            </div>
+
+            <div className="max-w-7xl mx-auto px-6 relative">
+                <div className="flex flex-col items-center text-center mb-20">
+                    <motion.span
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        className="text-[11px] font-bold tracking-[0.4em] text-blue-500 uppercase mb-6"
+                    >
+                        Engenharia de Sucesso
+                    </motion.span>
+                    <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        style={montserrat}
+                        className="text-4xl md:text-5xl font-bold tracking-tight text-white max-w-3xl leading-[1.1]"
+                    >
+                        Autoridade técnica para <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-sky-400">
+                            resultados inquestionáveis.
+                        </span>
+                    </motion.h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-5 auto-rows-[280px]">
-                    <BentoCard
-                        className="md:col-span-3 lg:col-span-8 lg:row-span-2"
-                        icon={<Layout size={24} weight="duotone" />}
-                        tag="Web Design & UI"
-                        title="Experiencias Digitais de Elite"
-                        desc="Nao fazemos apenas sites. Construimos ativos digitais de alta performance com Next.js, focados em UX impecavel e conversao maxima."
+                <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-6">
+                    {/* Main Card */}
+                    <CardAutoridade
+                        className="md:col-span-6 lg:col-span-8 lg:row-span-2"
+                        icon={Target}
+                        tag="Precisão"
+                        title="Sistemas de Alta Disponibilidade"
+                        desc="Diferente de agências focadas em estética passageira, a AION entrega infraestruturas robustas. Seus sistemas nunca param, processando leads e dados enquanto você foca no seu negócio."
+                        delay={0.1}
                     />
 
-                    <BentoCard
-                        className="md:col-span-3 lg:col-span-4"
-                        icon={<WhatsappLogo size={24} weight="duotone" />}
-                        tag="Automacao AI"
-                        title="Bots Inteligentes"
-                        desc="Capture e qualifique leads 24/7 com chatbots via API oficial."
+                    <CardAutoridade
+                        className="md:col-span-3 lg:col-span-4 lg:row-span-2"
+                        icon={Gear}
+                        tag="Automação"
+                        title="Fluxos Inteligentes"
+                        desc="Sincronia perfeita entre seus sistemas de gestão, site e canais de atendimento. Engenharia de ponta que elimina erros operacionais e gargalos de processamento."
+                        delay={0.5}
                     />
 
-                    <BentoCard
+                    <CardAutoridade
                         className="md:col-span-3 lg:col-span-4"
-                        icon={<ChartLineUp size={24} weight="duotone" />}
-                        tag="Sistemas"
-                        title="Automacao de Processos"
-                        desc="Conecte seu CRM e ERP com workflows inteligentes que eliminam trabalho manual."
+                        icon={ShieldCheck}
+                        tag="Segurança"
+                        title="Protocolo de Elite"
+                        desc="Criptografia ponta a ponta e arquitetura serverless blindada. Compliance total por design para operações críticas."
+                        delay={0.2}
                     />
 
-                    <BentoCard
+                    <CardAutoridade
                         className="md:col-span-3 lg:col-span-4"
-                        icon={<Cpu size={24} weight="duotone" />}
-                        tag="DevOps"
+                        icon={Headset}
+                        tag="Suporte"
+                        title="Acompanhamento Especializado"
+                        desc="Acompanhamento técnico real, do planejamento estratégico à operação diária pós-deploy."
+                        delay={0.3}
+                    />
+
+                    {/* New Grid Row */}
+                    <CardAutoridade
+                        className="md:col-span-3 lg:col-span-4"
+                        icon={Lightning}
+                        tag="Rapidez"
                         title="Performance Extrema"
-                        desc="Carregamento em milissegundos e SEO forte por padrao."
+                        desc="Carregamento instantâneo e otimização técnica profunda para escala massiva."
+                        delay={0.4}
                     />
 
-                    <BentoCard
+                    <CardAutoridade
                         className="md:col-span-3 lg:col-span-4"
-                        icon={<Code size={24} weight="duotone" />}
-                        tag="Custom"
-                        title="Codigo Limpo"
-                        desc="Arquitetura modular para evoluir sem friccao tecnica."
-                    />
-
-                    <BentoCard
-                        className="md:col-span-3 lg:col-span-4"
-                        icon={<Globe size={24} weight="duotone" />}
-                        tag="Scalability"
-                        title="Escala Global"
-                        desc="Infraestrutura pronta para crescer junto com seu faturamento."
+                        icon={CodeBlock}
+                        tag="Código Limpo"
+                        title="Arquitetura Modular"
+                        desc="Estrutura de software escalável que permite evoluções contínuas sem retrabalho."
+                        delay={0.6}
                     />
                 </div>
             </div>

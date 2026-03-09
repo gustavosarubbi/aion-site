@@ -528,7 +528,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     initialRotation={mobileOptimized ? [0.06, 0.04, -0.01] : [0.12, 0.42, -0.04]}
                     color="#38bdf8"
                     type="preview"
-                    title="DESIGN PREMIUM"
+                    title="DESIGN ELITE"
                     onRef={(r) => {
                         previewCardRef.current = r;
                     }}

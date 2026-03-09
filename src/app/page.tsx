@@ -1,14 +1,16 @@
 "use client";
 
 import ActionNode from "@/components/ActionNode";
-import PortfolioShowcase from "@/components/PortfolioShowcase";
-import ServiceStack from "@/components/ServiceStack";
-import CommercialExpertise from "@/components/CommercialExpertise";
-import Methodology from "@/components/Methodology";
+import VitrineEngenharia from "@/components/EngineeringShowcase";
+import CentralIntegracoes from "@/components/IntegrationsHub";
+import VitrineSistemas from "@/components/TemplateShowcase";
+import AutoridadeTecnica from "@/components/CommercialExpertise";
+import DiagnosticoEstrategico from "@/components/StrategicDiagnosis";
 import FAQ from "@/components/FAQ";
-import Testimonials from "@/components/Testimonials";
+import PerformanceMetrics from "@/components/PerformanceMetrics";
 import Footer from "@/components/Footer";
 import HeroHeadline from "@/components/HeroHeadline";
+import GatewayCarousel from "@/components/GatewayCarousel";
 import dynamic from "next/dynamic";
 import { Code, ChatCircleDots, RocketLaunch, InstagramLogo, EnvelopeSimple, WhatsappLogo, ArrowRight } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
@@ -27,7 +29,7 @@ const montserrat = { fontFamily: "var(--font-montserrat)" } as const;
 const serviceItems = [
   {
     icon: Code,
-    label: "WEB DESIGN",
+    label: "SITES PREMIUM",
     color: "text-sky-300",
     halo: "bg-sky-400/35",
     divider: "via-sky-300/70",
@@ -65,7 +67,7 @@ function HeroSubtitle() {
       >
         Potencializamos sua escala digital com ecossistemas de alta performance:
         <span className="text-cyan-300 font-bold"> Sites magnéticos</span>,
-        <span className="text-sky-300 font-bold font-semibold"> chatbots de conversão</span> e
+        <span className="text-sky-300 font-bold font-semibold"> robôs de conversão</span> e
         <span className="text-blue-300 font-bold font-semibold"> automações voltadas para o lucro</span>.
       </p>
     </div>
@@ -231,7 +233,7 @@ export default function Home() {
               <div className="flex w-full flex-col md:flex-row md:items-center justify-center gap-3 sm:gap-4 px-6 md:max-w-none">
                 <ActionNode compact />
                 <a
-                  href="#services"
+                  href="#servicos"
                   className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-1.5 h-[44px] lg:h-[48px] px-6 lg:px-8 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 text-[12px] font-bold text-white transition-all duration-500 hover:bg-white/10 hover:border-white/20 active:scale-[0.98] overflow-hidden"
                   style={montserrat}
                 >
@@ -244,7 +246,7 @@ export default function Home() {
               </div>
 
               <p style={montserrat} className="text-[10.5px] uppercase tracking-[0.08em] text-cyan-200/60">
-                Diagnóstico estratégico em até 24h úteis.
+                Design de elite e tecnologia estratégica.
               </p>
             </motion.div>
           </div>
@@ -331,7 +333,7 @@ export default function Home() {
                 <div className="flex items-center gap-4 pointer-events-auto">
                   <ActionNode />
                   <a
-                    href="#services"
+                    href="#servicos"
                     className="group relative inline-flex items-center justify-center gap-2.5 h-[46px] lg:h-[48px] min-[1280px]:h-[52px] px-2.5 lg:px-3.5 min-[1280px]:px-8 rounded-2xl bg-sky-500/10 backdrop-blur-xl border border-sky-400/20 text-[10.5px] lg:text-[11.5px] min-[1280px]:text-[13px] font-semibold text-white transition-all duration-500 hover:bg-sky-500/15 hover:border-sky-400/35 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 pointer-events-auto shadow-[0_0_14px_rgba(56,189,248,0.06)] hover:shadow-[0_0_22px_rgba(56,189,248,0.12)] overflow-hidden"
                     style={montserrat}
                   >
@@ -347,7 +349,7 @@ export default function Home() {
                 <div className="flex items-center gap-2.5">
                   <div className="w-2 h-[2px] bg-sky-400 opacity-80" />
                   <p style={montserrat} className="text-[10px] lg:text-[10.5px] min-[1280px]:text-[12px] uppercase tracking-[0.1em] text-cyan-200/60">
-                    Diagnóstico estratégico em até 24h úteis.
+                    Design de elite e tecnologia estratégica.
                   </p>
                 </div>
               </motion.div>
@@ -371,12 +373,69 @@ export default function Home() {
         </div>
       </section>
 
-      <Methodology />
-      <CommercialExpertise />
-      <PortfolioShowcase />
-      <ServiceStack />
-      <Testimonials />
+      {/* Modern Section Divider */}
+      <div className="relative w-full h-px overflow-visible z-20">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-blue-400/10 to-transparent blur-sm" />
+      </div>
+
+      <GatewayCarousel />
+
+      {/* ── Divider ── */}
+      <div className="relative w-full h-px overflow-visible z-20">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-blue-400/10 to-transparent blur-sm" />
+      </div>
+
+      <VitrineEngenharia />
+
+      {/* ── Divider ── */}
+      <div className="relative w-full h-px overflow-visible z-20">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent blur-sm" />
+      </div>
+
+      <CentralIntegracoes />
+
+      {/* ── Divider ── */}
+      <div className="relative w-full h-px overflow-visible z-20">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-blue-400/10 to-transparent blur-sm" />
+      </div>
+
+      <VitrineSistemas />
+
+      {/* ── Divider ── */}
+      <div className="relative w-full h-px overflow-visible z-20">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent blur-sm" />
+      </div>
+
+      <AutoridadeTecnica />
+
+      {/* ── Divider ── */}
+      <div className="relative w-full h-px overflow-visible z-20">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-blue-400/10 to-transparent blur-sm" />
+      </div>
+
+      <PerformanceMetrics />
+
+      {/* ── Divider ── */}
+      <div className="relative w-full h-px overflow-visible z-20">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent blur-sm" />
+      </div>
+
       <FAQ />
+
+      {/* ── Divider ── */}
+      <div className="relative w-full h-px overflow-visible z-20">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-blue-400/10 to-transparent blur-sm" />
+      </div>
+
+      <DiagnosticoEstrategico />
       <Footer />
 
     </main>
