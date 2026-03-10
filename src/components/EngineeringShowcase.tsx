@@ -60,31 +60,31 @@ export default function VitrineEngenharia() {
                 <div className="absolute inset-0 bg-[#379cfd]/5 mix-blend-overlay z-0" />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#00030A] via-[#00030A]/70 to-[#00030A] z-0" />
 
-                {/* Top-right remote decorative orb — hidden on mobile so it doesn't interfere */}
+                {/* Top-right decorative orb - bleeds right off the corner */}
                 <motion.div
-                    animate={{ y: [0, -30, 0], scale: [1, 1.08, 1], opacity: [0.25, 0.4, 0.25] }}
+                    animate={{ y: [0, -25, 0], scale: [1, 1.06, 1], opacity: [0.55, 0.75, 0.55] }}
                     transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-                    className="hidden md:block absolute -top-24 -right-24 w-[420px] h-[420px] z-0"
+                    className="absolute -top-20 -right-40 w-[480px] h-[480px] sm:w-[580px] sm:h-[580px] z-0"
                 >
                     <img
                         src="/assets/showcase/shape_knot_structure.png"
                         alt=""
                         className="w-full h-full object-contain"
-                        style={{ filter: 'grayscale(1) brightness(1.1) sepia(1) hue-rotate(188deg) saturate(6) contrast(1.3)' }}
+                        style={{ filter: 'grayscale(1) brightness(1.4) sepia(1) hue-rotate(188deg) saturate(8) contrast(1.4)' }}
                     />
                 </motion.div>
 
-                {/* Bottom-left remote decorative orb */}
+                {/* Bottom-left decorative orb - bleeds left off the corner */}
                 <motion.div
-                    animate={{ y: [0, 40, 0], scale: [1, 1.1, 1], opacity: [0.15, 0.28, 0.15] }}
+                    animate={{ y: [0, 35, 0], scale: [1, 1.08, 1], opacity: [0.45, 0.65, 0.45] }}
                     transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-                    className="hidden md:block absolute -bottom-40 -left-40 w-[560px] h-[560px] z-0"
+                    className="absolute -bottom-48 -left-48 w-[540px] h-[540px] sm:w-[680px] sm:h-[680px] z-0"
                 >
                     <img
                         src="/assets/showcase/shape_knot_structure.png"
                         alt=""
                         className="w-full h-full object-contain"
-                        style={{ filter: 'grayscale(1) brightness(1.05) sepia(1) hue-rotate(188deg) saturate(4) contrast(1.2) blur(6px)' }}
+                        style={{ filter: 'grayscale(1) brightness(1.3) sepia(1) hue-rotate(188deg) saturate(6) contrast(1.3) blur(3px)' }}
                     />
                 </motion.div>
             </div>
@@ -157,11 +157,11 @@ function CardPilar({ title, desc, tag, iconId, image, accentColor, delay }: any)
                     alt=""
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-[3s] ease-out group-hover:scale-110"
                     style={{
-                        filter: 'grayscale(1) sepia(1) hue-rotate(190deg) saturate(4) contrast(1.1) brightness(0.55)'
+                        filter: 'grayscale(1) sepia(1) hue-rotate(190deg) saturate(5) contrast(1.15) brightness(0.8)'
                     }}
                 />
-                {/* Dark overlay for readability */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#00030A] via-[#00030A]/75 to-[#00030A]/40 z-10" />
+                {/* Dark overlay — lighter vignette, keeps text legible */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#00030A] via-[#00030A]/55 to-transparent z-10" />
                 {/* Hover accent glow */}
                 <div
                     className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
@@ -175,7 +175,7 @@ function CardPilar({ title, desc, tag, iconId, image, accentColor, delay }: any)
             {/* Content */}
             <div className="relative z-30 flex flex-col h-full p-6 sm:p-7">
                 {/* Icon */}
-                <div className="w-14 h-14 rounded-2xl bg-[#379cfd]/5 backdrop-blur-xl border border-white/10 flex items-center justify-center mb-6 self-start group-hover:scale-110 group-hover:border-[#379cfd]/70 group-hover:bg-[#379cfd]/10 transition-all duration-500 shadow-xl overflow-hidden">
+                <div className="w-14 h-14 rounded-2xl bg-[#0a1628] border border-[#379cfd]/20 flex items-center justify-center mb-6 self-start group-hover:scale-110 group-hover:border-[#379cfd]/60 group-hover:bg-[#0d1f3c] transition-all duration-500 shadow-[0_0_20px_rgba(55,156,253,0.08)] overflow-hidden">
                     <motion.div
                         className="flex items-center justify-center w-full h-full"
                         whileHover={{ scale: 1.1 }}
