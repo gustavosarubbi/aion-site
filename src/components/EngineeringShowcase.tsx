@@ -56,35 +56,61 @@ export default function VitrineEngenharia() {
         <section id="engenharia" className="relative z-10 w-full py-16 md:py-24 overflow-hidden bg-[#00030A]">
             {/* ── Background Decoration (pointer-events-none, clipped, not overlapping content) ── */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                {/* Subtle grid texture */}
-                <div className="absolute inset-0 bg-[#379cfd]/5 mix-blend-overlay z-0" />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#00030A] via-[#00030A]/70 to-[#00030A] z-0" />
+                {/* Fundo Lowpoly - Visibilidade corrigida em tons de cinza */}
+                <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                    <img
+                        src="/assets/showcase/bg_lowpoly_structure.png"
+                        alt=""
+                        className="w-full h-full object-cover opacity-[0.25]"
+                        style={{
+                            filter: 'grayscale(1) brightness(0.7) contrast(1.1)',
+                        }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#00030A] via-[#00030A]/20 to-[#00030A] z-0" />
+                </div>
 
-                {/* Top-right decorative orb - bleeds right off the corner */}
+                {/* Top-right decorative orb - Black/Gray premium theme */}
                 <motion.div
-                    animate={{ y: [0, -25, 0], scale: [1, 1.06, 1], opacity: [0.55, 0.75, 0.55] }}
-                    transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute -top-20 -right-40 w-[480px] h-[480px] sm:w-[580px] sm:h-[580px] z-0"
+                    animate={{
+                        y: [0, -40, 0],
+                        rotate: [0, 8, 0],
+                        scale: [1, 1.04, 1],
+                        opacity: [0.35, 0.55, 0.35]
+                    }}
+                    transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute -top-32 -right-48 w-[420px] h-[420px] sm:w-[600px] sm:h-[600px] lg:w-[850px] lg:h-[850px] z-0 pointer-events-none"
+                    style={{
+                        mixBlendMode: "screen",
+                        filter: "drop-shadow(0 0 40px rgba(255,255,255,0.08))"
+                    }}
                 >
                     <img
                         src="/assets/showcase/shape_knot_structure.png"
                         alt=""
                         className="w-full h-full object-contain"
-                        style={{ filter: 'grayscale(1) brightness(1.4) sepia(1) hue-rotate(188deg) saturate(8) contrast(1.4)' }}
+                        style={{
+                            filter: 'grayscale(1) brightness(0.85) contrast(1.25)',
+                            maskImage: 'radial-gradient(circle at center, black 35%, transparent 85%)',
+                            WebkitMaskImage: 'radial-gradient(circle at center, black 35%, transparent 85%)'
+                        }}
                     />
                 </motion.div>
 
-                {/* Bottom-left decorative orb - bleeds left off the corner */}
+                {/* Bottom-left decorative orb - Black/Gray premium theme */}
                 <motion.div
-                    animate={{ y: [0, 35, 0], scale: [1, 1.08, 1], opacity: [0.45, 0.65, 0.45] }}
+                    animate={{ y: [0, 35, 0], scale: [1, 1.08, 1], opacity: [0.3, 0.45, 0.3] }}
                     transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-                    className="absolute -bottom-48 -left-48 w-[540px] h-[540px] sm:w-[680px] sm:h-[680px] z-0"
+                    className="absolute -bottom-48 -left-48 w-[480px] h-[480px] sm:w-[600px] sm:h-[600px] lg:w-[750px] lg:h-[750px] z-0 pointer-events-none"
                 >
                     <img
                         src="/assets/showcase/shape_knot_structure.png"
                         alt=""
                         className="w-full h-full object-contain"
-                        style={{ filter: 'grayscale(1) brightness(1.3) sepia(1) hue-rotate(188deg) saturate(6) contrast(1.3) blur(3px)' }}
+                        style={{
+                            filter: 'grayscale(1) brightness(0.8) contrast(1.2) blur(2px)',
+                            maskImage: 'radial-gradient(circle at center, black 30%, transparent 80%)',
+                            WebkitMaskImage: 'radial-gradient(circle at center, black 30%, transparent 80%)'
+                        }}
                     />
                 </motion.div>
             </div>
@@ -92,7 +118,7 @@ export default function VitrineEngenharia() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
                 {/* ── Heading Section ── */}
                 <div className="text-center space-y-4 mb-14 md:mb-20 relative">
-                    <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-40 bg-[#379cfd]/8 blur-[80px] rounded-full -z-10" />
+                    <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-40 bg-[#379cfd]/8 blur-[100px] rounded-full -z-10" />
 
                     <motion.span
                         initial={{ opacity: 0, y: 10 }}
