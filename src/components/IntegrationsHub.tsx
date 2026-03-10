@@ -91,7 +91,7 @@ export default function CentralIntegracoes() {
                                     className="group bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4 hover:bg-white/[0.06] hover:border-blue-500/20 transition-all duration-300 cursor-default"
                                 >
                                     <div className={`w-10 h-10 rounded-xl ${item.bg} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
-                                        <item.icon size={20} weight="duotone" className={item.color} />
+                                        <item.icon size={20} weight="bold" className={item.color} />
                                     </div>
                                     <h4 className="text-white font-bold text-sm mb-1">{item.name}</h4>
                                     <p className="text-white/30 text-[11px] leading-relaxed">{item.desc}</p>
@@ -110,7 +110,7 @@ export default function CentralIntegracoes() {
                             className="relative z-20 w-28 h-28 rounded-3xl bg-gradient-to-br from-blue-500/20 to-cyan-500/10 border border-blue-400/30 backdrop-blur-xl flex flex-col items-center justify-center shadow-[0_0_60px_rgba(59,130,246,0.15)] gap-2"
                         >
                             <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-3xl animate-pulse" />
-                            <ChatCircleDots size={36} weight="duotone" className="text-blue-400 relative z-10" />
+                            <ChatCircleDots size={36} weight="bold" className="text-blue-400 relative z-10" />
                             <span className="text-[8px] font-bold tracking-[0.2em] text-white/40 uppercase relative z-10">HUB</span>
                         </motion.div>
 
@@ -160,7 +160,7 @@ export default function CentralIntegracoes() {
                                             style={{ transform: `rotate(-${angle}deg)` }}
                                         >
                                             <div className={`w-14 h-14 rounded-2xl bg-white/[0.04] border border-white/[0.1] backdrop-blur-md flex items-center justify-center group-hover:bg-white/[0.08] group-hover:border-white/25 transition-all duration-300 shadow-lg shadow-black/20`}>
-                                                <item.icon size={24} weight="duotone" className={`${item.color} group-hover:scale-110 transition-transform`} />
+                                                <item.icon size={24} weight="bold" className={`${item.color} group-hover:scale-110 transition-transform`} />
                                             </div>
                                             <span className="absolute -bottom-6 whitespace-nowrap text-[9px] font-bold tracking-[0.15em] text-white/30 uppercase opacity-0 group-hover:opacity-100 transition-opacity">
                                                 {item.name}

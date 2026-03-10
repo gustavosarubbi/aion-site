@@ -19,7 +19,7 @@ const sourceCodePro = Source_Code_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "AION | Arquitetura Digital de Elite",
+  title: "QODEC | Arquitetura Digital de Elite",
   description: "Onde a inteligência sistêmica encontra o design de luxo.",
 };
 

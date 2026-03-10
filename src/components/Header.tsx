@@ -79,7 +79,7 @@ export default function Header() {
                             <div className="relative">
                                 <Image
                                     src="/AionLogo.png"
-                                    alt="Aion Logo"
+                                    alt="Qodec Logo"
                                     width={30}
                                     height={30}
                                     priority
@@ -88,7 +88,7 @@ export default function Header() {
                             </div>
                             <div className="flex flex-col -space-y-1">
                                 <span className="text-white font-extrabold tracking-[0.2em] text-[13px] sm:text-[14px] 2xl:text-[16px] leading-none drop-shadow-[0_0_8px_rgba(125,211,252,0.2)] font-[family-name:var(--font-montserrat)]">
-                                    AION
+                                    QODEC
                                 </span>
                                 <span className="text-[6.5px] font-semibold tracking-[0.25em] text-[#4169E1] uppercase leading-none pl-[1.5px] 2xl:pl-[2px] 2xl:text-[7.5px] font-[family-name:var(--font-source-code-pro)] mix-blend-screen">
                                     digital

@@ -10,36 +10,36 @@ const heroContent = [
     service: "DESIGN ELITE",
     outcome: "RESULTADOS",
     colors: {
-      text: "from-[#b8f3ff] via-[#67dcff] to-[#2f94ff]",
-      glow: "rgba(56,189,248,0.36)",
-      underline: "from-cyan-300/85 via-sky-300/70 to-blue-400/35",
-      underlineShadow: "rgba(34,211,238,0.55)",
-      outcomeGradient: "from-[#c6f6ff] via-[#6fd7ff] to-[#348bff]",
-      outcomeShadow: "rgba(56,189,248,0.32)"
+      text: "from-white via-[#7dcfff] to-[#379cfd]",
+      glow: "rgba(55,156,253,0.45)",
+      underline: "from-white/70 via-[#379cfd] to-[#1a5fa8]/40",
+      underlineShadow: "rgba(55,156,253,0.6)",
+      outcomeGradient: "from-white via-[#5db8ff] to-[#379cfd]",
+      outcomeShadow: "rgba(55,156,253,0.35)"
     }
   },
   {
     service: "ROBÔS I.A.",
     outcome: "ATENDIMENTO",
     colors: {
-      text: "from-[#d2f7ff] via-[#7ae0ff] to-[#37a8ff]",
-      glow: "rgba(34,211,238,0.34)",
-      underline: "from-cyan-300/85 via-sky-300/70 to-blue-400/35",
-      underlineShadow: "rgba(34,211,238,0.52)",
-      outcomeGradient: "from-[#d9f9ff] via-[#8be4ff] to-[#4d9bff]",
-      outcomeShadow: "rgba(34,211,238,0.3)"
+      text: "from-[#379cfd] via-[#5ec4ff] to-white",
+      glow: "rgba(55,156,253,0.40)",
+      underline: "from-[#379cfd] via-[#7dd9ff]/80 to-white/40",
+      underlineShadow: "rgba(55,156,253,0.55)",
+      outcomeGradient: "from-[#379cfd] via-[#66c5ff] to-white",
+      outcomeShadow: "rgba(55,156,253,0.32)"
     }
   },
   {
     service: "AUTOMAÇÃO",
     outcome: "ESCALA",
     colors: {
-      text: "from-[#c7f5ff] via-[#74d5ff] to-[#3a8dff]",
-      glow: "rgba(59,130,246,0.34)",
-      underline: "from-sky-300/85 via-cyan-300/70 to-blue-400/35",
-      underlineShadow: "rgba(56,189,248,0.52)",
-      outcomeGradient: "from-[#d3f8ff] via-[#7fdfff] to-[#4a88ff]",
-      outcomeShadow: "rgba(59,130,246,0.3)"
+      text: "from-[#1a6bcc] via-[#379cfd] to-[#88d4ff]",
+      glow: "rgba(55,156,253,0.42)",
+      underline: "from-[#1a6bcc]/60 via-[#379cfd] to-[#88d4ff]/60",
+      underlineShadow: "rgba(55,156,253,0.5)",
+      outcomeGradient: "from-[#1a6bcc] via-[#379cfd] to-[#9ddaff]",
+      outcomeShadow: "rgba(55,156,253,0.32)"
     }
   },
 ];
@@ -99,7 +99,7 @@ export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "ri
     >
       {/* MOBILE / TABLET (< 1280px): Stacked layout */}
       <div className={`min-[1280px]:hidden flex flex-col items-center gap-1 ${tabletSide === "left" ? "md:items-start" : "md:items-center"}`}>
-        <h1 className={`block font-black text-blue-200/88 tracking-[-0.02em] leading-[0.92] md:leading-[0.9] ${mobileDisplaySize} ${tabletDisplaySize} uppercase text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"}`}>
+        <h1 className={`block font-black text-white/90 tracking-[-0.02em] leading-[0.92] md:leading-[0.9] ${mobileDisplaySize} ${tabletDisplaySize} uppercase text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"}`}>
           TRANSFORMAMOS
         </h1>
 
@@ -133,7 +133,7 @@ export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "ri
         </motion.div>
 
         <motion.h1 layout className={`flex items-baseline justify-center gap-1.5 sm:gap-2 mt-0.5 ${tabletSide === "left" ? "md:justify-start" : "md:justify-center"}`}>
-          <motion.span layout className={`block font-black text-blue-200/88 tracking-[-0.015em] leading-[0.92] md:leading-[0.9] ${mobileDisplaySize} ${tabletDisplaySize} uppercase text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"}`}>
+          <motion.span layout className={`block font-black text-white/90 tracking-[-0.015em] leading-[0.92] md:leading-[0.9] ${mobileDisplaySize} ${tabletDisplaySize} uppercase text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"}`}>
             EM
           </motion.span>
           <div className="relative flex items-baseline overflow-visible">
@@ -158,7 +158,7 @@ export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "ri
       {/* DESKTOP (>= 1280px): 2 lines left-aligned */}
       <div className="hidden min-[1280px]:block w-full">
         <h1 className="flex flex-wrap items-center justify-start gap-x-1 sm:gap-x-2 gap-y-0 w-full">
-          <span className={`block font-black text-blue-200/85 tracking-tight leading-[0.95] ${desktopDisplaySize} uppercase`}>
+          <span className={`block font-black text-white/90 tracking-tight leading-[0.95] ${desktopDisplaySize} uppercase`}>
             TRANSFORMAMOS
           </span>
 
@@ -195,7 +195,7 @@ export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "ri
         </h1>
 
         <h1 className="flex flex-wrap items-baseline justify-start gap-1 sm:gap-2 w-full -mt-0.5 sm:-mt-1">
-          <span className={`block font-black text-blue-200/85 tracking-tight leading-[0.95] ${desktopDisplaySize} uppercase`}>
+          <span className={`block font-black text-white/90 tracking-tight leading-[0.95] ${desktopDisplaySize} uppercase`}>
             EM
           </span>
 

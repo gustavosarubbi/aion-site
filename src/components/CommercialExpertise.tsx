@@ -41,7 +41,7 @@ function CardAutoridade({
             <div className="relative z-10 flex flex-col h-full justify-between gap-6">
                 <div className="flex items-start justify-between">
                     <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
-                        <Icon size={24} weight="duotone" />
+                        <Icon size={24} weight="bold" />
                     </div>
                     <span className="text-[10px] font-bold tracking-[0.2em] text-white/30 uppercase py-1 px-3 bg-white/5 rounded-full border border-white/5">
                         {tag}
@@ -56,7 +56,7 @@ function CardAutoridade({
                 </div>
 
                 <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-                    <span className="text-[10px] font-bold tracking-[0.1em] text-white/20 uppercase">Padrão AION</span>
+                    <span className="text-[10px] font-bold tracking-[0.1em] text-white/20 uppercase">Padrão QODEC</span>
                     <ArrowUpRight size={18} className="text-blue-400 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all" />
                 </div>
             </div>
@@ -118,7 +118,7 @@ export default function AutoridadeTecnica() {
                         icon={Target}
                         tag="Precisão"
                         title="Sistemas de Alta Disponibilidade"
-                        desc="Diferente de agências focadas em estética passageira, a AION entrega infraestruturas robustas. Seus sistemas nunca param, processando leads e dados enquanto você foca no seu negócio."
+                        desc="Diferente de agências focadas em estética passageira, a QODEC entrega infraestruturas robustas. Seus sistemas nunca param, processando leads e dados enquanto você foca no seu negócio."
                         delay={0.1}
                     />
 

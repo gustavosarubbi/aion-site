@@ -53,7 +53,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 To log web-vitals in the browser console, run:
 
 ```js
-localStorage.setItem("aion:debug:web-vitals", "1")
+localStorage.setItem("qodec:debug:web-vitals", "1")
 ```
 
 Reload the page and inspect the console logs.

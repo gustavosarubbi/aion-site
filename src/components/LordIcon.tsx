@@ -28,7 +28,7 @@ const LordIcon: React.FC<LordIconProps> = ({
     colors = "primary:#06b6d4,secondary:#ffffff", // Default cyan/white for AION
     size = 64,
     delay = 0,
-    stroke = "100",
+    stroke = "bold",
 }) => {
     return (
         // @ts-ignore - custom element

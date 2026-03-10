@@ -404,12 +404,12 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                 angle={0.15}
                 penumbra={1}
                 intensity={mobileOptimized ? (isLaptopBand ? 0.72 : isTabletBand ? 0.67 : 0.62) : visualLowMode ? 0.72 : visualMediumMode ? 0.86 : 1}
-                color="#06b6d4"
+                color="#379cfd"
             />
             <pointLight
                 position={[-10, -5, -10]}
                 intensity={mobileOptimized ? (isLaptopBand ? 0.27 : isTabletBand ? 0.24 : 0.2) : visualLowMode ? 0.3 : visualMediumMode ? 0.4 : 0.5}
-                color="#3b82f6"
+                color="#1a5fa8"
             />
             {!visualLowMode && !visualMediumMode && <Environment preset="night" />}
             <Stars
@@ -462,7 +462,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                             : codeCardDesktopPosition
                     }
                     initialRotation={mobileOptimized ? [0.02, -0.22, 0.05] : [-0.1, -0.48, 0.1]}
-                    color="#3b82f6"
+                    color="#379cfd"
                     type="code"
                     title="SISTEMAS IA"
                     onRef={(r) => {
@@ -494,7 +494,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                             : lerp3([4.2, -0.4, -4.5], [2.9, -0.85, -2.4], responsiveProgress)
                     }
                     initialRotation={mobileOptimized ? [0.03, 0.18, -0.03] : [0.05, 0.28, -0.05]}
-                    color="#22d3ee"
+                    color="#379cfd"
                     type="flow"
                     title="ALTA CONVERSÃO"
                     onRef={(r) => {
@@ -526,7 +526,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                             : lerp3([-0.6, -3.4, 3.5], [-1.15, -3.2, 2.85], responsiveProgress)
                     }
                     initialRotation={mobileOptimized ? [0.06, 0.04, -0.01] : [0.12, 0.42, -0.04]}
-                    color="#38bdf8"
+                    color="#5db8ff"
                     type="preview"
                     title="DESIGN ELITE"
                     onRef={(r) => {

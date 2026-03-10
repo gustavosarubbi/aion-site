@@ -78,18 +78,18 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
 
     const desktopGlow = useMemo(() => {
         if (viewportWidth <= 1366) {
-            return { left: "47%", size: 340, opacity: "bg-cyan-500/8", blur: "blur-[74px]" };
+            return { left: "47%", size: 340, opacity: "bg-[#379cfd]/8", blur: "blur-[74px]" };
         }
 
         if (viewportWidth <= 1536) {
-            return { left: "50%", size: 390, opacity: "bg-cyan-500/9", blur: "blur-[86px]" };
+            return { left: "50%", size: 390, opacity: "bg-[#379cfd]/9", blur: "blur-[86px]" };
         }
 
         if (viewportWidth >= 1850) {
-            return { left: "54%", size: 560, opacity: "bg-cyan-500/11", blur: "blur-[106px]" };
+            return { left: "54%", size: 560, opacity: "bg-[#379cfd]/11", blur: "blur-[106px]" };
         }
 
-        return { left: "52%", size: 450, opacity: "bg-cyan-500/10", blur: "blur-[92px]" };
+        return { left: "52%", size: 450, opacity: "bg-[#379cfd]/10", blur: "blur-[92px]" };
     }, [viewportWidth]);
 
     return (
@@ -101,10 +101,10 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
                 className={
                     mobileOptimized
                         ? mobileBand === "laptop"
-                            ? "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[340px] max-w-[100vw] h-[340px] bg-cyan-500/10 rounded-full blur-[86px] pointer-events-none"
+                            ? "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[340px] max-w-[100vw] h-[340px] bg-[#379cfd]/10 rounded-full blur-[86px] pointer-events-none"
                             : mobileBand === "tablet"
-                                ? "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[285px] max-w-[100vw] h-[285px] bg-cyan-500/9 rounded-full blur-[74px] pointer-events-none"
-                                : "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[220px] max-w-[100vw] h-[220px] bg-cyan-500/8 rounded-full blur-[64px] pointer-events-none"
+                                ? "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[285px] max-w-[100vw] h-[285px] bg-[#379cfd]/9 rounded-full blur-[74px] pointer-events-none"
+                                : "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[220px] max-w-[100vw] h-[220px] bg-[#379cfd]/8 rounded-full blur-[64px] pointer-events-none"
                         : `absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none ${desktopGlow.opacity} ${desktopGlow.blur}`
                 }
                 style={

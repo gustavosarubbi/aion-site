@@ -145,7 +145,7 @@ export default function TemplatesPage() {
                                                 <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
                                             </div>
                                             <div className="flex-1 mx-3 h-5 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center px-3">
-                                                <span className="text-[10px] text-white/20">aion.digital/{tpl.id}</span>
+                                                <span className="text-[10px] text-white/20">qodec.digital/{tpl.id}</span>
                                             </div>
                                         </div>
                                         <Image

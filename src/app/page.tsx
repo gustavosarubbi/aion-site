@@ -30,23 +30,23 @@ const serviceItems = [
   {
     icon: Code,
     label: "SITES PREMIUM",
-    color: "text-sky-300",
-    halo: "bg-sky-400/35",
-    divider: "via-sky-300/70",
+    color: "text-[#379cfd]",
+    halo: "bg-[#379cfd]/35",
+    divider: "via-[#379cfd]/70",
   },
   {
     icon: ChatCircleDots,
     label: "CONVERSÃO",
-    color: "text-cyan-300",
-    halo: "bg-cyan-400/35",
-    divider: "via-cyan-300/70",
+    color: "text-[#379cfd]",
+    halo: "bg-[#379cfd]/35",
+    divider: "via-[#379cfd]/70",
   },
   {
     icon: RocketLaunch,
     label: "AUTOMAÇÃO",
-    color: "text-blue-300",
-    halo: "bg-blue-400/35",
-    divider: "via-blue-300/75",
+    color: "text-[#379cfd]",
+    halo: "bg-[#379cfd]/35",
+    divider: "via-[#379cfd]/75",
   },
 ] as const;
 
@@ -66,9 +66,9 @@ function HeroSubtitle() {
         className="text-white/84 text-[15.5px] sm:text-[16.5px] md:text-[clamp(1.05rem,0.4rem+1.8vw,1.45rem)] min-[1280px]:text-[18px] leading-[1.46] md:leading-[1.55] min-[1280px]:leading-[1.46] font-medium max-w-[40ch] md:max-w-[50ch] lg:max-w-none tracking-tight [text-wrap:balance] md:text-wrap"
       >
         Potencializamos sua escala digital com ecossistemas de alta performance:
-        <span className="text-cyan-300 font-bold"> Sites magnéticos</span>,
-        <span className="text-sky-300 font-bold font-semibold"> robôs de conversão</span> e
-        <span className="text-blue-300 font-bold font-semibold"> automações voltadas para o lucro</span>.
+        <span className="text-[#379cfd] font-bold"> Sites magnéticos</span>,
+        <span className="text-[#379cfd] font-bold font-semibold"> robôs de conversão</span> e
+        <span className="text-[#379cfd] font-bold font-semibold"> automações voltadas para o lucro</span>.
       </p>
     </div>
   );
@@ -121,12 +121,12 @@ export default function Home() {
         />
       </div>
 
-      <div className="fixed top-[18%] left-[8%] w-[34vw] h-[34vw] rounded-full bg-blue-600/7 blur-[84px] pointer-events-none mix-blend-screen z-0" />
-      <div className="fixed bottom-[12%] right-[10%] w-[28vw] h-[28vw] rounded-full bg-cyan-500/5 blur-[76px] pointer-events-none mix-blend-screen z-0" />
+      <div className="fixed top-[18%] left-[8%] w-[34vw] h-[34vw] rounded-full bg-[#379cfd]/10 blur-[84px] pointer-events-none mix-blend-screen z-0" />
+      <div className="fixed bottom-[12%] right-[10%] w-[28vw] h-[28vw] rounded-full bg-[#379cfd]/5 blur-[76px] pointer-events-none mix-blend-screen z-0" />
       <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,transparent_0%,#000000_100%)]" />
 
       <section id="inicio" className={HERO_SECTION_CLASS}>
-        <div className="absolute inset-x-0 top-[10%] h-[68%] bg-[radial-gradient(ellipse_at_center,rgba(14,165,233,0.08)_0%,rgba(0,0,0,0)_72%)] pointer-events-none z-0" />
+        <div className="absolute inset-x-0 top-[10%] h-[68%] bg-[radial-gradient(ellipse_at_center,rgba(55,156,253,0.08)_0%,rgba(0,0,0,0)_72%)] pointer-events-none z-0" />
 
         <div className={HERO_SHELL_CLASS}>
 
@@ -135,7 +135,7 @@ export default function Home() {
 
             {/* Text block: ServiceBar + Headline + Subtitle */}
             <div className="relative flex flex-col items-center justify-center gap-4 md:gap-4 px-4 sm:px-4 pb-0.5 mx-auto w-full max-w-5xl">
-              <div className="absolute -inset-8 bg-gradient-to-r from-blue-500/6 via-cyan-500/3 to-blue-500/5 blur-[58px] -z-10 rounded-full opacity-30 pointer-events-none" />
+              <div className="absolute -inset-8 bg-gradient-to-r from-[#379cfd]/10 via-[#379cfd]/5 to-[#379cfd]/10 blur-[58px] -z-10 rounded-full opacity-30 pointer-events-none" />
 
               {/* ServiceBar: Centered for Tablet */}
               <motion.div
@@ -203,7 +203,7 @@ export default function Home() {
                   },
                   {
                     Icon: EnvelopeSimple,
-                    href: "mailto:contato@aion.digital",
+                    href: "mailto:contato@qodec.digital",
                     baseColor: "text-sky-300",
                     borderColor: "border-sky-400/30",
                     glowColor: "shadow-[0_0_10px_rgba(56,189,248,0.16)]",
@@ -240,12 +240,12 @@ export default function Home() {
                   <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
                   <span className="relative z-10 flex items-center gap-2 tracking-[0.1em] uppercase">
                     VER SOLUÇÕES
-                    <ArrowRight size={14} weight="bold" className="transition-transform duration-500 group-hover:translate-x-1 text-blue-300" />
+                    <ArrowRight size={14} weight="bold" className="transition-transform duration-500 group-hover:translate-x-1 text-[#379cfd]" />
                   </span>
                 </a>
               </div>
 
-              <p style={montserrat} className="text-[10.5px] uppercase tracking-[0.08em] text-cyan-200/60">
+              <p style={montserrat} className="text-[10.5px] uppercase tracking-[0.08em] text-[#379cfd]/80">
                 Design de elite e tecnologia estratégica.
               </p>
             </motion.div>
@@ -256,7 +256,7 @@ export default function Home() {
 
             {/* Left: text content — vertically centered within the grid row */}
             <div className={HERO_DESKTOP_LEFT_CLASS}>
-              <div className="absolute -inset-8 bg-gradient-to-r from-blue-500/6 via-cyan-500/3 to-blue-500/5 blur-[58px] -z-10 rounded-full opacity-30 pointer-events-none" />
+              <div className="absolute -inset-8 bg-gradient-to-r from-[#379cfd]/10 via-[#379cfd]/5 to-[#379cfd]/10 blur-[58px] -z-10 rounded-full opacity-30 pointer-events-none" />
 
               <motion.div
                 className="relative z-30"
@@ -334,21 +334,21 @@ export default function Home() {
                   <ActionNode />
                   <a
                     href="#servicos"
-                    className="group relative inline-flex items-center justify-center gap-2.5 h-[46px] lg:h-[48px] min-[1280px]:h-[52px] px-2.5 lg:px-3.5 min-[1280px]:px-8 rounded-2xl bg-sky-500/10 backdrop-blur-xl border border-sky-400/20 text-[10.5px] lg:text-[11.5px] min-[1280px]:text-[13px] font-semibold text-white transition-all duration-500 hover:bg-sky-500/15 hover:border-sky-400/35 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500/50 pointer-events-auto shadow-[0_0_14px_rgba(56,189,248,0.06)] hover:shadow-[0_0_22px_rgba(56,189,248,0.12)] overflow-hidden"
+                    className="group relative inline-flex items-center justify-center gap-2.5 h-[46px] lg:h-[48px] min-[1280px]:h-[52px] px-2.5 lg:px-3.5 min-[1280px]:px-8 rounded-2xl bg-[#379cfd]/10 backdrop-blur-xl border border-[#379cfd]/20 text-[10.5px] lg:text-[11.5px] min-[1280px]:text-[13px] font-semibold text-white transition-all duration-500 hover:bg-[#379cfd]/15 hover:border-[#379cfd]/35 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#379cfd]/50 pointer-events-auto shadow-[0_0_14px_rgba(55,156,253,0.06)] hover:shadow-[0_0_22px_rgba(55,156,253,0.12)] overflow-hidden"
                     style={montserrat}
                   >
                     <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
                     <div className="absolute inset-0 bg-white/0 group-hover:bg-white/[0.02] transition-colors duration-500" />
                     <span className="relative z-10 flex items-center gap-2.5 uppercase tracking-[0.14em] drop-shadow-[0_1px_4px_rgba(0,0,0,0.1)] group-hover:text-white transition-all duration-500">
                       Ver soluções
-                      <ArrowRight size={14} weight="bold" className="transition-transform duration-500 group-hover:translate-x-1 text-sky-300 group-hover:text-white" />
+                      <ArrowRight size={14} weight="bold" className="transition-transform duration-500 group-hover:translate-x-1 text-[#379cfd] group-hover:text-white" />
                     </span>
                   </a>
                 </div>
 
                 <div className="flex items-center gap-2.5">
-                  <div className="w-2 h-[2px] bg-sky-400 opacity-80" />
-                  <p style={montserrat} className="text-[10px] lg:text-[10.5px] min-[1280px]:text-[12px] uppercase tracking-[0.1em] text-cyan-200/60">
+                  <div className="w-2 h-[2px] bg-[#379cfd] opacity-80" />
+                  <p style={montserrat} className="text-[10px] lg:text-[10.5px] min-[1280px]:text-[12px] uppercase tracking-[0.1em] text-[#379cfd]/80">
                     Design de elite e tecnologia estratégica.
                   </p>
                 </div>
