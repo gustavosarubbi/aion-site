@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat, Source_Code_Pro } from "next/font/google";
+import Script from "next/script";
 import SmoothScroll from "@/components/SmoothScroll";
 import Header from "@/components/Header";
 import WebVitalsReporter from "@/components/WebVitalsReporter";
@@ -37,6 +38,7 @@ export default function RootLayout({
           <Header />
           {children}
         </SmoothScroll>
+        <Script src="https://cdn.lordicon.com/lordicon.js" strategy="afterInteractive" />
       </body>
     </html>
   );

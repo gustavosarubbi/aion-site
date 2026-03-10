@@ -7,7 +7,7 @@ const montserrat = { fontFamily: "var(--font-montserrat)" } as const;
 /* ── Inline SVG logos for brands that fail via CDN ── */
 function AzureLogo() {
     return (
-        <svg viewBox="0 0 24 24" fill="white" className="h-5 w-5">
+        <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
             <path d="M5.483 0L1.006 8.602 0 20.77h4.503L12.209 0zm1.885 3.403L11.753 16.56l-5.635 5.477H24z" />
         </svg>
     );
@@ -15,19 +15,22 @@ function AzureLogo() {
 
 function AWSLogo() {
     return (
-        <svg viewBox="0 0 24 24" fill="white" className="h-5 w-5">
-            <path d="M6.763 10.036c0 .296.032.535.088.71.064.176.144.368.256.576.04.063.056.127.056.183 0 .08-.048.16-.152.24l-.503.335a.383.383 0 0 1-.208.072c-.08 0-.16-.04-.239-.112a2.47 2.47 0 0 1-.287-.375 6.18 6.18 0 0 1-.248-.471c-.622.734-1.405 1.101-2.347 1.101-.67 0-1.205-.191-1.596-.574-.391-.384-.59-.894-.59-1.533 0-.678.239-1.23.726-1.644.487-.415 1.133-.623 1.955-.623.272 0 .551.024.846.064.296.04.6.104.918.176v-.583c0-.607-.127-1.03-.375-1.277-.255-.248-.686-.367-1.3-.367-.28 0-.568.032-.863.104-.296.072-.583.16-.863.272a2.287 2.287 0 0 1-.28.104.488.488 0 0 1-.127.024c-.112 0-.168-.08-.168-.247v-.391c0-.128.016-.224.056-.28a.597.597 0 0 1 .224-.167c.279-.144.614-.264 1.005-.36a4.84 4.84 0 0 1 1.246-.152c.95 0 1.644.216 2.091.647.439.43.662 1.085.662 1.963v2.586zm-3.24 1.214c.263 0 .534-.048.822-.144.287-.096.543-.271.758-.51.128-.152.224-.32.272-.512.047-.191.08-.423.08-.694v-.335a6.66 6.66 0 0 0-.735-.136 6.02 6.02 0 0 0-.75-.048c-.535 0-.926.104-1.19.32-.263.215-.39.518-.39.917 0 .375.095.655.295.846.191.2.47.296.838.296zm6.41.862c-.144 0-.24-.024-.304-.08-.064-.048-.12-.16-.168-.311L7.586 5.55a1.398 1.398 0 0 1-.072-.32c0-.128.064-.2.191-.2h.783c.151 0 .255.025.31.08.065.048.113.16.16.312l1.342 5.284 1.245-5.284c.04-.16.088-.264.151-.312a.549.549 0 0 1 .32-.08h.638c.152 0 .256.025.32.08.063.048.12.16.151.312l1.261 5.348 1.381-5.348c.048-.16.104-.264.16-.312a.52.52 0 0 1 .311-.08h.743c.127 0 .2.065.2.2 0 .04-.009.08-.017.128a1.137 1.137 0 0 1-.056.2l-1.923 6.17c-.048.16-.104.263-.168.311a.51.51 0 0 1-.303.08h-.687c-.151 0-.255-.024-.32-.08-.063-.056-.119-.16-.15-.32l-1.238-5.148-1.23 5.14c-.04.16-.087.264-.15.32-.065.056-.177.08-.32.08zm10.256.215c-.415 0-.83-.048-1.229-.143-.399-.096-.71-.2-.918-.32-.128-.071-.215-.151-.247-.223a.563.563 0 0 1-.048-.224v-.407c0-.167.064-.247.183-.247.048 0 .096.008.144.024.048.016.12.048.2.08.271.12.566.215.878.279.319.064.63.096.95.096.502 0 .894-.088 1.165-.264a.86.86 0 0 0 .415-.758.777.777 0 0 0-.215-.559c-.144-.151-.415-.287-.806-.415l-1.157-.36c-.583-.183-1.014-.454-1.277-.813a1.902 1.902 0 0 1-.4-1.158c0-.335.073-.63.216-.886.144-.255.335-.479.575-.654.24-.184.51-.32.83-.415a3.48 3.48 0 0 1 1.005-.136c.175 0 .359.008.535.032.183.024.35.056.518.088.16.04.312.08.455.127.144.048.256.096.336.152a.69.69 0 0 1 .24.2.43.43 0 0 1 .071.263v.375c0 .168-.064.256-.184.256a.83.83 0 0 1-.303-.096 3.652 3.652 0 0 0-1.532-.311c-.455 0-.815.071-1.062.223-.248.152-.375.383-.375.71 0 .224.08.416.24.567.159.152.454.304.878.44l1.134.358c.574.184.99.44 1.237.767.247.327.367.702.367 1.117 0 .343-.072.655-.207.926-.144.272-.335.511-.583.703-.248.2-.543.343-.886.447-.36.111-.734.167-1.142.167zM21.698 16.207c-2.626 1.94-6.442 2.969-9.722 2.969-4.598 0-8.74-1.7-11.87-4.526-.247-.224-.024-.527.271-.352 3.384 1.963 7.559 3.153 11.877 3.153 2.914 0 6.114-.607 9.06-1.852.439-.2.814.287.384.608zM22.792 14.961c-.336-.43-2.22-.207-3.074-.104-.255.032-.295-.192-.063-.36 1.5-1.053 3.967-.75 4.254-.399.287.36-.08 2.826-1.485 4.007-.215.184-.423.088-.327-.152.319-.79 1.03-2.57.695-2.992z" />
+        <svg viewBox="0 0 304 182" fill="currentColor" className="h-4 w-auto">
+            {/* AWS Text - Reacts to hover */}
+            <path d="M86.4,66.4c0,3.7,0.4,6.7,1.1,8.9c0.8,2.2,1.8,4.6,3.2,7.2c0.5,0.8,0.7,1.6,0.7,2.3c0,1-0.6,2-1.9,3l-6.3,4.2c-0.9,0.6-1.8,0.9-2.6,0.9c-1,0-2-0.5-3-1.4C76.2,90,75,88.4,74,86.8c-1-1.7-2-3.6-3.1-5.9c-7.8,9.2-17.6,13.8-29.4,13.8c-8.4,0-15.1-2.4-20-7.2c-4.9-4.8-7.4-11.2-7.4-19.2c0-8.5,3-15.4,9.1-20.6c6.1-5.2,14.2-7.8,24.5-7.8c3.4,0,6.9,0.3,10.6,0.8c3.7,0.5,7.5,1.3,11.5,2.2v-7.3c0-7.6-1.6-12.9-4.7-16c-3.2-3.1-8.6-4.6-16.3-4.6c-3.5,0-7.1,0.4-10.8,1.3c-3.7,0.9-7.3,2-10.8,3.4c-1.6,0.7-2.8,1.1-3.5,1.3c-0.7,0.2-1.2,0.3-1.6,0.3c-1.4,0-2.1-1-2.1-3.1v-4.9c0-1.6,0.2-2.8,0.7-3.5c0.5-0.7,1.4-1.4,2.8-2.1c3.5-1.8,7.7-3.3,12.6-4.5c4.9-1.3,10.1-1.9,15.6-1.9c11.9,0,20.6,2.7,26.2,8.1c5.5,5.4,8.3,13.6,8.3,24.6V66.4z M45.8,81.6c3.3,0,6.7-0.6,10.3-1.8c3.6-1.2,6.8-3.4,9.5-6.4c1.6-1.9,2.8-4,3.4-6.4c0.6-2.4,1-5.3,1-8.7v-4.2c-2.9-0.7-6-1.3-9.2-1.7c-3.2-0.4-6.3-0.6-9.4-0.6c-6.7,0-11.6,1.3-14.9,4c-3.3,2.7-4.9,6.5-4.9,11.5c0,4.7,1.2,8.2,3.7,10.6C37.7,80.4,41.2,81.6,45.8,81.6z M126.1,92.4c-1.8,0-3-0.3-3.8-1c-0.8-0.6-1.5-2-2.1-3.9L96.7,10.2c-0.6-2-0.9-3.3-0.9-4c0-1.6,0.8-2.5,2.4-2.5h9.8c1.9,0,3.2,0.3,3.9,1c0.8,0.6,1.4,2,2,3.9l16.8,66.2l15.6-66.2c0.5-2,1.1-3.3,1.9-3.9c0.8-0.6,2.2-1,4-1h8c1.9,0,3.2,0.3,4,1c0.8,0.6,1.5,2,1.9,3.9l15.8,67l17.3-67c0.6-2,1.3-3.3,2-3.9c0.8-0.6,2.1-1,3.9-1h9.3c1.6,0,2.5,0.8,2.5,2.5c0,0.5-0.1,1-0.2,1.6c-0.1,0.6-0.3,1.4-0.7,2.5l-24.1,77.3c-0.6,2-1.3,3.3-2.1,3.9c-0.8,0.6-2.1,1-3.8,1h-8.6c-1.9,0-3.2-0.3-4-1c-0.8-0.7-1.5-2-1.9-4L156,23l-15.4,64.4c-0.5,2-1.1,3.3-1.9,4c-0.8,0.7-2.2,1-4,1H126.1z M254.6,95.1c-5.2,0-10.4-0.6-15.4-1.8c-5-1.2-8.9-2.5-11.5-4c-1.6-0.9-2.7-1.9-3.1-2.8c-0.4-0.9-0.6-1.9-0.6-2.8v-5.1c0-2.1,0.8-3.1,2.3-3.1c0.6,0,1.2,0.1,1.8,0.3c0.6,0.2,1.5,0.6,2.5,1c3.4,1.5,7.1,2.7,11,3.5c4,0.8,7.9,1.2,11.9,1.2c6.3,0,11.2-1.1,14.6-3.3c3.4-2.2,5.2-5.4,5.2-9.5c0-2.8-0.9-5.1-2.7-7c-1.8-1.9-5.2-3.6-10.1-5.2L246,52c-7.3-2.3-12.7-5.7-16-10.2c-3.3-4.4-5-9.3-5-14.5c0-4.2,0.9-7.9,2.7-11.1c1.8-3.2,4.2-6,7.2-8.2c3-2.3,6.4-4,10.4-5.2c4-1.2,8.2-1.7,12.6-1.7c2.2,0,4.5,0.1,6.7,0.4c2.3,0.3,4.4,0.7,6.5,1.1c2,0.5,3.9,1,5.7,1.6c1.8,0.6,3.2,1.2,4.2,1.8c1.4,0.8,2.4,1.6,3,2.5c0.6,0.8,0.9,1.9,0.9,3.3v4.7c0,2.1-0.8,3.2-2.3,3.2c-0.8,0-2.1-0.4-3.8-1.2c-5.7-2.6-12.1-3.9-19.2-3.9c-5.7,0-10.2,0.9-13.3,2.8c-3.1,1.9-4.7,4.8-4.7,8.9c0,2.8,1,5.2,3,7.1c2,1.9,5.7,3.8,11,5.5l14.2,4.5c7.2,2.3,12.4,5.5,15.5,9.6c3.1,4.1,4.6,8.8,4.6,14c0,4.3-0.9,8.2-2.6,11.6c-1.8,3.4-4.2,6.4-7.3,8.8c-3.1,2.5-6.8,4.3-11.1,5.6C264.4,94.4,259.7,95.1,254.6,95.1z" />
+            {/* AWS Smile - Fixed Orange */}
+            <g fill="#FF9900">
+                <path d="M273.5,143.7c-32.9,24.3-80.7,37.2-121.8,37.2c-57.6,0-109.5-21.3-148.7-56.7c-3.1-2.8-0.3-6.6,3.4-4.4c42.4,24.6,94.7,39.5,148.8,39.5c36.5,0,76.6-7.6,113.5-23.2C274.2,133.6,278.9,139.7,273.5,143.7z" />
+                <path d="M287.2,128.1c-4.2-5.4-27.8-2.6-38.5-1.3c-3.2,0.4-3.7-2.4-0.8-4.5c18.8-13.2,49.7-9.4,53.3-5c3.6,4.5-1,35.4-18.6,50.2c-2.7,2.3-5.3,1.1-4.1-1.9C282.5,155.7,291.4,133.4,287.2,128.1z" />
+            </g>
         </svg>
     );
 }
 
 function InfinitePayLogo() {
     return (
-        <svg viewBox="0 0 120 24" fill="white" className="h-4 w-auto">
-            <path d="M8 4C5.8 4 4 5.8 4 8s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
-            <path d="M16 12c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z" />
-            <path d="M12 8c0-1.1-.45-2.09-1.17-2.83l-1.41 1.41A2 2 0 0 1 10 8c0 1.1-.45 2.09-1.17 2.83l1.41 1.41A3.97 3.97 0 0 0 12 8z" />
-            <path d="M12 16c0 1.1.45 2.09 1.17 2.83l1.41-1.41A2 2 0 0 1 14 16c0-1.1.45-2.09 1.17-2.83l-1.41-1.41A3.97 3.97 0 0 0 12 16z" />
+        <svg viewBox="0 0 210 210" fill="currentColor" className="h-4 w-auto">
+            <path fillRule="evenodd" clipRule="evenodd" d="M105 157.962C134.246 157.962 157.962 134.246 157.962 105C157.962 75.754 134.246 52.038 105 52.038C75.754 52.038 52.038 75.754 52.038 105C52.038 134.246 75.754 157.962 105 157.962ZM174.076 105C174.076 143.15 143.15 174.076 105 174.076C66.85 174.076 35.924 143.15 35.924 105C35.924 66.85 66.85 35.924 105 35.924C143.15 35.924 174.076 66.85 174.076 105Z" />
         </svg>
     );
 }
@@ -36,87 +39,108 @@ type GatewayItem = {
     name: string;
     logo?: string;
     CustomIcon?: React.ComponentType;
+    brandColor: string;
 };
 
 const gateways: GatewayItem[] = [
-    { name: "n8n.io", logo: "https://cdn.simpleicons.org/n8n/fff" },
-    { name: "WhatsApp Business", logo: "https://cdn.simpleicons.org/whatsapp/fff" },
-    { name: "Mercado Pago", logo: "https://cdn.simpleicons.org/mercadopago/fff" },
-    { name: "InfinitePay", CustomIcon: InfinitePayLogo },
-    { name: "Stripe", logo: "https://cdn.simpleicons.org/stripe/fff" },
-    { name: "Microsoft Azure", CustomIcon: AzureLogo },
-    { name: "Amazon AWS", CustomIcon: AWSLogo },
-    { name: "Shopify", logo: "https://cdn.simpleicons.org/shopify/fff" },
-    { name: "Meta Business", logo: "https://cdn.simpleicons.org/meta/fff" },
+    { name: "n8n.io", logo: "https://cdn.simpleicons.org/n8n/fff", brandColor: "#FF6C37" },
+    { name: "WhatsApp Business", logo: "https://cdn.simpleicons.org/whatsapp/fff", brandColor: "#25D366" },
+    { name: "Mercado Pago", logo: "https://cdn.simpleicons.org/mercadopago/fff", brandColor: "#009EE3" },
+    { name: "InfinitePay", CustomIcon: InfinitePayLogo, brandColor: "#00FF5F" },
+    { name: "Stripe", logo: "https://cdn.simpleicons.org/stripe/fff", brandColor: "#635BFF" },
+    { name: "Microsoft Azure", CustomIcon: AzureLogo, brandColor: "#008AD7" }, // Official Azure blue corrected
+    { name: "Amazon AWS", CustomIcon: AWSLogo, brandColor: "#FF9900" },
+    { name: "Shopify", logo: "https://cdn.simpleicons.org/shopify/fff", brandColor: "#96bf48" },
+    { name: "Meta Business", logo: "https://cdn.simpleicons.org/meta/fff", brandColor: "#0668E1" },
 ];
 
-const marqueeItems = [...gateways, ...gateways];
+const marqueeItems = [...gateways, ...gateways, ...gateways, ...gateways]; // 4 copies for bulletproof full-width looping
 
 export default function GatewayCarousel() {
     return (
-        <div className="relative w-full py-10 md:py-14 bg-black overflow-hidden flex flex-col items-center group">
-            {/* Top & Bottom Animated Borders */}
-            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent opacity-30" />
-            <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent opacity-30" />
+        <div className="relative w-full py-2 bg-black overflow-hidden flex flex-col items-center group">
+            {/* Expanded Track Container with Integrated Title */}
+            <div className="w-full max-w-5xl mx-auto relative flex flex-col overflow-x-hidden">
 
-            <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="text-[9px] md:text-[10px] font-bold tracking-[0.4em] text-white/20 uppercase mb-10 text-center px-6"
-            >
-                Tecnologias de ponta integradas para acelerar seu lucro
-            </motion.p>
+                {/* Top Border with Integrated Title */}
+                <div className="absolute top-0 inset-x-0 outline-none flex items-center justify-center z-30 pt-1 pointer-events-none">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-blue-500/10" />
+                    <motion.span
+                        initial={{ opacity: 0, letterSpacing: '0.1em' }}
+                        whileInView={{ opacity: 1, letterSpacing: '0.25em' }}
+                        viewport={{ once: true }}
+                        className="px-6 text-[9px] md:text-[10px] font-black text-white/50 uppercase tracking-[0.25em]"
+                    >
+                        Tecnologias Integradas
+                    </motion.span>
+                    <div className="flex-1 h-px bg-gradient-to-r from-blue-500/10 via-blue-500/30 to-transparent" />
+                </div>
+                {/* Secondary line just below the title for that "track" feel */}
+                <div className="absolute top-[2px] inset-x-0 h-px w-full bg-gradient-to-r from-transparent via-white/5 to-transparent z-10 pointer-events-none" />
 
-            <div className="w-full relative flex overflow-x-hidden">
-                {/* High-end Gradient Masks */}
-                <div className="absolute left-0 top-0 bottom-0 w-24 md:w-64 bg-gradient-to-r from-black via-black/80 to-transparent z-10 pointer-events-none" />
-                <div className="absolute right-0 top-0 bottom-0 w-24 md:w-64 bg-gradient-to-l from-black via-black/80 to-transparent z-10 pointer-events-none" />
+
+                {/* Harmonious Bottom Border */}
+                <div className="absolute bottom-0 inset-x-0 flex flex-col items-center z-10 pointer-events-none">
+                    <div className="h-px w-[95%] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-[1px]" />
+                    <div className="h-px w-full bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
+                    {/* Subtle bottom glow */}
+                    <div className="absolute bottom-0 h-4 w-full bg-gradient-to-t from-blue-500/5 to-transparent pointer-events-none" />
+                </div>
+
+                {/* Fixed Fades */}
+                <div className="absolute left-0 top-0 bottom-0 w-24 md:w-32 bg-gradient-to-r from-black via-black/80 to-transparent z-20 pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-0 w-24 md:w-32 bg-gradient-to-l from-black via-black/80 to-transparent z-20 pointer-events-none" />
 
                 <motion.div
-                    className="flex shrink-0 gap-12 md:gap-16 items-center pl-12 md:pl-16"
+                    className="flex shrink-0 w-max items-center py-8 mt-4"
                     animate={{
-                        x: ['0%', '-50%']
+                        x: [0, "-50%"] // Translate exactly half of the multiplied sets
                     }}
                     transition={{
                         x: {
                             repeat: Infinity,
                             repeatType: "loop",
-                            duration: 60,
+                            duration: 35, // Slowed down from 20 for a smoother, relaxed pace
                             ease: "linear",
                         },
                     }}
                 >
                     {marqueeItems.map((item, idx) => {
-                        const isEven = idx % 2 === 0;
-                        const accentColor = isEven ? "bg-blue-500/40" : "bg-cyan-500/40";
-
                         return (
-                            <div key={idx} className="flex items-center gap-12 md:gap-16">
+                            // Perfect math sizing block: includes gap and right padding to seamlessly repeat without parent gap math drift
+                            <div key={idx} className="flex items-center gap-10 md:gap-14 pr-10 md:pr-14">
                                 <div
-                                    className="flex items-center gap-3 opacity-30 hover:opacity-100 transition-all duration-500 group/item cursor-default"
+                                    className="relative flex flex-col items-center gap-2.5 transition-all duration-300 group/item cursor-default"
+                                    style={{ '--hover-color': item.brandColor } as React.CSSProperties}
                                 >
-                                    {item.CustomIcon ? (
-                                        <item.CustomIcon />
-                                    ) : (
-                                        <img
-                                            src={item.logo}
-                                            alt={item.name}
-                                            className="h-5 w-auto object-contain opacity-90 group-hover/item:opacity-100 transition-opacity"
-                                            onError={(e) => {
-                                                e.currentTarget.style.display = 'none';
-                                            }}
-                                        />
-                                    )}
+                                    <div className="transition-all duration-300 group-hover/item:text-[var(--hover-color)] text-white/80 group-hover/item:scale-110 group-hover/item:drop-shadow-[0_0_15px_var(--hover-color)]">
+                                        {item.CustomIcon ? (
+                                            <item.CustomIcon />
+                                        ) : (
+                                            <div
+                                                className="h-5 w-8 bg-current transition-colors duration-300"
+                                                style={{
+                                                    maskImage: `url(${item.logo})`,
+                                                    maskSize: 'contain',
+                                                    maskRepeat: 'no-repeat',
+                                                    maskPosition: 'center',
+                                                    WebkitMaskImage: `url(${item.logo})`,
+                                                    WebkitMaskSize: 'contain',
+                                                    WebkitMaskRepeat: 'no-repeat',
+                                                    WebkitMaskPosition: 'center',
+                                                }}
+                                            />
+                                        )}
+                                    </div>
                                     <span
                                         style={montserrat}
-                                        className="text-white/80 font-medium tracking-[0.2em] text-[10px] md:text-xs whitespace-nowrap uppercase"
+                                        className="text-[9px] md:text-[10px] text-white/60 font-bold whitespace-nowrap uppercase transition-all duration-300 group-hover/item:text-white"
                                     >
                                         {item.name}
                                     </span>
                                 </div>
-                                {/* Vertical Separator */}
-                                <div className={`w-px h-6 rotate-[15deg] ${accentColor} shadow-[0_0_8px_rgba(59,130,246,0.1)]`} />
+                                {/* Discrete Vertical Separator */}
+                                <div className="w-[1px] h-6 bg-white/10" />
                             </div>
                         );
                     })}
