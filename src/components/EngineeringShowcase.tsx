@@ -6,6 +6,9 @@ import { MagnifyingGlass, CursorClick, Cpu, ShieldCheck, ArrowRight } from "@pho
 
 const montserrat = { fontFamily: "var(--font-montserrat)" } as const;
 
+// THEME COLOR: #379cfd
+const THEME_BLUE = "#379cfd";
+
 const pilares = [
     {
         title: "DIAGNÓSTICO ESTRATÉGICO",
@@ -44,7 +47,7 @@ export default function VitrineEngenharia() {
     useEffect(() => {
         async function loadAssets() {
             try {
-                const res = await fetch("/api/showcase");
+                const res = await fetch(`/api/showcase?purge=${Date.now()}`);
                 const data = await res.json();
                 setAssets(data);
             } catch (error) {
@@ -57,10 +60,10 @@ export default function VitrineEngenharia() {
     }, []);
 
     return (
-        <section id="engenharia" className="relative z-10 w-full py-24 md:py-32 overflow-hidden bg-[#00040D]">
+        <section id="engenharia" className="relative z-10 w-full py-24 md:py-32 overflow-hidden bg-[#00030A]">
             {/* ── Background Elements ── */}
             <div className="absolute inset-0 pointer-events-none">
-                {/* Dynamic Premium Background */}
+                {/* Dynamic Premium Background - Strictly Color Grayscale + #379cfd Overlay */}
                 <AnimatePresence>
                     {!isLoading && assets?.background && (
                         <motion.div
@@ -72,80 +75,103 @@ export default function VitrineEngenharia() {
                                 backgroundImage: `url('${assets.background}')`,
                                 backgroundSize: 'cover',
                                 backgroundPosition: 'center',
-                                filter: 'contrast(130%) brightness(0.5) saturate(1.2)'
+                                filter: 'grayscale(1) brightness(0.6) contrast(120%)'
                             }}
                         />
                     )}
                 </AnimatePresence>
 
-                {/* Intense Specific Blue #3188ff Palette Casting */}
-                <div className="absolute inset-0 bg-[#3188ff]/30 mix-blend-overlay z-0" />
-                <div className="absolute inset-0 bg-[#3188ff]/10 mix-blend-color z-0" />
-                <div className="absolute inset-0 bg-[#00040D]/70 z-0" />
+                {/* Force Specific Blue #379cfd Casting */}
+                <div className="absolute inset-0 bg-[#379cfd]/30 mix-blend-overlay z-0" />
+                <div className="absolute inset-0 bg-[#379cfd]/10 mix-blend-color z-0" />
+                <div className="absolute inset-0 bg-[#00030A]/85 z-0" />
 
-                {/* Vertical Fade gradients */}
-                <div className="absolute inset-0 bg-gradient-to-b from-[#00040D] via-transparent to-[#00040D] z-0" />
-
-                {/* Composed 3D Elements - Fixing "Square Box" by adding masks and better blending */}
+                {/* Composed 3D Elements - Fixing "Square Box" and Palette #379cfd perfectly */}
                 <motion.div
-                    animate={{ y: [0, -30, 0], rotate: [0, 10, 0], scale: [1, 1.05, 1] }}
-                    transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-[5%] -left-32 w-[650px] h-[650px] opacity-40 mix-blend-screen z-0"
+                    animate={{ y: [0, -45, 0], rotate: [0, 15, 0], scale: [1, 1.05, 1] }}
+                    transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-[8%] -left-32 w-[700px] h-[700px] z-0"
                 >
+                    <div
+                        className="w-full h-full bg-[#379cfd] opacity-50 blur-[2px]"
+                        style={{
+                            maskImage: 'url("/assets/3d_shape_glass_cyan.png")',
+                            WebkitMaskImage: 'url("/assets/3d_shape_glass_cyan.png")',
+                            maskSize: 'contain',
+                            WebkitMaskSize: 'contain',
+                            maskRepeat: 'no-repeat',
+                            WebkitMaskRepeat: 'no-repeat',
+                            maskPosition: 'center',
+                            WebkitMaskPosition: 'center',
+                        }}
+                    />
+                    {/* Secondary layer for glow/depth overlay */}
                     <img
                         src="/assets/3d_shape_glass_cyan.png"
                         alt=""
-                        className="w-full h-full object-contain blur-[1px]"
-                        style={{ maskImage: 'radial-gradient(circle, black 40%, transparent 80%)', WebkitMaskImage: 'radial-gradient(circle, black 40%, transparent 80%)' }}
+                        className="absolute inset-0 w-full h-full object-contain mix-blend-screen opacity-20"
+                        style={{
+                            filter: 'hue-rotate(25deg) saturate(2)',
+                            maskImage: 'radial-gradient(circle, black 30%, transparent 65%)',
+                            WebkitMaskImage: 'radial-gradient(circle, black 30%, transparent 65%)'
+                        }}
                     />
                 </motion.div>
 
                 <motion.div
-                    animate={{ y: [0, 40, 0], rotate: [0, -15, 0], scale: [1, 1.1, 1] }}
-                    transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                    className="absolute bottom-[-10%] -right-48 w-[800px] h-[800px] opacity-20 mix-blend-screen z-0"
+                    animate={{ y: [0, 60, 0], rotate: [0, -12, 0], scale: [1, 1.1, 1] }}
+                    transition={{ duration: 35, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+                    className="absolute bottom-[-15%] -right-48 w-[950px] h-[950px] z-0"
                 >
+                    <div
+                        className="w-full h-full bg-[#379cfd] opacity-35 blur-[10px]"
+                        style={{
+                            maskImage: 'url("/assets/3d_shape_glass_cyan.png")',
+                            WebkitMaskImage: 'url("/assets/3d_shape_glass_cyan.png")',
+                            maskSize: 'contain',
+                            WebkitMaskSize: 'contain',
+                            maskRepeat: 'no-repeat',
+                            WebkitMaskRepeat: 'no-repeat',
+                            maskPosition: 'center',
+                            WebkitMaskPosition: 'center',
+                        }}
+                    />
                     <img
                         src="/assets/3d_shape_glass_cyan.png"
                         alt=""
-                        className="w-full h-full object-contain blur-[5px]"
-                        style={{ maskImage: 'radial-gradient(circle, black 30%, transparent 75%)', WebkitMaskImage: 'radial-gradient(circle, black 30%, transparent 75%)' }}
+                        className="absolute inset-0 w-full h-full object-contain blur-[8px] mix-blend-screen opacity-15"
+                        style={{
+                            filter: 'hue-rotate(30deg) saturate(2)',
+                            maskImage: 'radial-gradient(circle, black 25%, transparent 60%)',
+                            WebkitMaskImage: 'radial-gradient(circle, black 25%, transparent 60%)'
+                        }}
                     />
                 </motion.div>
 
-                {/* Futuristic Tech Grid Texture */}
-                <div
-                    className="absolute inset-0 opacity-15 mix-blend-overlay z-0"
-                    style={{
-                        backgroundImage: "url('/assets/dark_tech_bg_grid.png')",
-                        backgroundSize: '900px',
-                        backgroundRepeat: 'repeat',
-                        maskImage: 'linear-gradient(to bottom, transparent, black, transparent)',
-                    }}
-                />
-
-                {/* Wavy Kinetic Path using #3188ff */}
-                <svg className="absolute top-1/2 left-0 w-full h-80 -translate-y-1/2 opacity-30 blur-xl mix-blend-screen z-0" preserveAspectRatio="none" viewBox="0 0 1200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Wavy Kinetic Path using #379cfd */}
+                <svg className="absolute top-1/2 left-0 w-full h-[600px] -translate-y-1/2 opacity-30 blur-3xl mix-blend-screen z-0" preserveAspectRatio="none" viewBox="0 0 1200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <motion.path
                         d="M0 60C150 110 300 10 450 60C600 110 750 10 900 60C1050 110 1200 60 1200 60"
-                        stroke="#3188ff"
-                        strokeWidth="2"
+                        stroke={THEME_BLUE}
+                        strokeWidth="5"
                         initial={{ pathLength: 0, opacity: 0 }}
                         whileInView={{ pathLength: 1, opacity: 1 }}
-                        transition={{ duration: 7, ease: "easeInOut" }}
+                        transition={{ duration: 8, ease: "easeInOut" }}
                     />
                 </svg>
+
+                <div className="absolute inset-0 bg-gradient-to-b from-[#00030A] via-transparent to-[#00030A] z-0" />
             </div>
 
             <div className="max-w-7xl mx-auto px-6 relative z-10">
                 {/* Heading Section */}
-                <div className="text-center space-y-6 mb-24 relative">
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-[700px] h-32 bg-[#3188ff]/10 blur-[100px] rounded-full -z-10" />
+                <div className="text-center space-y-8 mb-24 relative">
+                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[800px] h-40 bg-[#379cfd]/20 blur-[130px] rounded-full -z-10" />
 
                     <motion.span
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        className="text-[10px] md:text-[11px] font-black tracking-[0.7em] text-[#3188ff] uppercase drop-shadow-[0_0_12px_rgba(49,136,255,0.6)]"
+                        className="text-[10px] md:text-[12px] font-black tracking-[1em] text-[#379cfd] uppercase drop-shadow-[0_0_15px_rgba(55,156,253,0.8)]"
                     >
                         ENGENHARIA E PERFORMANCE
                     </motion.span>
@@ -154,24 +180,25 @@ export default function VitrineEngenharia() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         style={montserrat}
-                        className="text-3xl md:text-5xl lg:text-7xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-[#3188ff]/40 leading-tight uppercase relative z-10"
+                        className="text-4xl md:text-6xl lg:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-white via-white to-[#379cfd]/60 leading-[0.85] uppercase relative z-10"
                     >
-                        ARQUITETAMOS ECOSSISTEMAS <br className="hidden md:block" />
-                        DIGITAIS DE ELITE
+                        ARQUITETAMOS <br />
+                        ECOSSISTEMAS <br />
+                        DE ELITE
                     </motion.h2>
 
                     <motion.p
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         transition={{ delay: 0.2 }}
-                        className="text-white/40 text-sm md:text-base max-w-2xl mx-auto font-light leading-relaxed"
+                        className="text-white/40 text-sm md:text-base max-w-2xl mx-auto font-light leading-relaxed tracking-wider"
                     >
-                        Do diagnóstico à operação crítica. Soluções robustas e automações inteligentes com excelência técnica e estética premium sob medida.
+                        Padrão AION: Excelência técnica e estética premium operando em sintonia absoluta com a paleta #379cfd.
                     </motion.p>
                 </div>
 
                 {/* Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-2">
                     {pilares.map((pilar, idx) => (
                         <CardPilar
                             key={idx}
@@ -189,27 +216,27 @@ export default function VitrineEngenharia() {
 function CardPilar({ title, desc, tag, Icon, delay, cardImage, isLoading }: any) {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay, duration: 0.7 }}
-            className="group relative p-8 rounded-[36px] border border-white/5 hover:border-[#3188ff]/40 transition-all duration-700 overflow-hidden flex flex-col h-full min-h-[480px] bg-[#050A18]/20 backdrop-blur-sm"
+            transition={{ delay, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="group relative p-9 rounded-[42px] border border-white/[0.04] hover:border-[#379cfd]/60 transition-all duration-700 overflow-hidden flex flex-col h-full min-h-[520px] bg-[#01040D]/40 backdrop-blur-[8px]"
         >
             {/* Card Base Layer */}
-            <div className="absolute inset-0 bg-[#00040D] z-0" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#050C21] to-[#01040D] z-0" />
 
-            {/* Premium Asset Reveal Layer */}
+            {/* Premium Asset Reveal Layer - Now strictly filtered to #379cfd */}
             <AnimatePresence>
                 {!isLoading && cardImage && (
                     <motion.div
-                        initial={{ opacity: 0, scale: 1.1 }}
-                        animate={{ opacity: 0.12, scale: 1 }}
-                        className="absolute inset-0 z-0 transition-transform duration-[2s] ease-out group-hover:scale-105 group-hover:opacity-45"
+                        initial={{ opacity: 0, scale: 1.2 }}
+                        animate={{ opacity: 0.2, scale: 1 }}
+                        className="absolute inset-0 z-0 transition-transform duration-[3s] ease-out group-hover:scale-105 group-hover:opacity-75"
                         style={{
                             backgroundImage: `url('${cardImage}')`,
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
-                            filter: 'saturate(1.2)'
+                            filter: 'grayscale(1) sepia(1) hue-rotate(185deg) saturate(5) contrast(130%) brightness(0.9)'
                         }}
                     />
                 )}
@@ -217,23 +244,23 @@ function CardPilar({ title, desc, tag, Icon, delay, cardImage, isLoading }: any)
 
             {/* Shimmer Effect */}
             {isLoading && (
-                <div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-[#3188ff]/5 to-transparent animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
+                <div className="absolute inset-0 z-0 bg-gradient-to-r from-transparent via-[#379cfd]/15 to-transparent animate-shimmer" style={{ backgroundSize: '200% 100%' }} />
             )}
 
-            {/* Specific Blue #3188ff Tint Overlay */}
-            <div className="absolute inset-0 mix-blend-color bg-[#3188ff]/20 z-0 pointer-events-none" />
+            {/* Specific Blue #379cfd Tint Overlay */}
+            <div className="absolute inset-0 mix-blend-color bg-[#379cfd]/30 z-0 pointer-events-none" />
 
             {/* Depth Gradients */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#00040D] via-[#00040D]/80 to-transparent group-hover:from-[#00040D] group-hover:via-[#00040D]/40 group-hover:to-[#3188ff]/20 transition-all duration-700 z-0" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#01040D] via-[#01040D]/80 to-transparent group-hover:from-[#01040D] group-hover:via-[#01040D]/40 group-hover:to-[#379cfd]/25 transition-all duration-700 z-0" />
 
             {/* Inner Reflective Border */}
-            <div className="absolute inset-0 rounded-[36px] border border-white/[0.03] pointer-events-none z-10" />
+            <div className="absolute inset-0 rounded-[42px] border border-white/[0.06] pointer-events-none z-10" />
 
             {/* Content Body */}
             <div className="relative z-10 flex flex-col h-full">
                 {/* Thin Premium Icon Container */}
-                <div className="w-16 h-16 rounded-2xl bg-[#3188ff]/5 backdrop-blur-3xl border border-white/10 flex items-center justify-center mb-12 self-start group-hover:scale-110 group-hover:border-[#3188ff]/50 group-hover:bg-[#3188ff]/10 group-hover:shadow-[0_0_20px_rgba(49,136,255,0.2)] transition-all duration-500">
-                    <Icon size={34} weight="thin" className="text-[#3188ff] group-hover:text-white transition-colors duration-400" />
+                <div className="w-16 h-16 rounded-2xl bg-[#379cfd]/5 backdrop-blur-3xl border border-white/10 flex items-center justify-center mb-16 self-start group-hover:scale-110 group-hover:border-[#379cfd]/70 group-hover:bg-[#379cfd]/10 group-hover:shadow-[0_0_40px_rgba(55,156,253,0.3)] transition-all duration-500 shadow-2xl">
+                    <Icon size={34} weight="thin" className="text-[#379cfd] group-hover:text-white transition-colors duration-400" />
                 </div>
 
                 <div className="mt-auto">
@@ -241,17 +268,17 @@ function CardPilar({ title, desc, tag, Icon, delay, cardImage, isLoading }: any)
                         {title}
                     </h3>
 
-                    <p className="text-white/40 text-[13.5px] leading-relaxed mb-12 font-light group-hover:text-white/60 transition-colors">
+                    <p className="text-white/45 text-[14px] leading-relaxed mb-16 font-light group-hover:text-white/80 transition-colors tracking-tight">
                         {desc}
                     </p>
 
-                    <div className="pt-5 border-t border-white/[0.05] group-hover:border-[#3188ff]/30 transition-colors duration-500 flex justify-between items-center">
-                        <span className="text-[10px] font-black tracking-[0.2em] text-[#3188ff] uppercase bg-[#3188ff]/5 px-5 py-2.5 rounded-full border border-[#3188ff]/10 group-hover:bg-[#3188ff] group-hover:text-black transition-all duration-300">
+                    <div className="pt-7 border-t border-white/[0.08] group-hover:border-[#379cfd]/50 transition-colors duration-500 flex justify-between items-center">
+                        <span className="text-[10px] font-black tracking-[0.3em] text-[#379cfd] uppercase bg-[#379cfd]/5 px-6 py-3 rounded-full border border-[#379cfd]/20 group-hover:bg-[#379cfd] group-hover:text-black transition-all duration-400 shadow-xl">
                             {tag}
                         </span>
 
-                        <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:border-[#3188ff] group-hover:bg-[#3188ff] transition-all duration-300">
-                            <ArrowRight size={18} weight="bold" className="text-white group-hover:text-black transition-colors" />
+                        <div className="w-12 h-12 rounded-full border border-white/15 flex items-center justify-center group-hover:border-[#379cfd] group-hover:bg-[#379cfd] transition-all duration-400 shadow-2xl">
+                            <ArrowRight size={22} weight="bold" className="text-white group-hover:text-black transition-colors" />
                         </div>
                     </div>
                 </div>

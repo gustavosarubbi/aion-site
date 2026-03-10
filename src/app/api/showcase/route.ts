@@ -11,10 +11,10 @@ export async function GET() {
         let card3 = "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&q=80";
         let card4 = "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&q=80";
 
-        // Fetch Pexels (Specific blue #3188ff aesthetic)
+        // Fetch Pexels (Strict #379cfd blue aesthetic)
         if (pexelsKey) {
             try {
-                const res = await fetch(`https://api.pexels.com/v1/search?query=dark+minimalist+3188ff+blue+technological+texture&per_page=1`, {
+                const res = await fetch(`https://api.pexels.com/v1/search?query=379cfd+vibrant+blue+abstract+dark+tech&color=blue&per_page=1`, {
                     headers: { Authorization: pexelsKey },
                     next: { revalidate: 3600 }
                 });
@@ -23,18 +23,18 @@ export async function GET() {
             } catch (e) { }
         }
 
-        // Fetch Unsplash (Premium tech aesthetic with #3188ff influence)
+        // Fetch Unsplash (Specifically targeting #379cfd tone)
         if (unsplashKey) {
             const queries = [
-                "industrial technical diagnostic blue 3188ff",
-                "modern luxury minimalist website blue 3188ff",
-                "neural network artificial intelligence blue 3188ff",
-                "robust cloud infrastructure blue 3188ff"
+                "data analytic diagnostic software blue",
+                "premium digital experience interface blue",
+                "ai neural processing unit circuit blue",
+                "enterprise cloud server network blue"
             ];
 
             const fetchUnsplash = async (q: string) => {
                 try {
-                    const res = await fetch(`https://api.unsplash.com/photos/random?query=${encodeURIComponent(q)}&orientation=landscape`, {
+                    const res = await fetch(`https://api.unsplash.com/photos/random?query=${encodeURIComponent(q)}&color=blue&orientation=landscape`, {
                         headers: { Authorization: `Client-ID ${unsplashKey}` },
                         next: { revalidate: 3600 }
                     });

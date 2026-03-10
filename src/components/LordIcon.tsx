@@ -2,6 +2,13 @@
 
 import React from "react";
 
+// Explicitly declare for this file to ensure Turbopack picks it up
+declare namespace JSX {
+    interface IntrinsicElements {
+        "lord-icon": any;
+    }
+}
+
 interface LordIconProps {
     src: string;
     trigger?: "hover" | "click" | "loop" | "loop-on-hover" | "morph" | "boomerang";
@@ -24,6 +31,7 @@ const LordIcon: React.FC<LordIconProps> = ({
     stroke = "100",
 }) => {
     return (
+        // @ts-ignore - custom element
         <lord-icon
             src={src}
             trigger={trigger}
