@@ -4,6 +4,7 @@ import Script from "next/script";
 import SmoothScroll from "@/components/SmoothScroll";
 import Header from "@/components/Header";
 import WebVitalsReporter from "@/components/WebVitalsReporter";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 const montserrat = Montserrat({

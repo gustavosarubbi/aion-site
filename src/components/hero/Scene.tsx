@@ -1,13 +1,14 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { PerspectiveCamera, Stars, Environment } from "@react-three/drei";
 import * as THREE from "three";
 import { OrbitingProps, CLUSTER_CENTER } from "./OrbitingProps";
 import { UICard } from "./UICard";
 
 type SceneProps = {
-    mobileOptimized?: boolean;
+  mobileOptimized?: boolean;
+  onAnyCardDraggingChange?: (isDragging: boolean) => void;
 };
 
 type PerformanceTier = "high" | "medium" | "low";
@@ -167,13 +168,19 @@ function getMobileLayout(band: MobileBand, progress: number): MobileLayout {
     };
 }
 
-export function Scene({ mobileOptimized = false }: SceneProps) {
+export function Scene({ mobileOptimized = false, onAnyCardDraggingChange }: SceneProps) {
     const codeCardRef = useRef<THREE.Group>(null!);
     const flowCardRef = useRef<THREE.Group>(null!);
     const previewCardRef = useRef<THREE.Group>(null!);
 
-    const [activeCardId, setActiveCardId] = useState<string | null>(null);
-    const [draggingCardId, setDraggingCardId] = useState<string | null>(null);
+const [activeCardId, setActiveCardId] = useState<string | null>(null);
+  const [draggingCardId, setDraggingCardId] = useState<string | null>(null);
+  
+  // Wrapper for dragging state changes with callback
+  const handleDraggingCardChange = useCallback((id: string | null) => {
+    setDraggingCardId(id);
+    onAnyCardDraggingChange?.(id !== null);
+  }, [onAnyCardDraggingChange]);
     const [performanceTier] = useState<PerformanceTier>(() => {
         if (typeof navigator === "undefined") return mobileOptimized ? "low" : "medium";
 
@@ -403,12 +410,12 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                 position={[10, 10, 10]}
                 angle={0.15}
                 penumbra={1}
-                intensity={mobileOptimized ? (isLaptopBand ? 0.72 : isTabletBand ? 0.67 : 0.62) : visualLowMode ? 0.72 : visualMediumMode ? 0.86 : 1}
+                intensity={mobileOptimized ? (isLaptopBand ? 0.72 : isTabletBand ? 0.67 : 0.62) : visualLowMode ? 0.72 : visualMediumMode ? 0.86 : 0.45}
                 color="#379cfd"
             />
             <pointLight
                 position={[-10, -5, -10]}
-                intensity={mobileOptimized ? (isLaptopBand ? 0.27 : isTabletBand ? 0.24 : 0.2) : visualLowMode ? 0.3 : visualMediumMode ? 0.4 : 0.5}
+                intensity={mobileOptimized ? (isLaptopBand ? 0.27 : isTabletBand ? 0.24 : 0.2) : visualLowMode ? 0.3 : visualMediumMode ? 0.4 : 0.20}
                 color="#1a5fa8"
             />
             {!visualLowMode && !visualMediumMode && <Environment preset="night" />}
@@ -473,7 +480,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     activeCardId={activeCardId}
                     onActiveCardChange={setActiveCardId}
                     draggingCardId={draggingCardId}
-                    onDraggingCardChange={setDraggingCardId}
+                    onDraggingCardChange={handleDraggingCardChange}
                     reducedMotion={reducedMotion}
                     baseScale={mobileOptimized ? mobileLayout.scaleMultipliers.code * mobileCardScaleBoost : codeCardDesktopScale}
                     labelPosition={codeLabel.labelPosition}
@@ -482,12 +489,13 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     labelScale={codeLabel.labelScale}
                     labelCompact={codeLabel.labelCompact}
                     labelDistanceFactor={codeLabel.labelDistanceFactor}
-                    qualityTier={performanceTier}
-                    showConnector={!mobileOptimized}
-                />
+qualityTier={performanceTier}
+        showConnector={!mobileOptimized}
+        mobileOptimized={mobileOptimized}
+      />
 
-                <UICard
-                    id="flow-card"
+      <UICard
+        id="flow-card"
                     position={
                         mobileOptimized
                             ? mobileLayout.positions.flow
@@ -505,7 +513,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     activeCardId={activeCardId}
                     onActiveCardChange={setActiveCardId}
                     draggingCardId={draggingCardId}
-                    onDraggingCardChange={setDraggingCardId}
+                    onDraggingCardChange={handleDraggingCardChange}
                     reducedMotion={reducedMotion}
                     baseScale={mobileOptimized ? mobileLayout.scaleMultipliers.flow * mobileCardScaleBoost : lerp(1.15, 1.15, responsiveProgress) * desktopScale}
                     labelPosition={flowLabel.labelPosition}
@@ -514,12 +522,13 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     labelScale={flowLabel.labelScale}
                     labelCompact={flowLabel.labelCompact}
                     labelDistanceFactor={flowLabel.labelDistanceFactor}
-                    qualityTier={performanceTier}
-                    showConnector={!mobileOptimized}
-                />
+qualityTier={performanceTier}
+        showConnector={!mobileOptimized}
+        mobileOptimized={mobileOptimized}
+      />
 
-                <UICard
-                    id="preview-card"
+      <UICard
+        id="preview-card"
                     position={
                         mobileOptimized
                             ? mobileLayout.positions.preview
@@ -537,7 +546,7 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     activeCardId={activeCardId}
                     onActiveCardChange={setActiveCardId}
                     draggingCardId={draggingCardId}
-                    onDraggingCardChange={setDraggingCardId}
+                    onDraggingCardChange={handleDraggingCardChange}
                     reducedMotion={reducedMotion}
                     baseScale={mobileOptimized ? mobileLayout.scaleMultipliers.preview * mobileCardScaleBoost : lerp(0.90, 0.88, responsiveProgress) * desktopScale}
                     labelPosition={previewLabel.labelPosition}
@@ -545,10 +554,11 @@ export function Scene({ mobileOptimized = false }: SceneProps) {
                     labelConnector={previewLabel.labelConnector}
                     labelScale={premiumLabelScale}
                     labelCompact={previewLabel.labelCompact}
-                    labelDistanceFactor={previewLabel.labelDistanceFactor}
-                    qualityTier={performanceTier}
-                    showConnector={!mobileOptimized}
-                />
+labelDistanceFactor={previewLabel.labelDistanceFactor}
+        qualityTier={performanceTier}
+        showConnector={!mobileOptimized}
+        mobileOptimized={mobileOptimized}
+      />
             </group>
         </>
     );

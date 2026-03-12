@@ -7,26 +7,26 @@ const montserrat = { fontFamily: "var(--font-montserrat)" } as const;
 
 const heroContent = [
   {
-    service: "DESIGN ELITE",
-    outcome: "RESULTADOS",
+    service: "SITES",
+    outcome: "CLIENTES",
     colors: {
-      text: "from-white via-[#7dcfff] to-[#379cfd]",
+      text: "from-[#379cfd] via-[#5ec4ff] to-white",
       glow: "rgba(55,156,253,0.45)",
-      underline: "from-white/70 via-[#379cfd] to-[#1a5fa8]/40",
+      underline: "from-[#379cfd] via-[#5ec4ff] to-white",
       underlineShadow: "rgba(55,156,253,0.6)",
-      outcomeGradient: "from-white via-[#5db8ff] to-[#379cfd]",
+      outcomeGradient: "from-[#379cfd] via-[#5db8ff] to-white",
       outcomeShadow: "rgba(55,156,253,0.35)"
     }
   },
   {
-    service: "ROBÔS I.A.",
+    service: "ROBÔS DE IA",
     outcome: "ATENDIMENTO",
     colors: {
       text: "from-[#379cfd] via-[#5ec4ff] to-white",
       glow: "rgba(55,156,253,0.40)",
-      underline: "from-[#379cfd] via-[#7dd9ff]/80 to-white/40",
+      underline: "from-[#379cfd] via-[#5ec4ff] to-white",
       underlineShadow: "rgba(55,156,253,0.55)",
-      outcomeGradient: "from-[#379cfd] via-[#66c5ff] to-white",
+      outcomeGradient: "from-[#379cfd] via-[#5db8ff] to-white",
       outcomeShadow: "rgba(55,156,253,0.32)"
     }
   },
@@ -34,30 +34,29 @@ const heroContent = [
     service: "AUTOMAÇÃO",
     outcome: "ESCALA",
     colors: {
-      text: "from-[#1a6bcc] via-[#379cfd] to-[#88d4ff]",
+      text: "from-[#379cfd] via-[#5ec4ff] to-white",
       glow: "rgba(55,156,253,0.42)",
-      underline: "from-[#1a6bcc]/60 via-[#379cfd] to-[#88d4ff]/60",
+      underline: "from-[#379cfd] via-[#5ec4ff] to-white",
       underlineShadow: "rgba(55,156,253,0.5)",
-      outcomeGradient: "from-[#1a6bcc] via-[#379cfd] to-[#9ddaff]",
+      outcomeGradient: "from-[#379cfd] via-[#5db8ff] to-white",
       outcomeShadow: "rgba(55,156,253,0.32)"
     }
   },
 ];
 
-const longestService = "DESIGN ELITE";
+const longestService = "ROBÔS DE IA";
 const longestOutcome = "ATENDIMENTO";
 
 export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "right" }) {
   const [index, setIndex] = useState(0);
-  const mobileDisplaySize = "text-[clamp(1.64rem,1.31rem+2vw,2.54rem)]";
-  const mobileDynamicDisplaySize = "text-[clamp(1.69rem,1.36rem+2.06vw,2.62rem)]";
+  // Aumentado para destacar mais
+  const mobileDisplaySize = "text-[clamp(1.8rem,1.4rem+2vw,3rem)]";
+  const mobileDynamicDisplaySize = "text-[clamp(1.9rem,1.5rem+2.1vw,3.2rem)]";
 
-  // Specific scaling for the 768-1279 range where it's split in a 2-column block
-  // More modest headline for tablet to allow right column to breathe and balance
-  const tabletDisplaySize = "md:text-[clamp(1.85rem,1rem+2vw,2.75rem)]";
-  const tabletDynamicSize = "md:text-[clamp(1.95rem,1.1rem+2.1vw,2.9rem)]";
+  const tabletDisplaySize = "md:text-[clamp(2.2rem,1.2rem+2.5vw,3.5rem)]";
+  const tabletDynamicSize = "md:text-[clamp(2.4rem,1.3rem+2.7vw,3.8rem)]";
 
-  const desktopDisplaySize = "text-[clamp(1.85rem,1.2rem+1.95vw,4rem)]";
+  const desktopDisplaySize = "text-[clamp(2.5rem,1.5rem+2vw,4.5rem)]";
 
   useEffect(() => {
     if (typeof document === "undefined") return;
@@ -100,7 +99,7 @@ export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "ri
       {/* MOBILE / TABLET (< 1280px): Stacked layout */}
       <div className={`min-[1280px]:hidden flex flex-col items-center gap-1 ${tabletSide === "left" ? "md:items-start" : "md:items-center"}`}>
         <h1 className={`block font-black text-white/90 tracking-[-0.02em] leading-[0.92] md:leading-[0.9] ${mobileDisplaySize} ${tabletDisplaySize} uppercase text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"}`}>
-          TRANSFORMAMOS
+          CRIAMOS
         </h1>
 
         <motion.div layout className={`relative flex items-center justify-center overflow-visible w-full ${tabletSide === "left" ? "md:justify-start" : "md:justify-center"}`}>
@@ -117,14 +116,14 @@ export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "ri
               >
                 <span className={`inline-flex flex-col items-center w-fit ${tabletSide === "left" ? "md:items-start" : "md:items-center"}`}>
                   <span
-                    className={`font-black text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.text || "from-blue-400"} text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"} ${mobileDynamicDisplaySize} ${tabletDynamicSize} tracking-[-0.02em] leading-[0.92] md:leading-[0.9] uppercase`}
+                    className={`font-black text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.text || "from-blue-400"} text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"} ${mobileDynamicDisplaySize} ${tabletDynamicSize} tracking-[-0.02em] leading-[0.95] md:leading-[0.95] uppercase whitespace-nowrap`}
                     style={{ filter: `drop-shadow(0 0 6px ${current.colors?.glow || "rgba(0,0,0,0)"})` }}
                   >
                     {current.service}
                   </span>
                   <span
-                    className={`mt-0.5 h-[2px] w-full bg-gradient-to-r ${current.colors?.underline || "from-white"}`}
-                    style={{ boxShadow: `0 0 7px ${current.colors?.underlineShadow || "transparent"}` }}
+                    className={`mt-1 h-[2px] w-full bg-gradient-to-r ${current.colors?.underline || "from-white"} rounded-full`}
+                    style={{ boxShadow: `0 0 8px ${current.colors?.underlineShadow || "transparent"}` }}
                   />
                 </span>
               </motion.div>
@@ -134,7 +133,7 @@ export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "ri
 
         <motion.h1 layout className={`flex items-baseline justify-center gap-1.5 sm:gap-2 mt-0.5 ${tabletSide === "left" ? "md:justify-start" : "md:justify-center"}`}>
           <motion.span layout className={`block font-black text-white/90 tracking-[-0.015em] leading-[0.92] md:leading-[0.9] ${mobileDisplaySize} ${tabletDisplaySize} uppercase text-center ${tabletSide === "left" ? "md:text-left" : "md:text-center"}`}>
-            EM
+            PARA
           </motion.span>
           <div className="relative flex items-baseline overflow-visible">
             <AnimatePresence mode="popLayout" initial={false}>
@@ -159,7 +158,7 @@ export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "ri
       <div className="hidden min-[1280px]:block w-full">
         <h1 className="flex flex-wrap items-center justify-start gap-x-1 sm:gap-x-2 gap-y-0 w-full">
           <span className={`block font-black text-white/90 tracking-tight leading-[0.95] ${desktopDisplaySize} uppercase`}>
-            TRANSFORMAMOS
+            CRIAMOS
           </span>
 
           <div className="relative inline-flex items-end pb-0.5 sm:pb-1">
@@ -178,14 +177,14 @@ export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "ri
                 >
                   <span className="inline-flex flex-col items-start w-fit">
                     <span
-                      className={`font-black text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.text || "from-blue-400"} text-left ${desktopDisplaySize} tracking-tight leading-[0.95] pt-0.5 uppercase`}
+                      className={`font-black text-transparent bg-clip-text bg-gradient-to-r ${current.colors?.text || "from-blue-400"} text-left ${desktopDisplaySize} tracking-tight leading-[0.95] pt-0.5 uppercase whitespace-nowrap`}
                       style={{ filter: `drop-shadow(0 0 5px ${current.colors?.glow || "rgba(0,0,0,0)"})` }}
                     >
                       {current.service}
                     </span>
                     <span
-                      className={`mt-0.5 h-[2px] w-full bg-gradient-to-r ${current.colors?.underline || "from-white"}`}
-                      style={{ boxShadow: `0 0 6px ${current.colors?.underlineShadow || "transparent"}` }}
+                      className={`mt-1 h-[2px] w-full bg-gradient-to-r ${current.colors?.underline || "from-white"} rounded-full`}
+                      style={{ boxShadow: `0 0 8px ${current.colors?.underlineShadow || "transparent"}` }}
                     />
                   </span>
                 </motion.span>
@@ -196,7 +195,7 @@ export default function HeroHeadline({ tabletSide }: { tabletSide?: "left" | "ri
 
         <h1 className="flex flex-wrap items-baseline justify-start gap-1 sm:gap-2 w-full -mt-0.5 sm:-mt-1">
           <span className={`block font-black text-white/90 tracking-tight leading-[0.95] ${desktopDisplaySize} uppercase`}>
-            EM
+            PARA
           </span>
 
           <div className="relative inline-flex items-baseline overflow-visible">

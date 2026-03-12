@@ -36,7 +36,7 @@ export function CardFrame({
                         transparent
                         opacity={0.24}
                         emissive={color}
-                        emissiveIntensity={0.6}
+                        emissiveIntensity={0.18}
                         metalness={1}
                         roughness={0.1}
                     />
@@ -90,7 +90,7 @@ export function CardFrame({
             {(["#67e8f9", "#38bdf8", "#60a5fa"] as const).map((c, i) => (
                 <mesh key={i} position={[-1.5 + i * 0.2, 0.95, 0.075]}>
                     <sphereGeometry args={[0.055, reducedDetail ? 10 : 16, reducedDetail ? 10 : 16]} />
-                    <meshStandardMaterial color={c} emissive={c} emissiveIntensity={1.2} />
+                    <meshStandardMaterial color={c} emissive={c} emissiveIntensity={0.3} />
                 </mesh>
             ))}
             <mesh position={[0.4, 0.95, 0.07]}>

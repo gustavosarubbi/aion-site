@@ -57,42 +57,35 @@ const gateways: GatewayItem[] = [
 const marqueeItems = [...gateways, ...gateways, ...gateways, ...gateways]; // 4 copies for bulletproof full-width looping
 
 export default function GatewayCarousel() {
-    return (
-        <div className="relative w-full py-2 bg-black overflow-hidden flex flex-col items-center group">
-            {/* Expanded Track Container with Integrated Title */}
-            <div className="w-full max-w-5xl mx-auto relative flex flex-col overflow-x-hidden">
+  return (
+    <div className="relative w-full py-8 overflow-hidden flex flex-col items-center group bg-black">
+{/* Unified Track Container - Full Width with Single Elegant Border */}
+      <div className="w-full relative flex flex-col overflow-x-hidden">
 
-                {/* Top Border with Integrated Title */}
-                <div className="absolute top-0 inset-x-0 outline-none flex items-center justify-center z-30 pt-1 pointer-events-none">
-                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-blue-500/10" />
-                    <motion.span
-                        initial={{ opacity: 0, letterSpacing: '0.1em' }}
-                        whileInView={{ opacity: 1, letterSpacing: '0.25em' }}
-                        viewport={{ once: true }}
-                        className="px-6 text-[9px] md:text-[10px] font-black text-white/50 uppercase tracking-[0.25em]"
-                    >
-                        Tecnologias Integradas
-                    </motion.span>
-                    <div className="flex-1 h-px bg-gradient-to-r from-blue-500/10 via-blue-500/30 to-transparent" />
-                </div>
-                {/* Secondary line just below the title for that "track" feel */}
-                <div className="absolute top-[2px] inset-x-0 h-px w-full bg-gradient-to-r from-transparent via-white/5 to-transparent z-10 pointer-events-none" />
+        {/* Single Elegant Top Line */}
+        <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-[#379cfd]/50 to-transparent z-10 pointer-events-none" />
 
+        {/* Integrated Title - Floating above content */}
+        <div className="absolute top-3 inset-x-0 flex items-center justify-center z-30 pointer-events-none">
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] bg-gradient-to-r from-[#379cfd]/80 via-[#5ec4ff] to-[#379cfd]/80 bg-clip-text text-transparent"
+          >
+            Tecnologias Integradas
+          </motion.span>
+        </div>
 
-                {/* Harmonious Bottom Border */}
-                <div className="absolute bottom-0 inset-x-0 flex flex-col items-center z-10 pointer-events-none">
-                    <div className="h-px w-[95%] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-[1px]" />
-                    <div className="h-px w-full bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
-                    {/* Subtle bottom glow */}
-                    <div className="absolute bottom-0 h-4 w-full bg-gradient-to-t from-blue-500/5 to-transparent pointer-events-none" />
-                </div>
+        {/* Single Elegant Bottom Line */}
+        <div className="absolute bottom-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-[#379cfd]/50 to-transparent z-10 pointer-events-none" />
 
-                {/* Fixed Fades */}
-                <div className="absolute left-0 top-0 bottom-0 w-24 md:w-32 bg-gradient-to-r from-black via-black/80 to-transparent z-20 pointer-events-none" />
-                <div className="absolute right-0 top-0 bottom-0 w-24 md:w-32 bg-gradient-to-l from-black via-black/80 to-transparent z-20 pointer-events-none" />
+      {/* Fixed Fades - seamless blend */}
+      <div className="absolute left-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-r from-black to-transparent z-20 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-12 md:w-20 bg-gradient-to-l from-black to-transparent z-20 pointer-events-none" />
 
-                <motion.div
-                    className="flex shrink-0 w-max items-center py-8 mt-4"
+<motion.div
+        className="flex shrink-0 w-max items-center py-10 mt-6"
                     animate={{
                         x: [0, "-50%"] // Translate exactly half of the multiplied sets
                     }}
@@ -139,8 +132,8 @@ export default function GatewayCarousel() {
                                         {item.name}
                                     </span>
                                 </div>
-                                {/* Discrete Vertical Separator */}
-                                <div className="w-[1px] h-6 bg-white/10" />
+  {/* Discrete Vertical Separator */}
+              <div className="w-[1px] h-5 bg-gradient-to-b from-transparent via-[#379cfd]/30 to-transparent" />
                             </div>
                         );
                     })}

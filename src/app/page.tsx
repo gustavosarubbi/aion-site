@@ -12,7 +12,7 @@ import Footer from "@/components/Footer";
 import HeroHeadline from "@/components/HeroHeadline";
 import GatewayCarousel from "@/components/GatewayCarousel";
 import dynamic from "next/dynamic";
-import { Code, ChatCircleDots, RocketLaunch, InstagramLogo, EnvelopeSimple, WhatsappLogo, ArrowRight } from "@phosphor-icons/react";
+import { Code, ChatCircleDots, Gear, InstagramLogo, EnvelopeSimple, WhatsappLogo, ArrowRight } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 
 const Squares = dynamic(() => import("@/components/Squares"), {
@@ -29,7 +29,7 @@ const montserrat = { fontFamily: "var(--font-montserrat)" } as const;
 const serviceItems = [
   {
     icon: Code,
-    label: "SITES PREMIUM",
+    label: "SITES",
     color: "text-[#379cfd]",
     halo: "bg-[#379cfd]/35",
     divider: "via-[#379cfd]/70",
@@ -42,7 +42,7 @@ const serviceItems = [
     divider: "via-[#379cfd]/70",
   },
   {
-    icon: RocketLaunch,
+    icon: Gear,
     label: "AUTOMAÇÃO",
     color: "text-[#379cfd]",
     halo: "bg-[#379cfd]/35",
@@ -63,12 +63,9 @@ function HeroSubtitle() {
     <div className="flex flex-col">
       <p
         style={montserrat}
-        className="text-white/84 text-[15.5px] sm:text-[16.5px] md:text-[clamp(1.05rem,0.4rem+1.8vw,1.45rem)] min-[1280px]:text-[18px] leading-[1.46] md:leading-[1.55] min-[1280px]:leading-[1.46] font-medium max-w-[40ch] md:max-w-[50ch] lg:max-w-none tracking-tight [text-wrap:balance] md:text-wrap"
+        className="text-white/70 text-[13px] sm:text-[14px] md:text-[15px] min-[1280px]:text-[16px] leading-[1.5] md:leading-[1.55] font-normal max-w-[42ch] md:max-w-[48ch] lg:max-w-[55ch] tracking-tight"
       >
-        Potencializamos sua escala digital com ecossistemas de alta performance:
-        <span className="text-[#379cfd] font-bold"> Sites magnéticos</span>,
-        <span className="text-[#379cfd] font-bold font-semibold"> robôs de conversão</span> e
-        <span className="text-[#379cfd] font-bold font-semibold"> automações voltadas para o lucro</span>.
+        Sites, sistemas e robôs de IA. Você foca no negócio, nós na tecnologia.
       </p>
     </div>
   );
@@ -108,34 +105,34 @@ export default function Home() {
       <div
         className="fixed inset-0 z-0 pointer-events-none"
         style={{
-          maskImage: "radial-gradient(ellipse 118% 84% at 50% 46%, black 44%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(ellipse 118% 84% at 50% 46%, black 44%, transparent 100%)",
+          maskImage: "radial-gradient(ellipse 140% 100% at 50% 50%, black 70%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(ellipse 140% 100% at 50% 50%, black 70%, transparent 100%)",
         }}
       >
         <Squares
           direction="diagonal"
           speed={0.08}
-          squareSize={56}
-          borderColor="#121b2e"
-          hoverFillColor="#081120"
+          squareSize={48}
+          borderColor="#1e3a5f"
+          hoverFillColor="#0d2137"
         />
       </div>
 
-      <div className="fixed top-[18%] left-[8%] w-[34vw] h-[34vw] rounded-full bg-[#379cfd]/10 blur-[84px] pointer-events-none mix-blend-screen z-0" />
-      <div className="fixed bottom-[12%] right-[10%] w-[28vw] h-[28vw] rounded-full bg-[#379cfd]/5 blur-[76px] pointer-events-none mix-blend-screen z-0" />
-      <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,transparent_0%,#000000_100%)]" />
+      <div className="fixed top-[18%] left-[8%] w-[34vw] h-[34vw] rounded-full bg-[#379cfd]/6 blur-[60px] pointer-events-none mix-blend-screen z-0" />
+      <div className="fixed bottom-[12%] right-[10%] w-[28vw] h-[28vw] rounded-full bg-[#379cfd]/4 blur-[50px] pointer-events-none mix-blend-screen z-0" />
+      <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,transparent_0%,transparent_60%,rgba(0,0,0,0.3)_100%)]" />
 
       <section id="inicio" className={HERO_SECTION_CLASS}>
-        <div className="absolute inset-x-0 top-[10%] h-[68%] bg-[radial-gradient(ellipse_at_center,rgba(55,156,253,0.08)_0%,rgba(0,0,0,0)_72%)] pointer-events-none z-0" />
+        <div className="absolute inset-x-0 top-[8%] h-[75%] bg-[radial-gradient(ellipse_at_center,rgba(55,156,253,0.05)_0%,rgba(55,156,253,0.02)_50%,rgba(0,0,0,0)_80%)] pointer-events-none z-0" />
 
         <div className={HERO_SHELL_CLASS}>
 
           {/* ── MOBILE LAYOUT (< md) ── stacked: text → 3D → buttons */}
           <div className="min-[1280px]:hidden flex flex-col pt-[calc(var(--header-height,76px)+24px)] pb-6">
 
-            {/* Text block: ServiceBar + Headline + Subtitle */}
-            <div className="relative flex flex-col items-center justify-center gap-4 md:gap-4 px-4 sm:px-4 pb-0.5 mx-auto w-full max-w-5xl">
-              <div className="absolute -inset-8 bg-gradient-to-r from-[#379cfd]/10 via-[#379cfd]/5 to-[#379cfd]/10 blur-[58px] -z-10 rounded-full opacity-30 pointer-events-none" />
+        {/* Text block: ServiceBar + Headline + Subtitle */}
+        <div className="relative flex flex-col items-center justify-center gap-4 md:gap-4 px-4 sm:px-4 pb-0.5 mx-auto w-full max-w-5xl">
+          <div className="absolute -inset-8 bg-gradient-to-r from-[#379cfd]/6 via-[#379cfd]/3 to-[#379cfd]/6 blur-[50px] -z-10 rounded-full opacity-30 pointer-events-none" />
 
               {/* ServiceBar: Centered for Tablet */}
               <motion.div
@@ -254,9 +251,9 @@ export default function Home() {
           {/* ── DESKTOP LAYOUT (≥ md) ── side-by-side 2-column grid, full viewport height */}
           <div className={`${HERO_DESKTOP_GRID_CLASS} lg:pl-32 min-[1280px]:pl-[clamp(2.25rem,15.625rem-9.375vw,6.25rem)]`} style={{ paddingTop: "calc(var(--header-height, 88px) - 32px)" }}>
 
-            {/* Left: text content — vertically centered within the grid row */}
-            <div className={HERO_DESKTOP_LEFT_CLASS}>
-              <div className="absolute -inset-8 bg-gradient-to-r from-[#379cfd]/10 via-[#379cfd]/5 to-[#379cfd]/10 blur-[58px] -z-10 rounded-full opacity-30 pointer-events-none" />
+{/* Left: text content — vertically centered within the grid row */}
+        <div className={HERO_DESKTOP_LEFT_CLASS}>
+          <div className="absolute -inset-8 bg-gradient-to-r from-[#379cfd]/6 via-[#379cfd]/3 to-[#379cfd]/6 blur-[50px] -z-10 rounded-full opacity-30 pointer-events-none" />
 
               <motion.div
                 className="relative z-30"
@@ -373,26 +370,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Modern Section Divider */}
-      <div className="relative w-full h-px overflow-visible z-20">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
-        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-blue-400/10 to-transparent blur-sm" />
-      </div>
+{/* Seamless transition from hero to carousel */}
+<div className="relative w-full overflow-visible z-20 -mt-8">
+  {/* Soft gradient bridge - integrated into carousel */}
+  <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black via-black/80 to-transparent pointer-events-none z-10" />
+  <GatewayCarousel />
+</div>
 
-      <GatewayCarousel />
-
-      {/* ── Divider ── */}
-      <div className="relative w-full h-px overflow-visible z-20">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
-        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-blue-400/10 to-transparent blur-sm" />
-      </div>
-
-      <VitrineEngenharia />
+<VitrineEngenharia />
 
       {/* ── Divider ── */}
       <div className="relative w-full h-px overflow-visible z-20">
-        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent" />
-        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-400/10 to-transparent blur-sm" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-blue-400/10 to-transparent blur-sm" />
       </div>
 
       <CentralIntegracoes />

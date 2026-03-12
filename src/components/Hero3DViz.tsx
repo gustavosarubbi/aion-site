@@ -11,11 +11,12 @@ type Hero3DVizProps = {
 };
 
 export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const mobileOptimized = quality === "mobile";
-    const [isTabVisible, setIsTabVisible] = useState(true);
-    const [isInView, setIsInView] = useState(true);
-    const [viewportWidth, setViewportWidth] = useState(1600);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mobileOptimized = quality === "mobile";
+  const [isTabVisible, setIsTabVisible] = useState(true);
+  const [isInView, setIsInView] = useState(true);
+  const [viewportWidth, setViewportWidth] = useState(1600);
+  const [isAnyCardDragging, setIsAnyCardDragging] = useState(false);
 
     useEffect(() => {
         if (typeof document === "undefined") return;
@@ -76,21 +77,21 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
         return [0.9, 1.25];
     }, [mobileBand, mobileOptimized]);
 
-    const desktopGlow = useMemo(() => {
-        if (viewportWidth <= 1366) {
-            return { left: "47%", size: 340, opacity: "bg-[#379cfd]/8", blur: "blur-[74px]" };
-        }
+  const desktopGlow = useMemo(() => {
+    if (viewportWidth <= 1366) {
+      return { left: "47%", size: 340, opacity: "bg-[#379cfd]/5", blur: "blur-[60px]" };
+    }
 
-        if (viewportWidth <= 1536) {
-            return { left: "50%", size: 390, opacity: "bg-[#379cfd]/9", blur: "blur-[86px]" };
-        }
+    if (viewportWidth <= 1536) {
+      return { left: "50%", size: 390, opacity: "bg-[#379cfd]/6", blur: "blur-[70px]" };
+    }
 
-        if (viewportWidth >= 1850) {
-            return { left: "54%", size: 560, opacity: "bg-[#379cfd]/11", blur: "blur-[106px]" };
-        }
+    if (viewportWidth >= 1850) {
+      return { left: "54%", size: 560, opacity: "bg-[#379cfd]/7", blur: "blur-[85px]" };
+    }
 
-        return { left: "52%", size: 450, opacity: "bg-[#379cfd]/10", blur: "blur-[92px]" };
-    }, [viewportWidth]);
+    return { left: "52%", size: 450, opacity: "bg-[#379cfd]/6", blur: "blur-[75px]" };
+  }, [viewportWidth]);
 
     return (
         <div
@@ -98,15 +99,15 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
             className="w-full h-full relative flex items-center justify-center overflow-visible"
         >
             <div
-                className={
-                    mobileOptimized
-                        ? mobileBand === "laptop"
-                            ? "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[340px] max-w-[100vw] h-[340px] bg-[#379cfd]/10 rounded-full blur-[86px] pointer-events-none"
-                            : mobileBand === "tablet"
-                                ? "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[285px] max-w-[100vw] h-[285px] bg-[#379cfd]/9 rounded-full blur-[74px] pointer-events-none"
-                                : "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[220px] max-w-[100vw] h-[220px] bg-[#379cfd]/8 rounded-full blur-[64px] pointer-events-none"
-                        : `absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none ${desktopGlow.opacity} ${desktopGlow.blur}`
-                }
+      className={
+        mobileOptimized
+          ? mobileBand === "laptop"
+            ? "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[340px] max-w-[100vw] h-[340px] bg-[#379cfd]/6 rounded-full blur-[70px] pointer-events-none"
+            : mobileBand === "tablet"
+            ? "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[285px] max-w-[100vw] h-[285px] bg-[#379cfd]/5 rounded-full blur-[60px] pointer-events-none"
+            : "absolute left-1/2 top-[54%] -translate-x-1/2 -translate-y-1/2 w-[220px] max-w-[100vw] h-[220px] bg-[#379cfd]/4 rounded-full blur-[50px] pointer-events-none"
+          : `absolute top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none ${desktopGlow.opacity} ${desktopGlow.blur}`
+      }
                 style={
                     mobileOptimized
                         ? undefined
@@ -128,14 +129,21 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
                         powerPreference: "default",
                         stencil: false,
                     }}
-                    performance={{ min: mobileOptimized ? (mobileBand === "laptop" ? 0.45 : mobileBand === "tablet" ? 0.4 : 0.35) : 0.5 }}
-                    camera={{ near: 0.1, far: 90 }}
-                    style={{ background: "transparent", overflow: "visible", touchAction: "none" }}
-                >
+performance={{ min: mobileOptimized ? (mobileBand === "laptop" ? 0.45 : mobileBand === "tablet" ? 0.4 : 0.35) : 0.5 }}
+        camera={{ near: 0.1, far: 90 }}
+        style={{ 
+          background: "transparent", 
+          overflow: "visible", 
+          touchAction: isAnyCardDragging ? "none" : "pan-y"  // Smart gesture: scroll by default, drag only when active
+        }}
+      >
                     <Suspense fallback={null}>
-                        <SignalProvider>
-                            <Scene mobileOptimized={mobileOptimized} />
-                        </SignalProvider>
+<SignalProvider>
+          <Scene 
+            mobileOptimized={mobileOptimized} 
+            onAnyCardDraggingChange={setIsAnyCardDragging}
+          />
+        </SignalProvider>
                     </Suspense>
                 </Canvas>
             </div>

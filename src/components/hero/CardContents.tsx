@@ -15,7 +15,7 @@ export function CodeCardContent({ reducedDetail = false }: { reducedDetail?: boo
             {[...Array(lineCount)].map((_, i) => (
                 <mesh key={`ln${i}`} position={[-0.15, -i * 0.22, 0]}>
                     <boxGeometry args={[0.06, 0.04, 0.04]} />
-                    <meshStandardMaterial color="#94a3b8" emissive="#94a3b8" emissiveIntensity={0.8} />
+                    <meshStandardMaterial color="#94a3b8" emissive="#94a3b8" emissiveIntensity={0.2} />
                 </mesh>
             ))}
 
@@ -32,7 +32,7 @@ export function CodeCardContent({ reducedDetail = false }: { reducedDetail?: boo
                     {(pulse) => (
                         <mesh position={[line.w / 2 + line.indent + 0.1, -i * 0.22, 0]}>
                             <boxGeometry args={[line.w, 0.06 + pulse * 0.08, 0.04 + pulse * 0.05]} />
-                            <meshStandardMaterial color={line.color} emissive={line.color} emissiveIntensity={1.5 + pulse * 6} />
+                            <meshStandardMaterial color={line.color} emissive={line.color} emissiveIntensity={0.4 + pulse * 1.5} />
                         </mesh>
                     )}
                 </InteractiveDetail>
@@ -40,7 +40,7 @@ export function CodeCardContent({ reducedDetail = false }: { reducedDetail?: boo
 
             <mesh position={[0.55, -1 * 0.22, 0.01]}>
                 <boxGeometry args={[0.02, 0.12, 0.04]} />
-                <meshStandardMaterial color="#e2e8f0" emissive="#e2e8f0" emissiveIntensity={2} />
+                <meshStandardMaterial color="#e2e8f0" emissive="#e2e8f0" emissiveIntensity={0.4} />
             </mesh>
         </group>
     );
@@ -59,7 +59,7 @@ export function PreviewCardContent({ reducedDetail = false }: { reducedDetail?: 
                     <group position={[-0.8, 0.45, 0.03]}>
                         <mesh>
                             <boxGeometry args={[1.0 + pulse * 0.1, 0.12, 0.01]} />
-                            <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={1.5 + pulse * 4} />
+                            <meshStandardMaterial color="#38bdf8" emissive="#38bdf8" emissiveIntensity={0.4 + pulse * 1} />
                         </mesh>
                         <mesh position={[0, -0.18, 0]}>
                             <boxGeometry args={[0.8, 0.06, 0.01]} />
@@ -94,7 +94,7 @@ export function PreviewCardContent({ reducedDetail = false }: { reducedDetail?: 
                                 <meshStandardMaterial
                                     color={i === 0 ? "#818cf8" : "#34d399"}
                                     emissive={i === 0 ? "#818cf8" : "#34d399"}
-                                    emissiveIntensity={0.8 + pulse * 5}
+                                    emissiveIntensity={0.25 + pulse * 1.5}
                                 />
                             </mesh>
                             <mesh position={[0, -0.1, 0.02]}>
@@ -137,14 +137,14 @@ export function FlowCardContent({ baseColor, reducedDetail = false }: { baseColo
                                     metalness={0.4}
                                     roughness={0.2}
                                     emissive={bar.color}
-                                    emissiveIntensity={pulse * 4}
+                                    emissiveIntensity={pulse}
                                     clearcoat={1}
                                     transmission={0.2}
                                 />
                             </mesh>
                             <mesh position={[0, (bar.h + pulse * 0.25) / 2, 0.01]}>
                                 <boxGeometry args={[0.3 + pulse * 0.1, 0.05, 0.08]} />
-                                <meshStandardMaterial color={baseColor} emissive={baseColor} emissiveIntensity={2 + pulse * 7} />
+                                <meshStandardMaterial color={baseColor} emissive={baseColor} emissiveIntensity={0.4 + pulse * 2} />
                             </mesh>
                         </group>
                     )}
@@ -158,7 +158,7 @@ export function FlowCardContent({ baseColor, reducedDetail = false }: { baseColo
                         <meshStandardMaterial
                             color="#22d3ee"
                             emissive="#22d3ee"
-                            emissiveIntensity={1 + pulse * 5}
+                            emissiveIntensity={0.3 + pulse * 1.5}
                             transparent
                             opacity={0.5 + pulse * 0.5}
                         />

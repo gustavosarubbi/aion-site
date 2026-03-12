@@ -50,7 +50,7 @@ export function OrbitingProps({
                 color,
                 wireframe: true,
                 transparent: true,
-                opacity: 0.35,
+                opacity: 0.18,
                 depthWrite: false,
             });
             return acc;

@@ -106,9 +106,9 @@ export default function Hero3DWrapper() {
                     <Hero3DViz quality="desktop" />
                 ) : (
                     <div className="relative w-full h-full overflow-visible">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_62%_42%,rgba(56,189,248,0.12),transparent_48%)]" />
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_68%,rgba(59,130,246,0.09),transparent_54%)]" />
-                        <div className="absolute left-[58%] top-[45%] w-[320px] max-w-[100vw] h-[320px] rounded-full border border-cyan-300/10 blur-[1px]" />
+<div className="absolute inset-0 bg-[radial-gradient(circle_at_62%_42%,rgba(56,189,248,0.06),transparent_48%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_68%,rgba(59,130,246,0.05),transparent_54%)]" />
+          <div className="absolute left-[58%] top-[45%] w-[320px] max-w-[100vw] h-[320px] rounded-full border border-cyan-300/8 blur-[1px]" />
                     </div>
                 )}
             </div>
@@ -118,9 +118,9 @@ export default function Hero3DWrapper() {
                     <Hero3DViz quality="mobile" />
                 ) : (
                     <>
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_62%_42%,rgba(56,189,248,0.11),transparent_52%)]" />
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_34%_68%,rgba(59,130,246,0.09),transparent_56%)]" />
-                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[220px] max-w-[100vw] h-[220px] rounded-full border border-cyan-300/12 blur-[1px]" />
+<div className="absolute inset-0 bg-[radial-gradient(circle_at_62%_42%,rgba(56,189,248,0.05),transparent_52%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_34%_68%,rgba(59,130,246,0.04),transparent_56%)]" />
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[220px] max-w-[100vw] h-[220px] rounded-full border border-cyan-300/8 blur-[1px]" />
                     </>
                 )}
             </div>

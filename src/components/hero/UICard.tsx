@@ -27,33 +27,35 @@ function seededRange(seed: string, channel: number, min: number, max: number) {
 export type CardType = "code" | "flow" | "preview";
 
 export type UICardProps = {
-    id: string;
-    position: [number, number, number];
-    initialRotation: [number, number, number];
-    color?: string;
-    type?: CardType;
-    delay?: number;
-    onRef: (ref: THREE.Group) => void;
-    speed?: number;
-    title?: string;
-    activeCardId: string | null;
-    onActiveCardChange: (id: string | null) => void;
-    draggingCardId: string | null;
-    onDraggingCardChange: (id: string | null) => void;
-    reducedMotion: boolean;
-    labelPosition?: "top" | "right" | "bottom" | "left";
-    labelOffset?: [number, number, number];
-    labelConnector?: {
-        start: [number, number, number];
-        mid: [number, number, number];
-        end: [number, number, number];
-    };
-    labelScale?: number;
-    labelCompact?: boolean;
-    labelDistanceFactor?: number;
-    baseScale?: number;
-    qualityTier?: "high" | "medium" | "low";
-    showConnector?: boolean;
+  id: string;
+  position: [number, number, number];
+  initialRotation: [number, number, number];
+  color?: string;
+  type?: CardType;
+  delay?: number;
+  onRef: (ref: THREE.Group) => void;
+  speed?: number;
+  title?: string;
+  activeCardId: string | null;
+  onActiveCardChange: (id: string | null) => void;
+  draggingCardId: string | null;
+  onDraggingCardChange: (id: string | null) => void;
+  reducedMotion: boolean;
+  labelPosition?: "top" | "right" | "bottom" | "left";
+  labelOffset?: [number, number, number];
+  labelConnector?: {
+    start: [number, number, number];
+    mid: [number, number, number];
+    end: [number, number, number];
+  };
+  labelScale?: number;
+  labelCompact?: boolean;
+  labelDistanceFactor?: number;
+  baseScale?: number;
+  qualityTier?: "high" | "medium" | "low";
+  showConnector?: boolean;
+  onAnyCardDraggingChange?: (isDragging: boolean) => void;
+  mobileOptimized?: boolean;
 };
 
 export const UICard = ({
@@ -79,16 +81,25 @@ export const UICard = ({
     labelDistanceFactor = 10,
     baseScale = 1,
     qualityTier = "high",
-    showConnector = true,
+  showConnector = true,
+  mobileOptimized = false,
 }: UICardProps) => {
-    const outerRef = useRef<THREE.Group>(null!);
-    const innerRef = useRef<THREE.Group>(null!);
-    const bodyMaterialRef = useRef<(THREE.Material & { opacity: number }) | null>(null);
-    const dimmerMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
+  const outerRef = useRef<THREE.Group>(null!);
+  const innerRef = useRef<THREE.Group>(null!);
+  const bodyMaterialRef = useRef<(THREE.Material & { opacity: number }) | null>(null);
+  const dimmerMaterialRef = useRef<THREE.MeshBasicMaterial>(null);
 
-    const scaleVector = useRef(new THREE.Vector3(1, 1, 1));
-    const clickTimelineRef = useRef(0);
-    const signal = useSignal();
+  const scaleVector = useRef(new THREE.Vector3(1, 1, 1));
+  const clickTimelineRef = useRef(0);
+  const signal = useSignal();
+
+  // Smart Gesture Detection System
+  type GestureMode = 'undecided' | 'scroll' | 'drag';
+  const GESTURE_THRESHOLD = 15; // pixels to determine direction
+  const gestureMode = useRef<GestureMode>('undecided');
+  const gestureStartPos = useRef({ x: 0, y: 0 });
+  const gestureDistance = useRef(0);
+  const hasTriggeredHaptic = useRef(false);
 
     const floatOffset = useMemo(() => seededRange(id, 1, 0, Math.PI * 2), [id]);
     const wobbleX = useMemo(() => seededRange(id, 2, 0.5, 1.2), [id]);
@@ -166,43 +177,77 @@ export const UICard = ({
         };
     }, []);
 
-    const setCursor = useCallback((cursor: string) => {
-        if (typeof document !== "undefined") document.body.style.cursor = cursor;
-    }, []);
+const setCursor = useCallback((cursor: string) => {
+    if (typeof document !== "undefined") document.body.style.cursor = cursor;
+  }, []);
 
-    const releaseDrag = useCallback(() => {
-        if (!isDragging.current) return;
-        isDragging.current = false;
-        setDragging(false);
-        onActiveCardChange(null);
-        onDraggingCardChange(null);
-    }, [onActiveCardChange, onDraggingCardChange]);
+  // Haptic feedback for premium UX
+  const triggerHaptic = useCallback((pattern: number | number[]) => {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      navigator.vibrate(pattern);
+    }
+  }, []);
 
-    const onPointerDown = useCallback((e: ThreeEvent<PointerEvent>) => {
-        e.stopPropagation();
-        isDragging.current = true;
-        setDragging(true);
-        dragDistance.current = 0;
-        prevPointer.current = { x: e.clientX, y: e.clientY };
-        velocity.current = { x: 0, y: 0 };
-        const target = e.target as Element | null;
-        target?.setPointerCapture?.(e.pointerId);
-        onActiveCardChange(id);
-        onDraggingCardChange(id);
-        setCursor("grabbing");
-    }, [id, onActiveCardChange, onDraggingCardChange, setCursor]);
+const releaseDrag = useCallback(() => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    gestureMode.current = 'undecided';
+    setDragging(false);
+    onActiveCardChange(null);
+    onDraggingCardChange(null);
+  }, [onActiveCardChange, onDraggingCardChange]);
 
-    const onPointerUp = useCallback((e: ThreeEvent<PointerEvent>) => {
-        e.stopPropagation();
-        const target = e.target as Element | null;
-        target?.releasePointerCapture?.(e.pointerId);
-        releaseDrag();
-        if (hovered) {
-            setCursor("grab");
-            return;
-        }
-        setCursor("auto");
-    }, [hovered, releaseDrag, setCursor]);
+const onPointerDown = useCallback((e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation();
+    
+    // Initialize gesture detection (mobile only)
+    gestureMode.current = mobileOptimized ? 'undecided' : 'drag';
+    gestureStartPos.current = { x: e.clientX, y: e.clientY };
+    gestureDistance.current = 0;
+    hasTriggeredHaptic.current = false;
+    dragDistance.current = 0;
+    prevPointer.current = { x: e.clientX, y: e.clientY };
+    velocity.current = { x: 0, y: 0 };
+    
+    const target = e.target as Element | null;
+    target?.setPointerCapture?.(e.pointerId);
+    onActiveCardChange(id);
+    
+    // On desktop: start dragging immediately (old behavior)
+    // On mobile: wait for gesture detection
+    if (!mobileOptimized) {
+      isDragging.current = true;
+      setDragging(true);
+      onDraggingCardChange(id);
+      setCursor("grabbing");
+    }
+  }, [id, onActiveCardChange, onDraggingCardChange, setCursor, mobileOptimized]);
+
+const onPointerUp = useCallback((e: ThreeEvent<PointerEvent>) => {
+    e.stopPropagation();
+    const target = e.target as Element | null;
+    target?.releasePointerCapture?.(e.pointerId);
+    
+    // Premium haptic feedback on release
+    if (isDragging.current) {
+      triggerHaptic(5);
+    }
+    
+    // Only reset drag state if we were actually dragging
+    if (isDragging.current) {
+      releaseDrag();
+    }
+    
+    // Reset gesture mode
+    gestureMode.current = 'undecided';
+    
+    // Set cursor based on hover state
+    if (hovered) {
+      setCursor("grab");
+      return;
+    }
+    setCursor("auto");
+  }, [hovered, releaseDrag, setCursor, triggerHaptic]);
 
     const onPointerCancel = useCallback((e: ThreeEvent<PointerEvent>) => {
         e.stopPropagation();
@@ -212,40 +257,75 @@ export const UICard = ({
         setCursor("auto");
     }, [releaseDrag, setCursor]);
 
-    const onPointerMove = useCallback((e: ThreeEvent<PointerEvent>) => {
-        // e.pointerId check: Only process movement if this EXACT pointer is captured by this card.
-        // This completely prevents dragging one card from rotating/affecting another card
-        // if multiple touches or fast swipes happen.
-        if (isDragging.current) {
-            e.stopPropagation();
-            const dx = e.clientX - prevPointer.current.x;
-            const dy = e.clientY - prevPointer.current.y;
-            dragDistance.current += Math.sqrt(dx * dx + dy * dy);
-
-            // UI/UX Improv: Map physical drag pixels directly to rotation (1:1 direct manipulation)
-            const sensitivity = 0.009;
-            let nextRotX = dragRot.current.x + (dy * sensitivity);
-            let nextRotY = dragRot.current.y + (dx * sensitivity);
-
-            // Allow full 360-degree rotation in all directions
-            dragRot.current.x = nextRotX;
-            dragRot.current.y = nextRotY;
-
-            // Preserve organic throw momentum when released
-            velocity.current.x = dy * 0.015;
-            velocity.current.y = dx * 0.015;
-
-            prevPointer.current = { x: e.clientX, y: e.clientY };
-            return;
+const onPointerMove = useCallback((e: ThreeEvent<PointerEvent>) => {
+    const dx = e.clientX - prevPointer.current.x;
+    const dy = e.clientY - prevPointer.current.y;
+    
+    // Smart Gesture Detection: Only on mobile/touch devices
+    if (mobileOptimized && gestureMode.current === 'undecided') {
+      const totalDx = e.clientX - gestureStartPos.current.x;
+      const totalDy = e.clientY - gestureStartPos.current.y;
+      gestureDistance.current = Math.sqrt(totalDx * totalDx + totalDy * totalDy);
+      
+      // Wait until we have enough movement to decide
+      if (gestureDistance.current > GESTURE_THRESHOLD) {
+        // Determine gesture direction: vertical = scroll, horizontal = drag
+        if (Math.abs(totalDy) > Math.abs(totalDx)) {
+          // Vertical movement = scroll mode - let browser handle it
+          gestureMode.current = 'scroll';
+          // Don't capture, don't stop propagation - let page scroll
+          return;
+        } else {
+          // Horizontal movement = drag mode - activate card rotation
+          gestureMode.current = 'drag';
+          isDragging.current = true;
+          setDragging(true);
+          onDraggingCardChange(id);
+          setCursor("grabbing");
+          
+          // Premium haptic feedback when entering drag mode
+          if (!hasTriggeredHaptic.current) {
+            triggerHaptic(10);
+            hasTriggeredHaptic.current = true;
+          }
         }
+      }
+    }
+    
+    // If in scroll mode (mobile only), do nothing (let browser handle scrolling)
+    if (mobileOptimized && gestureMode.current === 'scroll') {
+      return;
+    }
+    
+    // Handle drag mode (desktop starts immediately, mobile after threshold)
+    if (isDragging.current) {
+      e.stopPropagation();
+      dragDistance.current += Math.sqrt(dx * dx + dy * dy);
 
-        if (reducedMotion || lowQuality) return;
+      // Map physical drag pixels directly to rotation (1:1 direct manipulation)
+      const sensitivity = 0.009;
+      let nextRotX = dragRot.current.x + (dy * sensitivity);
+      let nextRotY = dragRot.current.y + (dx * sensitivity);
 
-        if (e.uv && e.uv.x !== undefined && e.uv.y !== undefined) {
-            pointerTiltTarget.current.x = (0.5 - e.uv.y) * 0.09;
-            pointerTiltTarget.current.y = (e.uv.x - 0.5) * 0.09;
-        }
-    }, [lowQuality, reducedMotion]);
+      // Allow full 360-degree rotation in all directions
+      dragRot.current.x = nextRotX;
+      dragRot.current.y = nextRotY;
+
+      // Preserve organic throw momentum when released
+      velocity.current.x = dy * 0.015;
+      velocity.current.y = dx * 0.015;
+
+      prevPointer.current = { x: e.clientX, y: e.clientY };
+      return;
+    }
+
+    if (reducedMotion || lowQuality) return;
+
+    if (e.uv && e.uv.x !== undefined && e.uv.y !== undefined) {
+      pointerTiltTarget.current.x = (0.5 - e.uv.y) * 0.09;
+      pointerTiltTarget.current.y = (e.uv.x - 0.5) * 0.09;
+    }
+  }, [lowQuality, reducedMotion, id, onDraggingCardChange, setCursor, triggerHaptic, mobileOptimized]);
 
     const onClick = useCallback((e: ThreeEvent<MouseEvent>) => {
         e.stopPropagation();
@@ -292,11 +372,16 @@ export const UICard = ({
         const clickProgress = 1 - clickTimelineRef.current;
         const pressPhase = clickProgress < 0.2 ? Math.sin((clickProgress / 0.2) * Math.PI) : 0;
 
-        const hoverScale = hovered ? 1.06 : 1;
-        const backgroundScale = isSecondary ? 0.85 : 1;
-        const finalScale = (hoverScale * backgroundScale + pressPhase * 0.05) * baseScale;
-        scaleVector.current.set(finalScale, finalScale, finalScale);
-        outerRef.current.scale.lerp(scaleVector.current, reducedMotion || lowQuality ? 0.22 : 0.35);
+const hoverScale = hovered ? 1.06 : 1;
+    const backgroundScale = isSecondary ? 0.85 : 1;
+    
+    // Premium interaction scale: subtle "breathing" when deciding, full scale when dragging
+    const decidingScale = gestureMode.current === 'undecided' && gestureDistance.current > 5 ? 1.02 : 1;
+    const dragScale = isDragging.current ? 1.06 : 1;
+    
+    const finalScale = (hoverScale * backgroundScale * decidingScale * dragScale + pressPhase * 0.05) * baseScale;
+    scaleVector.current.set(finalScale, finalScale, finalScale);
+    outerRef.current.scale.lerp(scaleVector.current, reducedMotion || lowQuality ? 0.22 : 0.35);
 
         if (isDragging.current) {
             // While dragging, direct 1:1 rotation is handled perfectly in onPointerMove.
@@ -442,7 +527,7 @@ export const UICard = ({
                                     alignItems: 'center',
                                     gap: compactGap,
                                     whiteSpace: 'nowrap' as const,
-                                    boxShadow: `0 0 10px ${color}12, 0 4px 16px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.03)`,
+                                    boxShadow: `0 0 5px ${color}05, 0 4px 16px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.03)`,
                                     position: 'relative' as const,
                                     overflow: 'hidden',
                                 }}>
@@ -479,7 +564,7 @@ export const UICard = ({
                                     <div style={{
                                         width: compactDot, height: compactDot, borderRadius: '50%',
                                         backgroundColor: color,
-                                        boxShadow: `0 0 4px ${color}, 0 0 8px ${color}55`,
+                                        boxShadow: `0 0 2px ${color}, 0 0 4px ${color}20`,
                                         flexShrink: 0,
                                         animation: 'pulse 2s ease-in-out infinite',
                                     }} />
@@ -545,8 +630,8 @@ function PulseOrb({ start, end, mid, color }: { start: [number, number, number];
 
         if (lightRef.current) {
             lightRef.current.position.copy(point);
-            // High-frequency intensity flicker for a true "sparkle" feel
-            lightRef.current.intensity = 4.0 + Math.sin(time * 40) * 2.0;
+          // Subtle intensity pulse for gentle glow effect
+          lightRef.current.intensity = 0.8 + Math.sin(time * 20) * 0.4;
         }
 
         if (secondaryLightRef.current) {
