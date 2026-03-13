@@ -9,6 +9,7 @@ import { UICard } from "./UICard";
 type SceneProps = {
   mobileOptimized?: boolean;
   onAnyCardDraggingChange?: (isDragging: boolean) => void;
+  shouldAnimate?: boolean;
 };
 
 type PerformanceTier = "high" | "medium" | "low";
@@ -36,11 +37,8 @@ type MobileLayout = {
 const DESKTOP_MIN_WIDTH = 1280;
 const DESKTOP_BASELINE_WIDTH = 1366;
 const DESKTOP_MAX_WIDTH = 1920;
-const MID_DESKTOP_STANDARD_MAX = 1536;
-const MID_DESKTOP_STANDARD_LOCK = 1378;
 const MID_DESKTOP_START = 1536;
 const MID_DESKTOP_END = 1650;
-const CODE_CARD_DESKTOP_ANCHOR_WIDTH = MID_DESKTOP_STANDARD_LOCK;
 const DESKTOP_SCALE_REDUCTION = 0.80; // Reducing desktop card sizes by 20%
 
 const clamp01 = (value: number) => Math.max(0, Math.min(1, value));
@@ -168,19 +166,44 @@ function getMobileLayout(band: MobileBand, progress: number): MobileLayout {
     };
 }
 
-export function Scene({ mobileOptimized = false, onAnyCardDraggingChange }: SceneProps) {
+export function Scene({
+    mobileOptimized = false,
+    onAnyCardDraggingChange,
+    shouldAnimate = true,
+}: SceneProps) {
     const codeCardRef = useRef<THREE.Group>(null!);
     const flowCardRef = useRef<THREE.Group>(null!);
     const previewCardRef = useRef<THREE.Group>(null!);
 
 const [activeCardId, setActiveCardId] = useState<string | null>(null);
   const [draggingCardId, setDraggingCardId] = useState<string | null>(null);
-  
-  // Wrapper for dragging state changes with callback
+
+  const handleActiveCardChange = useCallback((id: string | null) => {
+    setActiveCardId((prev) => (prev === id ? prev : id));
+  }, []);
+
   const handleDraggingCardChange = useCallback((id: string | null) => {
-    setDraggingCardId(id);
-    onAnyCardDraggingChange?.(id !== null);
+    setDraggingCardId((prev) => {
+      if (prev === id) return prev;
+      onAnyCardDraggingChange?.(id !== null);
+      return id;
+    });
   }, [onAnyCardDraggingChange]);
+
+  useEffect(() => {
+    if (shouldAnimate) return;
+    if (typeof window === "undefined") return;
+
+    const frame = window.requestAnimationFrame(() => {
+      setActiveCardId(null);
+      setDraggingCardId(null);
+      onAnyCardDraggingChange?.(false);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+    };
+  }, [shouldAnimate, onAnyCardDraggingChange]);
     const [performanceTier] = useState<PerformanceTier>(() => {
         if (typeof navigator === "undefined") return mobileOptimized ? "low" : "medium";
 
@@ -206,10 +229,22 @@ const [activeCardId, setActiveCardId] = useState<string | null>(null);
     useEffect(() => {
         if (typeof window === "undefined") return;
 
-        const onResize = () => setViewportWidth(window.innerWidth);
+        let resizeRaf: number | null = null;
+        const onResize = () => {
+            if (resizeRaf !== null) return;
+            resizeRaf = window.requestAnimationFrame(() => {
+                resizeRaf = null;
+                setViewportWidth(window.innerWidth);
+            });
+        };
         onResize();
         window.addEventListener("resize", onResize, { passive: true });
-        return () => window.removeEventListener("resize", onResize);
+        return () => {
+            window.removeEventListener("resize", onResize);
+            if (resizeRaf !== null) {
+                window.cancelAnimationFrame(resizeRaf);
+            }
+        };
     }, []);
 
     const normalizedDesktopWidth = viewportWidth;
@@ -242,8 +277,6 @@ const [activeCardId, setActiveCardId] = useState<string | null>(null);
         desktopLift,
     } = getDesktopAnchors(mobileOptimized, normalizedDesktopWidth);
 
-    const codeCardAnchor = getDesktopAnchors(false, CODE_CARD_DESKTOP_ANCHOR_WIDTH);
-
     // SCALE: tuned for xl+ while keeping continuity with tablet/laptop stacks
     const desktopScale = mobileOptimized
         ? 1.05
@@ -266,15 +299,15 @@ const [activeCardId, setActiveCardId] = useState<string | null>(null);
 
     const orbitCount = mobileOptimized
         ? isLaptopBand
-            ? 4
+            ? 3
             : isTabletBand
-                ? 3
-                : 3
+                ? 2
+                : 2
         : visualLowMode
-            ? 4
+            ? 3
             : visualMediumMode
-                ? (isWideDesktop ? 11 : 8)
-                : (isWideDesktop ? 14 : 10);
+                ? (isWideDesktop ? 8 : 6)
+                : (isWideDesktop ? 10 : 8);
 
     const orbitRadius = mobileOptimized ? mobileLayout.orbitRadius : lerp(2.8, 3.4, desktopProgress);
 
@@ -410,12 +443,12 @@ const [activeCardId, setActiveCardId] = useState<string | null>(null);
                 position={[10, 10, 10]}
                 angle={0.15}
                 penumbra={1}
-                intensity={mobileOptimized ? (isLaptopBand ? 0.72 : isTabletBand ? 0.67 : 0.62) : visualLowMode ? 0.72 : visualMediumMode ? 0.86 : 0.45}
+                intensity={mobileOptimized ? (isLaptopBand ? 0.72 : isTabletBand ? 0.67 : 0.62) : visualLowMode ? 0.72 : visualMediumMode ? 0.86 : 0.55}
                 color="#379cfd"
             />
             <pointLight
                 position={[-10, -5, -10]}
-                intensity={mobileOptimized ? (isLaptopBand ? 0.27 : isTabletBand ? 0.24 : 0.2) : visualLowMode ? 0.3 : visualMediumMode ? 0.4 : 0.20}
+                intensity={mobileOptimized ? (isLaptopBand ? 0.27 : isTabletBand ? 0.24 : 0.2) : visualLowMode ? 0.3 : visualMediumMode ? 0.4 : 0.25}
                 color="#1a5fa8"
             />
             {!visualLowMode && !visualMediumMode && <Environment preset="night" />}
@@ -425,20 +458,30 @@ const [activeCardId, setActiveCardId] = useState<string | null>(null);
                 count={
                     mobileOptimized
                         ? isLaptopBand
-                            ? 56
+                            ? 40
                             : isTabletBand
-                                ? 42
-                                : 28
+                                ? 30
+                                : 20
                         : visualLowMode
-                            ? 64
+                            ? 50
                             : visualMediumMode
-                                ? 140
-                                : 240
+                                ? 110
+                                : 180
                 }
-                factor={mobileOptimized ? (isLaptopBand ? 1.8 : isTabletBand ? 1.55 : 1.3) : visualLowMode ? 1.8 : visualMediumMode ? 2.8 : 3.6}
+                factor={mobileOptimized ? (isLaptopBand ? 1.45 : isTabletBand ? 1.3 : 1.15) : visualLowMode ? 1.5 : visualMediumMode ? 2.2 : 2.8}
                 saturation={0}
                 fade
-                speed={mobileOptimized ? (isLaptopBand ? 0.011 : isTabletBand ? 0.009 : 0.007) : visualLowMode ? 0.01 : visualMediumMode ? 0.02 : 0.04}
+                speed={
+                    shouldAnimate
+                        ? mobileOptimized
+                            ? (isLaptopBand ? 0.009 : isTabletBand ? 0.007 : 0.005)
+                            : visualLowMode
+                                ? 0.008
+                                : visualMediumMode
+                                    ? 0.016
+                                    : 0.028
+                        : 0
+                }
             />
 
             <OrbitingProps
@@ -446,6 +489,8 @@ const [activeCardId, setActiveCardId] = useState<string | null>(null);
                 radius={mobileOptimized ? orbitRadius : lerp(4.5, 5.2, desktopProgress)}
                 speed={mobileOptimized ? (isLaptopBand ? 0.066 : isTabletBand ? 0.054 : 0.042) : visualLowMode ? 0.06 : visualMediumMode ? 0.1 : 0.14}
                 reducedMotion={visualLowMode}
+                animate={shouldAnimate}
+                performanceTier={performanceTier}
                 centerOffsetX={clusterOffsetX}
                 centerOffsetY={clusterOffsetY}
                 zMultiplier={mobileOptimized ? 0.95 : 1.5}
@@ -478,7 +523,7 @@ const [activeCardId, setActiveCardId] = useState<string | null>(null);
                     speed={mobileOptimized ? 0.075 : 0.14}
                     delay={1}
                     activeCardId={activeCardId}
-                    onActiveCardChange={setActiveCardId}
+                    onActiveCardChange={handleActiveCardChange}
                     draggingCardId={draggingCardId}
                     onDraggingCardChange={handleDraggingCardChange}
                     reducedMotion={reducedMotion}
@@ -492,6 +537,7 @@ const [activeCardId, setActiveCardId] = useState<string | null>(null);
 qualityTier={performanceTier}
         showConnector={!mobileOptimized}
         mobileOptimized={mobileOptimized}
+        sceneAnimating={true}
       />
 
       <UICard
@@ -511,7 +557,7 @@ qualityTier={performanceTier}
                     speed={mobileOptimized ? 0.078 : 0.16}
                     delay={2}
                     activeCardId={activeCardId}
-                    onActiveCardChange={setActiveCardId}
+                    onActiveCardChange={handleActiveCardChange}
                     draggingCardId={draggingCardId}
                     onDraggingCardChange={handleDraggingCardChange}
                     reducedMotion={reducedMotion}
@@ -525,6 +571,7 @@ qualityTier={performanceTier}
 qualityTier={performanceTier}
         showConnector={!mobileOptimized}
         mobileOptimized={mobileOptimized}
+        sceneAnimating={true}
       />
 
       <UICard
@@ -544,7 +591,7 @@ qualityTier={performanceTier}
                     speed={mobileOptimized ? 0.06 : 0.12}
                     delay={0}
                     activeCardId={activeCardId}
-                    onActiveCardChange={setActiveCardId}
+                    onActiveCardChange={handleActiveCardChange}
                     draggingCardId={draggingCardId}
                     onDraggingCardChange={handleDraggingCardChange}
                     reducedMotion={reducedMotion}
@@ -558,6 +605,7 @@ labelDistanceFactor={previewLabel.labelDistanceFactor}
         qualityTier={performanceTier}
         showConnector={!mobileOptimized}
         mobileOptimized={mobileOptimized}
+        sceneAnimating={true}
       />
             </group>
         </>

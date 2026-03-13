@@ -12,27 +12,38 @@ function seededUnit(index: number, channel: number) {
 }
 
 export function OrbitingProps({
-    radius = 5.0,
-    speed = 0.15,
-    count = 14,
-    reducedMotion = false,
-    centerOffsetX = 0,
-    centerOffsetY = 0,
-    zMultiplier = 0.65,
-    sizeMultiplier = 1.0,
-    verticalAmplitude = 2.2,
+  radius = 5.0,
+  speed = 0.15,
+  count = 14,
+  reducedMotion = false,
+  animate = true,
+  performanceTier = "high",
+  centerOffsetX = 0,
+  centerOffsetY = 0,
+  zMultiplier = 0.65,
+  sizeMultiplier = 1.0,
+  verticalAmplitude = 2.2,
 }: {
-    radius?: number;
-    speed?: number;
-    count?: number;
-    reducedMotion?: boolean;
-    centerOffsetX?: number;
-    centerOffsetY?: number;
-    zMultiplier?: number;
-    sizeMultiplier?: number;
-    verticalAmplitude?: number;
+  radius?: number;
+  speed?: number;
+  count?: number;
+  reducedMotion?: boolean;
+  animate?: boolean;
+  performanceTier?: "high" | "medium" | "low";
+  centerOffsetX?: number;
+  centerOffsetY?: number;
+  zMultiplier?: number;
+  sizeMultiplier?: number;
+  verticalAmplitude?: number;
 }) {
-    const groupRef = useRef<THREE.Group>(null!);
+  const groupRef = useRef<THREE.Group>(null!);
+  const lastUpdateRef = useRef(0);
+
+  // Reset timestamp when animation resumes to prevent delta explosion
+  useEffect(() => {
+    if (!animate) return;
+    lastUpdateRef.current = 0;
+  }, [animate]);
     const colors = useMemo(() => ["#06b6d4", "#0ea5e9", "#38bdf8", "#3b82f6", "#22d3ee", "#60a5fa"], []);
 
     const geometries = useMemo(
@@ -82,6 +93,17 @@ export function OrbitingProps({
     }, [colors, count, radius]);
 
     useFrame((state) => {
+        if (!animate) return;
+
+        const elapsed = state.clock.getElapsedTime();
+        const minStep = performanceTier === "low" ? 1 / 24 : performanceTier === "medium" ? 1 / 36 : 1 / 52;
+        if (elapsed - lastUpdateRef.current < 0) {
+            lastUpdateRef.current = elapsed;
+            return;
+        }
+        if (elapsed - lastUpdateRef.current < minStep) return;
+        lastUpdateRef.current = elapsed;
+
         const t = state.clock.getElapsedTime() * speed;
         if (!groupRef.current) return;
         groupRef.current.children.forEach((child, i) => {

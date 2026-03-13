@@ -53,7 +53,8 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
         return () => window.removeEventListener("resize", onResize);
     }, []);
 
-    const shouldAnimate = isTabVisible && isInView;
+  const shouldRenderScene = isTabVisible && isInView;
+  const shouldAnimateEffects = shouldRenderScene;
     const mobileBand = viewportWidth < 768 ? "phone" : viewportWidth < 1024 ? "tablet" : viewportWidth < 1280 ? "laptop" : "desktop";
 
     const dprRange = useMemo<[number, number]>(() => {
@@ -67,14 +68,14 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
         const midTier = !lowEnd && (cores <= 8 || memory <= 8);
 
         if (mobileOptimized) {
-            if (mobileBand === "laptop") return lowEnd ? [0.65, 0.9] : [0.72, 1.05];
-            if (mobileBand === "tablet") return lowEnd ? [0.62, 0.86] : [0.68, 0.96];
-            return [0.6, 0.9];
+            if (mobileBand === "laptop") return lowEnd ? [0.58, 0.82] : [0.65, 0.95];
+            if (mobileBand === "tablet") return lowEnd ? [0.55, 0.78] : [0.62, 0.9];
+            return [0.5, 0.78];
         }
 
-        if (lowEnd) return [0.65, 0.95];
-        if (midTier) return [0.75, 1.05];
-        return [0.9, 1.25];
+        if (lowEnd) return [0.6, 0.9];
+        if (midTier) return [0.72, 1.0];
+        return [0.85, 1.15];
     }, [mobileBand, mobileOptimized]);
 
   const desktopGlow = useMemo(() => {
@@ -121,20 +122,20 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
 
             <div className="w-full h-full absolute inset-0 !overflow-visible pointer-events-auto">
                 <Canvas
-                    frameloop={shouldAnimate ? "always" : "never"}
+                    frameloop="always"
                     dpr={dprRange}
                     gl={{
-                        antialias: (!mobileOptimized && dprRange[1] >= 1.15) || (mobileOptimized && mobileBand === "laptop" && dprRange[1] >= 1),
+                        antialias: !mobileOptimized && dprRange[1] >= 1.05,
                         alpha: true,
-                        powerPreference: "default",
+                        powerPreference: mobileOptimized ? "low-power" : "high-performance",
                         stencil: false,
                     }}
-performance={{ min: mobileOptimized ? (mobileBand === "laptop" ? 0.45 : mobileBand === "tablet" ? 0.4 : 0.35) : 0.5 }}
+performance={{ min: mobileOptimized ? (mobileBand === "laptop" ? 0.38 : mobileBand === "tablet" ? 0.34 : 0.3) : 0.45 }}
         camera={{ near: 0.1, far: 90 }}
-        style={{ 
-          background: "transparent", 
-          overflow: "visible", 
-          touchAction: isAnyCardDragging ? "none" : "pan-y"  // Smart gesture: scroll by default, drag only when active
+        style={{
+          background: "transparent",
+          overflow: "visible",
+          touchAction: isAnyCardDragging ? "none" : "pan-y",
         }}
       >
                     <Suspense fallback={null}>
@@ -142,6 +143,7 @@ performance={{ min: mobileOptimized ? (mobileBand === "laptop" ? 0.45 : mobileBa
           <Scene 
             mobileOptimized={mobileOptimized} 
             onAnyCardDraggingChange={setIsAnyCardDragging}
+            shouldAnimate={shouldAnimateEffects}
           />
         </SignalProvider>
                     </Suspense>
