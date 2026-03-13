@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export function HubStatusLabels() {
+export function HubStatusLabels({ shouldAnimate = true }: { shouldAnimate?: boolean }) {
   const binaryStream = "011010010111";
 
   return (
@@ -23,8 +23,8 @@ export function HubStatusLabels() {
             <div className="flex items-center gap-2">
               <span className="text-[9px] font-black text-cyan-400 tracking-widest uppercase">Sync.Active</span>
               <motion.span
-                animate={{ opacity: [0.3, 1, 0.3] }}
-                transition={{ duration: 1.5, repeat: Infinity }}
+                animate={{ opacity: shouldAnimate ? [0.3, 1, 0.3] : 1 }}
+                transition={shouldAnimate ? { duration: 1.5, repeat: Infinity } : { duration: 0 }}
                 className="text-[6px] font-mono text-cyan-500/60"
               >
                 {binaryStream}
@@ -51,8 +51,8 @@ export function HubStatusLabels() {
             <div className="flex items-center gap-2 flex-row-reverse">
               <span className="text-[9px] font-black text-green-400 tracking-widest uppercase text-right">Core_Stability</span>
               <motion.div
-                animate={{ scaleX: [0.8, 1.2, 0.8] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                animate={{ scaleX: shouldAnimate ? [0.8, 1.2, 0.8] : 1 }}
+                transition={shouldAnimate ? { duration: 2, repeat: Infinity } : { duration: 0 }}
                 className="w-8 h-1 bg-green-500/20 rounded-full overflow-hidden"
               >
                 <div className="w-full h-full bg-green-400/40" />
@@ -80,8 +80,8 @@ export function HubStatusLabels() {
             <div className="flex items-center gap-1">
               <span className="text-[7px] text-slate-500 font-mono">REQ/s:</span>
               <motion.span
-                animate={{ color: ["#a78bfa", "#fff", "#a78bfa"] }}
-                transition={{ duration: 0.5, repeat: Infinity }}
+                animate={{ color: shouldAnimate ? ["#a78bfa", "#fff", "#a78bfa"] : "#a78bfa" }}
+                transition={shouldAnimate ? { duration: 0.5, repeat: Infinity } : { duration: 0 }}
                 className="text-[7px] text-purple-300 font-mono font-bold"
               >
                 1.4k

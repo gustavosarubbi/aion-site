@@ -47,75 +47,22 @@ export function HubInnerCore({ innerRef, shouldAnimate = true }: HubInnerCorePro
         }}
       />
 
-      {/* Hexágono Gigante Central */}
+      {/* The Central Symbol - Stacked Diamonds */}
       <div className="relative z-20 flex flex-col items-center justify-center">
+        {/* Stacked Diamonds Icon */}
         <div ref={innerRef} className="flex flex-col items-center justify-center mb-1">
-          <svg 
-            width="80" 
-            height="80" 
-            viewBox="0 0 100 100" 
-            fill="none" 
-            className="md:w-[100px] md:h-[100px]"
-            style={{ 
-              filter: 'drop-shadow(0 0 12px rgba(34,211,238,0.6)) drop-shadow(0 0 24px rgba(34,211,238,0.3))'
-            }}
-          >
-            {/* Hexágono externo - contorno principal */}
-            <polygon
-              points="50,5 90,27.5 90,72.5 50,95 10,72.5 10,27.5"
-              fill="none"
-              stroke="#22d3ee"
-              strokeWidth="2"
-              opacity="0.9"
-            />
-            
-            {/* Hexágono interno - camada 1 */}
-            <polygon
-              points="50,15 80,32.5 80,67.5 50,85 20,67.5 20,32.5"
-              fill="none"
-              stroke="#22d3ee"
-              strokeWidth="1.5"
-              opacity="0.7"
-            />
-            
-            {/* Hexágono interno - camada 2 */}
-            <polygon
-              points="50,25 70,36.25 70,63.75 50,75 30,63.75 30,36.25"
-              fill="none"
-              stroke="#22d3ee"
-              strokeWidth="1"
-              opacity="0.5"
-            />
-            
-            {/* Ponto central */}
-            <circle cx="50" cy="50" r="4" fill="#22d3ee" opacity="0.95">
-              {shouldAnimate && (
-                <animate
-                  attributeName="opacity"
-                  values="0.95;0.6;0.95"
-                  dur="2s"
-                  repeatCount="indefinite"
-                />
-              )}
-            </circle>
-            
-            {/* Linhas conectando centro aos vértices */}
-            <line x1="50" y1="50" x2="50" y2="5" stroke="#22d3ee" strokeWidth="0.5" opacity="0.4" />
-            <line x1="50" y1="50" x2="90" y2="27.5" stroke="#22d3ee" strokeWidth="0.5" opacity="0.4" />
-            <line x1="50" y1="50" x2="90" y2="72.5" stroke="#22d3ee" strokeWidth="0.5" opacity="0.4" />
-            <line x1="50" y1="50" x2="50" y2="95" stroke="#22d3ee" strokeWidth="0.5" opacity="0.4" />
-            <line x1="50" y1="50" x2="10" y2="72.5" stroke="#22d3ee" strokeWidth="0.5" opacity="0.4" />
-            <line x1="50" y1="50" x2="10" y2="27.5" stroke="#22d3ee" strokeWidth="0.5" opacity="0.4" />
+          <svg width="56" height="56" viewBox="0 0 64 64" fill="none" className="md:w-[64px] md:h-[64px]" style={{ filter: 'drop-shadow(0 0 8px rgba(34,211,238,0.3))' }}>
+            {/* Top Diamond */}
+            <path d="M32 12 L50 22 L32 32 L14 22 Z" stroke="#22d3ee" strokeWidth="3" strokeLinejoin="round" opacity="0.95" />
+            {/* Middle Chevron */}
+            <path d="M14 30 L32 40 L50 30" stroke="#22d3ee" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" opacity="0.8" />
+            {/* Bottom Chevron */}
+            <path d="M14 40 L32 50 L50 40" stroke="#22d3ee" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" opacity="0.65" />
           </svg>
         </div>
 
         {/* Hub Text */}
-        <span 
-          className="text-cyan-400 font-extrabold tracking-[0.35em] text-[10px] md:text-xs" 
-          style={{ 
-            textShadow: '0 0 8px rgba(34,211,238,0.5), 0 0 16px rgba(34,211,238,0.3)'
-          }}
-        >
+        <span className="text-cyan-400/90 font-extrabold tracking-[0.35em] text-[10px] md:text-xs" style={{ textShadow: '0 0 6px rgba(34,211,238,0.3)' }}>
           H U B
         </span>
       </div>

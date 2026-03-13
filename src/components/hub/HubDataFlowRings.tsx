@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 
-export function HubDataFlowRings() {
+export function HubDataFlowRings({ shouldAnimate = true }: { shouldAnimate?: boolean }) {
   return (
     <>
       {/* Dynamic Circuit Trace Rings - Strengthened Opacities */}
@@ -14,8 +14,8 @@ export function HubDataFlowRings() {
         <motion.div
           key={i}
           className="absolute inset-0"
-          animate={{ rotate: cfg.rev ? -360 : 360 }}
-          transition={{ duration: cfg.d, repeat: Infinity, ease: "linear" }}
+          animate={{ rotate: shouldAnimate ? (cfg.rev ? -360 : 360) : 0 }}
+          transition={shouldAnimate ? { duration: cfg.d, repeat: Infinity, ease: "linear" } : { duration: 0 }}
         >
           <svg viewBox="0 0 100 100" className="w-full h-full">
             <circle

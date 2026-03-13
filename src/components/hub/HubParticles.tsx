@@ -2,15 +2,15 @@
 
 import { motion } from "framer-motion";
 
-export function HubParticles() {
+export function HubParticles({ shouldAnimate = true }: { shouldAnimate?: boolean }) {
   return (
     <>
       {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((angle, i) => (
         <motion.div
           key={i}
           className="absolute w-full h-full"
-          animate={{ rotate: angle + 360 }}
-          transition={{ duration: 15 + (i * 2), repeat: Infinity, ease: "linear" }}
+          animate={{ rotate: shouldAnimate ? angle + 360 : angle }}
+          transition={shouldAnimate ? { duration: 15 + (i * 2), repeat: Infinity, ease: "linear" } : { duration: 0 }}
         >
           <div
             className={`absolute top-0 left-1/2 -translate-x-1/2 rounded-full ${i % 3 === 0 ? 'bg-white shadow-[0_0_6px_#fff]' : 'bg-cyan-400 shadow-[0_0_5px_#22d3ee]'}`}
