@@ -2,83 +2,13 @@
 
 import { CaretDown, WhatsappLogo, ArrowRight, ShieldCheck, ChartLineUp, ClockAfternoon } from "@phosphor-icons/react/dist/ssr";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useCallback, useMemo } from "react";
-import Particles from "@tsparticles/react";
-import type { Container, Engine } from "@tsparticles/engine";
-import { loadSlim } from "@tsparticles/slim";
-import tsParticles from "@tsparticles/engine";
+import { useState } from "react";
 
 const montserrat = { fontFamily: "var(--font-montserrat)" } as const;
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-  const particlesLoaded = useCallback(async (container: Container | undefined) => {
-    // Callback quando as partículas são carregadas
-  }, []);
-
-  const particlesOptions = useMemo(() => ({
-    fpsLimit: 120,
-    interactivity: {
-      events: {
-        onClick: {
-          enable: true,
-          mode: "push",
-        },
-        onHover: {
-          enable: true,
-          mode: "repulse",
-        },
-      },
-      modes: {
-        push: {
-          quantity: 4,
-        },
-        repulse: {
-          distance: 100,
-          duration: 0.4,
-        },
-      },
-    },
-    particles: {
-      color: {
-        value: ["#379cfd", "#00c3ff", "#8a2be2"],
-      },
-      links: {
-        color: "#379cfd",
-        distance: 150,
-        enable: true,
-        opacity: 0.3,
-        width: 1,
-      },
-      move: {
-        direction: "none" as const,
-        enable: true,
-        outModes: {
-          default: "bounce" as const,
-        },
-        random: false,
-        speed: 1,
-        straight: false,
-      },
-      number: {
-        density: {
-          enable: true,
-        },
-        value: 30,
-      },
-      opacity: {
-        value: 0.5,
-      },
-      shape: {
-        type: "circle" as const,
-      },
-      size: {
-        value: { min: 1, max: 3 },
-      },
-    },
-    detectRetina: true,
-  }), []);
   const faqs = [
     { q: "Qual o prazo para um ecossistema completo?", a: "O tempo de implementação depende da complexidade da sua operação. Após o diagnóstico, definimos um cronograma preciso para o seu deploy." },
     { q: "O bot de WhatsApp é seguro contra banimentos?", a: "Sim. Utilizamos exclusivamente a API Oficial da Meta (WhatsApp Business Cloud), garantindo conformidade total com as políticas." },
@@ -87,9 +17,9 @@ export default function FAQ() {
   ];
 
   return (
-<section id="faq" className="relative z-10 w-full py-24 md:py-40 overflow-hidden border-t border-white/[0.05]"
-  style={{ background: "linear-gradient(180deg, #000000 0%, #050717 35%, #070920 55%, #040c1a 75%, #000000 100%)" }}>
-  <Particles id="tsparticles" particlesLoaded={particlesLoaded} options={particlesOptions} className="absolute inset-0 z-0 pointer-events-none" />
+    <section id="faq" className="relative z-10 w-full py-24 md:py-40 overflow-hidden border-t border-white/[0.05]"
+      style={{ background: "linear-gradient(180deg, #000000 0%, #050717 35%, #070920 55%, #040c1a 75%, #000000 100%)" }}
+    >
       {/* ── Background Elements ── */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/[0.03] blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-cyan-500/[0.02] blur-[80px] rounded-full pointer-events-none" />

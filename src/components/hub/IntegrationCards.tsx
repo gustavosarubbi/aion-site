@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Integration } from "./types";
 import { montserrat } from "./constants";
 
@@ -116,6 +115,7 @@ export function IntegrationCards({ integrations, hoveredCard, onHover, cardRefs,
             }}
             onMouseEnter={() => onHover(idx)}
             onMouseLeave={() => onHover(null)}
+            onClick={() => onHover(idx)}
             className="relative group cursor-pointer px-5 py-4 rounded-[20px] flex items-center gap-4 transition-all duration-300 overflow-hidden"
             style={cardStyle}
           >

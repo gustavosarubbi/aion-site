@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat, Source_Code_Pro } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
-import Header from "@/components/Header";
+import Header from "@/components/header";
 import WebVitalsReporter from "@/components/WebVitalsReporter";
 import "./globals.css";
 

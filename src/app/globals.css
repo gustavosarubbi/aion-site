@@ -4,13 +4,41 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
-  --color-aionNavy: #111827;
-  --color-aionBlue: #06b6d4;
-  /* Cyan Neon */
-  --color-aionWhite: #FFFFFF;
-  --color-aionGray: #9ca3af;
-}
+@theme {
+
+  --color-aionNavy: #0a0f1c;
+
+  --color-aionBlue: #06b6d4;
+
+  /* Cyan Neon - Principal */
+
+  --color-aionCyan: #00d4ff;
+
+  /* Violet Premium */
+
+  --color-aionViolet: #8b5cf6;
+
+  /* Emerald Success */
+
+  --color-aionEmerald: #10b981;
+
+  /* Rose/Rosa Destaque */
+
+  --color-aionRose: #f472b6;
+
+  /* Gradientes */
+
+  --color-gradientStart: #06b6d4;
+
+  --color-gradientMid: #3b82f6;
+
+  --color-gradientEnd: #8b5cf6;
+
+  --color-aionWhite: #FFFFFF;
+
+  --color-aionGray: #9ca3af;
+
+}
 
 @layer base {
   :root {

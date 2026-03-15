@@ -1,58 +1,52 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { ArrowRight, InstagramLogo, EnvelopeSimple, WhatsappLogo } from "@phosphor-icons/react";
-import { FlipWords } from "@/components/ui/flip-words";
-import ServiceCards from "@/components/ServiceCards";
+import dynamic from "next/dynamic";
+import { Code, ChatCircleDots, Gear, InstagramLogo, EnvelopeSimple, WhatsappLogo, ArrowRight } from "@phosphor-icons/react";
+import HeroHeadline from "@/components/HeroHeadline";
 import ActionNode from "@/components/ActionNode";
 
 const Hero3DWrapper = dynamic(() => import("@/components/Hero3DWrapper"), {
-  loading: () => <div className="w-full h-[240px] sm:h-[290px] md:h-[340px] lg:h-[560px]" />,
+  loading: () => <div className="w-full h-full" />,
 });
 
-const words = ["SITES", "ROBÔS DE IA", "AUTOMAÇÃO"];
-const outcomes = ["CLIENTES", "ATENDIMENTO", "ESCALA"];
+const montserrat = { fontFamily: "var(--font-montserrat)" } as const;
 
-const socialLinks = [
-  {
-    Icon: InstagramLogo,
-    name: "Instagram",
-    href: "https://instagram.com",
-    baseColor: "text-[#60a5fa]",
-    borderColor: "border-[#60a5fa]/60",
-    glowColor: "shadow-[0_0_0_1px_rgba(96,165,250,0.3),0_4px_20px_rgba(96,165,250,0.3)]",
-    hoverGlow: "hover:shadow-[0_0_0_1px_rgba(96,165,250,0.5),0_6px_30px_rgba(96,165,250,0.5)]",
-    hoverBg: "hover:bg-[#60a5fa]/15",
-  },
-  {
-    Icon: EnvelopeSimple,
-    name: "E-mail",
-    href: "mailto:contato@qodec.digital",
-    baseColor: "text-[#38bdf8]",
-    borderColor: "border-[#38bdf8]/60",
-    glowColor: "shadow-[0_0_0_1px_rgba(56,189,248,0.3),0_4px_20px_rgba(56,189,248,0.3)]",
-    hoverGlow: "hover:shadow-[0_0_0_1px_rgba(56,189,248,0.5),0_6px_30px_rgba(56,189,248,0.5)]",
-    hoverBg: "hover:bg-[#38bdf8]/15",
-  },
-  {
-    Icon: WhatsappLogo,
-    name: "WhatsApp",
-    href: "https://wa.me/message/SEULINKAQUI",
-    baseColor: "text-[#22d3ee]",
-    borderColor: "border-[#22d3ee]/60",
-    glowColor: "shadow-[0_0_0_1px_rgba(34,211,238,0.3),0_4px_20px_rgba(34,211,238,0.3)]",
-    hoverGlow: "hover:shadow-[0_0_0_1px_rgba(34,211,238,0.5),0_6px_30px_rgba(34,211,238,0.5)]",
-    hoverBg: "hover:bg-[#22d3ee]/15",
-  },
-];
+const serviceItems = [
+  { icon: Code, label: "SITES", color: "text-[#379cfd]", halo: "bg-[#379cfd]/35", divider: "via-[#379cfd]/70" },
+  { icon: ChatCircleDots, label: "CONVERSÃO", color: "text-[#379cfd]", halo: "bg-[#379cfd]/35", divider: "via-[#379cfd]/70" },
+  { icon: Gear, label: "AUTOMAÇÃO", color: "text-[#379cfd]", halo: "bg-[#379cfd]/35", divider: "via-[#379cfd]/75" },
+] as const;
+
+function ServiceBar() {
+  return (
+    <div className="flex flex-nowrap items-center justify-center gap-x-3 sm:gap-x-5 max-w-full">
+      {serviceItems.map(({ icon: Icon, label, color, halo }, i) => (
+        <div key={i} className="flex items-center">
+          <div className="flex items-center gap-2 sm:gap-4 py-2.5 sm:py-4 cursor-default px-2 sm:px-4 min-[1280px]:first:pl-0 last:pr-0">
+            <span className="relative inline-flex h-7 w-7 min-[360px]:h-8 min-[360px]:w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full">
+              <span className={`absolute inset-0 rounded-full ${halo} blur-sm opacity-45`} />
+              <Icon size={18} weight="duotone" className={`${color} sm:hidden`} />
+              <Icon size={20} weight="duotone" className={`${color} hidden sm:block`} />
+            </span>
+            <span style={montserrat} className={`text-[11px] min-[360px]:text-[12px] sm:text-[14px] min-[1280px]:text-[16px] font-extrabold tracking-[0.05em] sm:tracking-[0.1em] min-[1280px]:tracking-[0.11em] ${color} uppercase whitespace-nowrap`}>
+              {label}
+            </span>
+          </div>
+          {i !== serviceItems.length - 1 && (
+            <div className="hidden sm:block h-5 sm:h-6 w-px bg-white/20 self-center mx-2 sm:mx-4" />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function HeroSubtitle() {
   return (
     <div className="flex flex-col">
-      <p className="font-[family-name:var(--font-montserrat)] text-white/70 text-sm md:text-base leading-relaxed font-normal max-w-md md:max-w-lg lg:max-w-xl">
-        Sites, sistemas e robôs de IA. Você foca no negócio, nós na tecnologia. 
-        Soluções digitais que convertem visitantes em clientes e automatizam processos para escalar sem limites.
+      <p style={montserrat} className="text-white/80 text-[15px] sm:text-[16px] md:text-[17px] min-[1280px]:text-[18px] leading-[1.6] md:leading-[1.65] font-normal max-w-[48ch] md:max-w-[55ch] lg:max-w-[65ch] tracking-tight">
+        Potencializamos sua escala digital com ecossistemas de <span className="text-[#379cfd] font-medium">alta performance</span>: <span className="text-[#379cfd] font-medium">Sites</span> magnéticos, <span className="text-[#379cfd] font-medium">robôs</span> de conversão e <span className="text-[#379cfd] font-medium">automações</span> voltadas para o lucro.
       </p>
     </div>
   );
@@ -60,241 +54,161 @@ function HeroSubtitle() {
 
 export default function HeroSection() {
   return (
-    <section id="inicio" className="relative w-full min-h-screen overflow-hidden bg-[#111827]">
-      {/* Grid Background */}
-      <div 
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, #379cfd 1px, transparent 1px),
-            linear-gradient(to bottom, #379cfd 1px, transparent 1px)
-          `,
-          backgroundSize: '60px 60px'
-        }}
-      />
+    <section id="inicio" className="relative w-full overflow-x-clip overflow-y-visible min-h-[90dvh] min-[1280px]:min-h-[min(90dvh,850px)]">
+      {/* Animated Grid Background - Movimento diagonal suave */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div 
+          className="absolute inset-0 opacity-[0.08]"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, #379cfd 1px, transparent 1px),
+              linear-gradient(to bottom, #379cfd 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px',
+            backgroundPosition: '0 0',
+          }}
+          animate={{
+            backgroundPosition: ['0px 0px', '60px 60px'],
+          }}
+          transition={{
+            duration: 4,
+            ease: "linear",
+            repeat: Infinity,
+          }}
+        />
+      </div>
       
-      {/* Subtle gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#111827]/50 pointer-events-none" />
-
-      {/* Main Content */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
+      {/* Grid secundário estático */}
+      <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
+        backgroundImage: `
+          linear-gradient(to right, #379cfd 1px, transparent 1px),
+          linear-gradient(to bottom, #379cfd 1px, transparent 1px)
+        `,
+        backgroundSize: '30px 30px'
+      }} />
+      
+      <div className="absolute inset-x-0 top-[8%] h-[75%] bg-[radial-gradient(ellipse_at_center,rgba(55,156,253,0.05)_0%,rgba(55,156,253,0.02)_50%,rgba(0,0,0,0)_80%)] pointer-events-none z-0" />
+      
+      <div className="relative z-10 w-full min-h-full min-[1280px]:h-full max-w-[1480px] mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
         
-        {/* MOBILE & TABLET LAYOUT */}
-        <div className="lg:hidden flex flex-col pt-24 sm:pt-28 pb-8">
-          {/* Service Cards */}
-          <div className="relative flex flex-col items-center justify-center gap-4 px-4 pb-2 mx-auto w-full">
-            <div className="absolute -inset-8 bg-gradient-to-r from-[#379cfd]/6 via-[#379cfd]/3 to-[#379cfd]/6 blur-[36px] -z-10 rounded-full opacity-30 pointer-events-none" />
-            <ServiceCards />
-          </div>
-
-          {/* Headline */}
-          <div className="flex flex-col md:flex-row items-center md:items-center justify-center gap-6 md:gap-8 lg:gap-10 mx-auto w-full mt-8">
-            <motion.div 
-              className="flex flex-col items-center md:items-start select-none md:flex-shrink-0"
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1], delay: 0.28 }}
-            >
-              <div className="text-center md:text-left">
-                <h1 className="font-[family-name:var(--font-montserrat)] block font-black text-white/90 tracking-tight leading-[0.92] text-2xl sm:text-3xl md:text-4xl uppercase">
-                  CRIAMOS{" "}
-                </h1>
-                <div className="inline-flex flex-col items-center md:items-start">
-                  <span className="font-[family-name:var(--font-montserrat)] font-black text-transparent bg-clip-text bg-gradient-to-r from-[#379cfd] via-[#5ec4ff] to-white text-2xl sm:text-3xl md:text-4xl tracking-tight leading-[0.95] uppercase">
-                    <FlipWords words={words} duration={4000} />
-                  </span>
-                  <span className="mt-1 h-[2px] w-full bg-gradient-to-r from-[#379cfd] via-[#5ec4ff] to-white rounded-full" />
-                </div>
-                <h1 className="font-[family-name:var(--font-montserrat)] block font-black text-white/90 tracking-tight leading-[0.92] text-2xl sm:text-3xl md:text-4xl uppercase mt-2">
-                  PARA{" "}
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#379cfd] via-[#5db8ff] to-white">
-                    <FlipWords words={outcomes} duration={4000} />
-                  </span>
-                </h1>
-              </div>
+        {/* MOBILE LAYOUT (< 1280px) */}
+        <div className="min-[1280px]:hidden flex flex-col min-h-screen pt-[calc(var(--header-height,76px)+24px)] pb-6">
+          {/* Text block: ServiceBar + Headline + Subtitle */}
+          <div className="relative flex flex-col items-start justify-center gap-4 md:gap-4 px-4 sm:px-4 pb-0.5 mx-auto w-full max-w-5xl">
+            <div className="absolute -inset-8 bg-gradient-to-r from-[#379cfd]/6 via-[#379cfd]/3 to-[#379cfd]/6 blur-[50px] -z-10 rounded-full opacity-30 pointer-events-none" />
+            
+            <motion.div className="flex justify-start w-full mb-2 md:mb-2" initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}>
+              <ServiceBar />
             </motion.div>
 
-            {/* Vertical Divider - hidden on mobile */}
-            <div className="hidden md:block w-[1.5px] h-[120px] bg-white/30" />
-
-            {/* Subtitle */}
-            <motion.div 
-              className="px-2 md:px-0 text-center md:text-left flex flex-col justify-center flex-1 md:max-w-[480px]"
-              initial={{ opacity: 0, x: 16 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.42 }}
-            >
-              <HeroSubtitle />
-            </motion.div>
-          </div>
-
-          {/* 3D Scene */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 1.04, filter: "blur(10px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
-            className="relative overflow-visible pointer-events-none mt-8"
-            style={{ width: "calc(100% + 2rem)", marginLeft: "-1rem", height: "clamp(300px, 62vw, 480px)" }}
-          >
-            <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black/20 backdrop-blur-sm border border-white/10">
-              <Hero3DWrapper />
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-start gap-6 md:gap-6 lg:gap-10 mx-auto w-full md:px-0">
+              <motion.div className="flex flex-col items-start md:items-start select-none md:flex-shrink-0" initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.3, ease: [0.16, 1, 0.3, 1], delay: 0.28 }}>
+                <HeroHeadline tabletSide="left" />
+              </motion.div>
+              
+              <div className="hidden md:block w-[1.5px] h-[120px] md:h-[130px] lg:h-[140px] bg-white/30 shadow-[0_0_10px_rgba(255,255,255,0.3)]" />
+              
+              <motion.div className="px-2 md:px-0 text-left flex flex-col justify-center flex-1 md:max-w-[580px]" initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.42 }}>
+                <HeroSubtitle />
+              </motion.div>
             </div>
+          </div>
+
+          {/* 3D cards */}
+          <motion.div initial={{ opacity: 0, scale: 1.04, filter: "blur(10px)" }} animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }} transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.12 }} className="relative overflow-visible pointer-events-none flex-1 min-h-[400px]" style={{ width: "calc(100% + 2rem)", marginLeft: "-1rem" }}>
+            <Hero3DWrapper />
+            <div className="absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-[#000000] to-transparent pointer-events-none" />
           </motion.div>
 
-          {/* CTA Buttons */}
-          <motion.div 
-            className="flex flex-col items-center gap-4 sm:gap-6 w-full pointer-events-auto pb-6 pt-4"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.55 }}
-          >
-            {/* Social Links */}
-            <div className="flex items-center gap-4">
-              {socialLinks.map((social, idx) => (
-                <a
-                  key={idx}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.name}
-                  title={social.name}
-                  className={`relative w-11 h-11 flex items-center justify-center rounded-full backdrop-blur-sm bg-[#1e293b]/40 border ${social.borderColor} transition-all duration-300 hover:scale-110 ${social.hoverBg} ${social.baseColor} ${social.glowColor} ${social.hoverGlow}`}
-                >
-                  <social.Icon size={22} weight="duotone" />
+          {/* Buttons + social - ALINHADOS À ESQUERDA */}
+          <motion.div className="flex flex-col items-start gap-4 sm:gap-6 w-full pointer-events-auto pb-6 pt-3 px-4" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.55 }}>
+            <div className="flex items-center gap-3">
+              {[
+                { Icon: InstagramLogo, href: "https://instagram.com", baseColor: "text-cyan-300", borderColor: "border-cyan-400/30", glowColor: "shadow-[0_0_10px_rgba(34,211,238,0.16)]", hoverGlow: "hover:shadow-[0_0_16px_rgba(34,211,238,0.28)]" },
+                { Icon: EnvelopeSimple, href: "mailto:contato@qodec.digital", baseColor: "text-sky-300", borderColor: "border-sky-400/30", glowColor: "shadow-[0_0_10px_rgba(56,189,248,0.16)]", hoverGlow: "hover:shadow-[0_0_16px_rgba(56,189,248,0.28)]" },
+                { Icon: WhatsappLogo, href: "https://wa.me/message/SEULINKAQUI", baseColor: "text-blue-300", borderColor: "border-blue-400/30", glowColor: "shadow-[0_0_10px_rgba(96,165,250,0.16)]", hoverGlow: "hover:shadow-[0_0_16px_rgba(96,165,250,0.28)]" }
+              ].map((social, idx) => (
+                <a key={idx} href={social.href} target="_blank" rel="noopener noreferrer" className={`w-11 h-11 flex items-center justify-center rounded-full bg-white/[0.03] border ${social.borderColor} transition-all duration-300 hover:scale-105 hover:bg-white/[0.08] ${social.baseColor} ${social.glowColor} ${social.hoverGlow}`}>
+                  <social.Icon size={20} weight="duotone" />
                 </a>
               ))}
             </div>
-
-            {/* Action Buttons */}
-            <div className="flex w-full flex-col md:flex-row md:items-center justify-center gap-3 sm:gap-4 px-4 md:max-w-none">
+            
+            <div className="flex w-full flex-col sm:flex-row sm:items-start justify-start gap-3 sm:gap-4">
               <ActionNode compact />
-              <a
-                href="#engenharia"
-                className="font-[family-name:var(--font-montserrat)] group relative w-full sm:w-auto inline-flex items-center justify-center gap-2 h-11 md:h-12 px-6 md:px-8 rounded-full backdrop-blur-[12px] text-xs font-bold text-white tracking-wide uppercase cursor-pointer transition-all duration-300 ease-out hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] focus-visible:outline-none overflow-hidden border border-white/25"
-              >
-                <span className="relative z-10 flex items-center gap-2">
+              <a href="#servicos" className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2 h-[48px] lg:h-[52px] px-8 lg:px-10 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-[13px] font-bold text-white transition-all duration-500 hover:bg-white/10 hover:border-white/20 active:scale-[0.98] overflow-hidden" style={montserrat}>
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+                <span className="relative z-10 flex items-center gap-2 tracking-[0.1em] uppercase">
                   VER SOLUÇÕES
-                  <ArrowRight size={14} weight="bold" className="transition-transform duration-300 group-hover:translate-x-1" />
+                  <ArrowRight size={16} weight="bold" className="transition-transform duration-500 group-hover:translate-x-1 text-[#379cfd]" />
                 </span>
               </a>
             </div>
-
-            {/* Tagline */}
-            <p className="font-[family-name:var(--font-montserrat)] text-[10px] uppercase tracking-widest text-[#379cfd]/80">
+            
+            <p style={montserrat} className="text-[10.5px] uppercase tracking-[0.08em] text-[#379cfd]/80">
               Design de elite e tecnologia estratégica.
             </p>
           </motion.div>
         </div>
 
-        {/* DESKTOP LAYOUT */}
-        <div className="hidden lg:grid h-full min-h-screen items-center gap-x-8 grid-cols-1 lg:grid-cols-[1fr_56%] xl:grid-cols-[1fr_52%] py-20 lg:py-0">
-          {/* Left Column */}
-          <div className="relative h-full flex flex-col items-start text-left justify-center gap-4 lg:gap-6 xl:gap-7 pl-0 xl:pl-8">
-            <div className="absolute -inset-8 bg-gradient-to-r from-[#379cfd]/6 via-[#379cfd]/3 to-[#379cfd]/6 blur-[36px] -z-10 rounded-full opacity-30 pointer-events-none" />
+        {/* DESKTOP LAYOUT (>= 1280px) */}
+        <div className="hidden min-[1280px]:grid min-h-screen min-[1280px]:items-start min-[1280px]:gap-x-8 min-[1280px]:grid-cols-[minmax(0,1fr)_minmax(580px,56%)] lg:pl-32 min-[1280px]:pl-[80px] lg:pl-[100px] xl:pl-[120px] 2xl:pl-[140px]" style={{ paddingTop: "calc(var(--header-height, 88px) - 32px)" }}>
+          <div className="relative h-full min-h-[800px] flex flex-col items-start text-left justify-start pt-[7vh] pb-12 min-[1280px]:pb-20 gap-3 lg:gap-4 transform-gpu min-[1280px]:pt-[9vh] min-[1280px]:translate-y-6 min-[1280px]:gap-7 min-[1280px]:-translate-x-1">
+            <div className="absolute -inset-8 bg-gradient-to-r from-[#379cfd]/6 via-[#379cfd]/3 to-[#379cfd]/6 blur-[50px] -z-10 rounded-full opacity-30 pointer-events-none" />
             
-            {/* Service Cards */}
-            <motion.div 
-              className="relative z-30"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-            >
-              <ServiceCards />
+            <motion.div className="relative z-30" initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}>
+              <ServiceBar />
             </motion.div>
-
-            {/* Headline */}
-            <motion.div 
-              className="relative z-30 w-full max-w-[780px]"
-              initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
-            >
-              <h1 className="flex flex-wrap items-center justify-start gap-x-2 gap-y-0 w-full">
-                <span className="font-[family-name:var(--font-montserrat)] block font-black text-white/90 tracking-tight leading-[1.05] text-3xl lg:text-4xl xl:text-5xl uppercase">
-                  CRIAMOS{" "}
-                </span>
-                <span className="font-[family-name:var(--font-montserrat)] font-black text-transparent bg-clip-text bg-gradient-to-r from-[#379cfd] via-[#5ec4ff] to-white text-3xl lg:text-4xl xl:text-5xl tracking-tight leading-[1.05] uppercase">
-                  <FlipWords words={words} duration={4000} />
-                </span>
-              </h1>
-              <h1 className="flex flex-wrap items-baseline justify-start gap-2 w-full -mt-1">
-                <span className="font-[family-name:var(--font-montserrat)] block font-black text-white/90 tracking-tight leading-[0.95] text-3xl lg:text-4xl xl:text-5xl uppercase">
-                  PARA{" "}
-                </span>
-                <span className="font-[family-name:var(--font-montserrat)] font-black text-transparent bg-clip-text bg-gradient-to-r from-[#379cfd] via-[#5db8ff] to-white text-3xl lg:text-4xl xl:text-5xl tracking-tight leading-[0.95] uppercase">
-                  <FlipWords words={outcomes} duration={4000} />
-                </span>
-              </h1>
+            
+            <motion.div className="relative z-30 w-full" initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}>
+              <HeroHeadline />
             </motion.div>
-
-            {/* Subtitle */}
-            <motion.div 
-              className="relative z-30 w-full max-w-md"
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
-            >
+            
+            <motion.div className="relative z-30 w-full max-w-[48ch]" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}>
               <HeroSubtitle />
             </motion.div>
-
-            {/* CTA */}
-            <motion.div 
-              className="relative z-10 flex flex-col items-start gap-5 w-full pointer-events-auto mt-4"
-              initial={{ opacity: 0, y: 30, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.78 }}
-            >
-              {/* Social Links */}
-              <div className="flex items-center gap-4">
-                {socialLinks.map((social, idx) => (
-                  <a
-                    key={idx}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.name}
-                    title={social.name}
-                    className={`relative w-11 h-11 flex items-center justify-center rounded-full backdrop-blur-sm bg-[#1e293b]/40 border ${social.borderColor} transition-all duration-300 hover:scale-110 ${social.hoverBg} ${social.baseColor} ${social.glowColor} ${social.hoverGlow}`}
-                  >
-                    <social.Icon size={22} weight="duotone" />
+            
+            {/* CTAs ALINHADOS À ESQUERDA */}
+            <motion.div className="relative z-10 flex flex-col items-start gap-5 w-full pointer-events-auto min-[1280px]:mt-[16px]" initial={{ opacity: 0, y: 30, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.78 }}>
+              <div className="flex items-center gap-3">
+                {[
+                  { Icon: InstagramLogo, href: "https://instagram.com", baseColor: "text-cyan-300", borderColor: "border-cyan-400/30", glowColor: "shadow-[0_0_10px_rgba(34,211,238,0.16)]", hoverGlow: "hover:shadow-[0_0_16px_rgba(34,211,238,0.28)]" },
+                  { Icon: EnvelopeSimple, href: "mailto:contato@aion.digital", baseColor: "text-sky-300", borderColor: "border-sky-400/30", glowColor: "shadow-[0_0_10px_rgba(56,189,248,0.16)]", hoverGlow: "hover:shadow-[0_0_16px_rgba(56,189,248,0.28)]" },
+                  { Icon: WhatsappLogo, href: "https://wa.me/message/SEULINKAQUI", baseColor: "text-blue-300", borderColor: "border-blue-400/30", glowColor: "shadow-[0_0_10px_rgba(96,165,250,0.16)]", hoverGlow: "hover:shadow-[0_0_16px_rgba(96,165,250,0.28)]" }
+                ].map((social, idx) => (
+                  <a key={idx} href={social.href} target="_blank" rel="noopener noreferrer" className={`w-11 h-11 flex items-center justify-center rounded-full bg-white/[0.03] border ${social.borderColor} transition-all duration-300 hover:scale-105 hover:bg-white/[0.08] ${social.baseColor} ${social.glowColor} ${social.hoverGlow}`}>
+                    <social.Icon size={20} weight="duotone" />
                   </a>
                 ))}
               </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center gap-4 pointer-events-auto">
+              
+              <div className="flex items-start gap-4 pointer-events-auto">
                 <ActionNode />
-                <a
-                  href="#engenharia"
-                  className="font-[family-name:var(--font-montserrat)] group relative inline-flex items-center justify-center gap-2 h-12 px-6 xl:px-8 rounded-full backdrop-blur-[12px] text-xs font-bold text-white tracking-wide uppercase cursor-pointer transition-all duration-300 ease-out hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] focus-visible:outline-none overflow-hidden border border-white/25"
-                >
-                  <span className="relative z-10 flex items-center gap-2">
+                <a href="#servicos" className="group relative inline-flex items-center justify-center gap-3 h-[52px] lg:h-[56px] min-[1280px]:h-[60px] px-8 lg:px-10 min-[1280px]:px-12 rounded-full bg-[#379cfd]/10 backdrop-blur-xl border border-[#379cfd]/20 text-[12px] lg:text-[13px] min-[1280px]:text-[14px] font-semibold text-white transition-all duration-500 hover:bg-[#379cfd]/15 hover:border-[#379cfd]/35 hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#379cfd]/50 pointer-events-auto shadow-[0_0_14px_rgba(55,156,253,0.06)] hover:shadow-[0_0_22px_rgba(55,156,253,0.12)] overflow-hidden" style={montserrat}>
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-white/0 group-hover:bg-white/[0.02] transition-colors duration-500" />
+                  <span className="relative z-10 flex items-center gap-3 uppercase tracking-[0.14em] drop-shadow-[0_1px_4px_rgba(0,0,0,0.1)] group-hover:text-white transition-all duration-500">
                     Ver soluções
-                    <ArrowRight size={14} weight="bold" className="transition-transform duration-300 group-hover:translate-x-1" />
+                    <ArrowRight size={16} weight="bold" className="transition-transform duration-500 group-hover:translate-x-1 text-[#379cfd] group-hover:text-white" />
                   </span>
                 </a>
               </div>
-
-              {/* Tagline */}
+              
               <div className="flex items-center gap-2.5">
                 <div className="w-2 h-[2px] bg-[#379cfd] opacity-80" />
-                <p className="font-[family-name:var(--font-montserrat)] text-[10px] lg:text-xs uppercase tracking-widest text-[#379cfd]/80">
+                <p style={montserrat} className="text-[10px] lg:text-[10.5px] min-[1280px]:text-[12px] uppercase tracking-[0.1em] text-[#379cfd]/80">
                   Design de elite e tecnologia estratégica.
                 </p>
               </div>
             </motion.div>
           </div>
 
-          {/* Right Column - 3D Scene */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 1.04, filter: "blur(10px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="relative z-20 self-stretch w-full overflow-visible pointer-events-none lg:pointer-events-auto"
-          >
-            <div className="relative w-full h-full min-h-[480px] rounded-2xl overflow-hidden bg-black/20 backdrop-blur-sm border border-white/10">
+          {/* Right: 3D scene */}
+          <motion.div initial={{ opacity: 0, scale: 1.04, filter: "blur(10px)" }} animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }} transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }} className="relative z-20 self-stretch w-full overflow-visible pointer-events-none min-[1280px]:pointer-events-auto min-h-[800px]">
+            <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 w-[136%] max-w-[100vw] min-h-[800px] overflow-visible">
               <Hero3DWrapper />
             </div>
+            <div className="absolute inset-x-0 bottom-0 h-16 lg:h-24 bg-gradient-to-t from-[#000000] to-transparent pointer-events-none" />
           </motion.div>
         </div>
       </div>

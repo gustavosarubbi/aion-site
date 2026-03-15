@@ -81,7 +81,6 @@ export default function IntegrationsHub() {
       if (!scrollingRef.current) {
         scrollingRef.current = true;
         setIsScrolling(true);
-        setHoveredCard(null);
       }
 
       if (scrollStopTimerRef.current !== null) {

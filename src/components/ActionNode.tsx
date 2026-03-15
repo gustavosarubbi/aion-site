@@ -11,7 +11,7 @@ export default function ActionNode({ compact = false }: ActionNodeProps) {
   // Glassmorphism - Card Azul Principal
   const rootClass = compact
     ? "group relative w-full sm:w-auto inline-flex items-center justify-center gap-2 h-[44px] px-6 rounded-full backdrop-blur-[12px] text-[11px] font-bold text-white tracking-[0.5px] uppercase cursor-pointer transition-all duration-300 ease-out hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] focus-visible:outline-none overflow-hidden"
-    : "group relative w-full sm:w-auto inline-flex items-center justify-center gap-2 h-[46px] lg:h-[48px] min-[1280px]:h-[52px] px-5 lg:px-6 min-[1280px]:px-8 rounded-full backdrop-blur-[12px] text-[10px] lg:text-[11px] min-[1280px]:text-[12px] font-bold text-white tracking-[0.5px] uppercase cursor-pointer transition-all duration-300 ease-out hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] focus-visible:outline-none overflow-hidden";
+    : "group relative w-full sm:w-auto inline-flex items-center justify-center gap-2.5 h-[48px] lg:h-[52px] min-[1280px]:h-[54px] px-7 lg:px-8 min-[1280px]:px-10 rounded-full backdrop-blur-[12px] text-[11px] lg:text-[12px] min-[1280px]:text-[13px] font-bold text-white tracking-[0.5px] uppercase cursor-pointer transition-all duration-300 ease-out hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] focus-visible:outline-none overflow-hidden";
 
   return (
     <a
@@ -48,7 +48,7 @@ export default function ActionNode({ compact = false }: ActionNodeProps) {
 
       <span className="relative z-10 flex items-center gap-2 drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
         RESERVAR ESTRATÉGIA
-        <ArrowRight size={14} weight="bold" className="transition-transform duration-300 group-hover:translate-x-1" />
+        <ArrowRight size={13} weight="bold" className="transition-transform duration-300 group-hover:translate-x-1" />
       </span>
     </a>
   );
