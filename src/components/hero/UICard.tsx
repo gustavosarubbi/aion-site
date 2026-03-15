@@ -137,7 +137,10 @@ export const UICard = ({
     labelDistanceFactor = 10,
 
     baseScale = 1,
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
   qualityTier = "high",
   showConnector = true,
   mobileOptimized = false,
@@ -161,9 +164,12 @@ export const UICard = ({
   const lastPointerMoveAtRef = useRef(0);
   const lastFrameAtRef = useRef(0);
   const currentCursorRef = useRef<string>("auto");
+<<<<<<< HEAD
   const pointerCaptureTargetRef = useRef<PointerCaptureTarget | null>(null);
   const activePointerIdRef = useRef<number | null>(null);
 
+=======
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
 
     const floatOffset = useMemo(() => seededRange(id, 1, 0, Math.PI * 2), [id]);
 
@@ -178,9 +184,14 @@ export const UICard = ({
     const lowQuality = qualityTier === "low";
     const mediumQuality = qualityTier === "medium";
     const motionScalar = lowQuality ? 0.58 : mediumQuality ? 0.78 : 1;
+<<<<<<< HEAD
     const shouldRunConnectorPulse = sceneAnimating && !reducedMotion && (hovered || activeCardId === id || dragging);
     const shouldAnimateCardDetails = sceneAnimating && !reducedMotion && (hovered || activeCardId === id || dragging);
 
+=======
+    const shouldRunConnectorPulse = !reducedMotion && (hovered || activeCardId === id || dragging);
+    const shouldAnimateCardDetails = !reducedMotion && (hovered || activeCardId === id || dragging);
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
 
     const isDragging = useRef(false);
 
@@ -434,6 +445,32 @@ const releaseDrag = useCallback(() => {
   }, [resetInteraction]);
 
 
+  // Reset timestamp when scene resumes to prevent frame delta explosion
+  useEffect(() => {
+    if (!sceneAnimating) return;
+    lastFrameAtRef.current = 0;
+  }, [sceneAnimating]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleScrollRelease = () => {
+      if (!isDragging.current) return;
+      releaseDrag();
+      setHovered(false);
+      pointerTiltTarget.current = { x: 0, y: 0 };
+      setCursor("auto");
+    };
+
+    window.addEventListener("scroll", handleScrollRelease, { passive: true });
+    window.addEventListener("pointerup", handleScrollRelease, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScrollRelease);
+      window.removeEventListener("pointerup", handleScrollRelease);
+    };
+  }, [releaseDrag, setCursor]);
+
 const onPointerDown = useCallback((e: ThreeEvent<PointerEvent>) => {
     if (!sceneAnimating) return;
     e.stopPropagation();
@@ -513,8 +550,11 @@ const onPointerMove = useCallback((e: ThreeEvent<PointerEvent>) => {
     if (now - lastPointerMoveAtRef.current < pointerInterval) return;
     lastPointerMoveAtRef.current = now;
 
+<<<<<<< HEAD
     if (!sceneAnimating && !isDragging.current) return;
 
+=======
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
     const dx = e.clientX - prevPointer.current.x;
     const dy = e.clientY - prevPointer.current.y;
     
@@ -584,8 +624,12 @@ const onPointerMove = useCallback((e: ThreeEvent<PointerEvent>) => {
       pointerTiltTarget.current.x = (0.5 - e.uv.y) * 0.09;
       pointerTiltTarget.current.y = (e.uv.x - 0.5) * 0.09;
     }
+<<<<<<< HEAD
   }, [capturePointer, lowQuality, mediumQuality, reducedMotion, resetInteraction, sceneAnimating, id, onDraggingCardChange, setCursor, triggerHaptic, mobileOptimized]);
 
+=======
+  }, [lowQuality, mediumQuality, reducedMotion, id, onDraggingCardChange, setCursor, triggerHaptic, mobileOptimized]);
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
 
     const onClick = useCallback((e: ThreeEvent<MouseEvent>) => {
 
@@ -599,6 +643,7 @@ const onPointerMove = useCallback((e: ThreeEvent<PointerEvent>) => {
 
     }, [signal]);
 
+<<<<<<< HEAD
 
 
     useFrame((state) => {
@@ -606,17 +651,32 @@ const onPointerMove = useCallback((e: ThreeEvent<PointerEvent>) => {
 
         if (!sceneAnimating && !isDragging.current) return;
 
+=======
+    useFrame((state) => {
+        if (!outerRef.current || !innerRef.current) return;
+
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
         const now = state.clock.getElapsedTime();
         const interacting = hovered || isDragging.current || activeCardId === id;
         const targetFps = lowQuality ? (interacting ? 28 : 20) : mediumQuality ? (interacting ? 40 : 30) : (interacting ? 60 : 45);
         const minStep = 1 / targetFps;
         const elapsed = now - lastFrameAtRef.current;
+<<<<<<< HEAD
+=======
+        if (elapsed < 0) {
+            lastFrameAtRef.current = now;
+            return;
+        }
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
         if (elapsed < minStep) return;
         lastFrameAtRef.current = now;
 
   const frameDelta = Math.min(Math.max(elapsed, 1 / 120), 1 / 30);
     const t = now * speed * (reducedMotion ? 0.9 : 1) + delay;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
 
         const targetX =
 
@@ -642,6 +702,7 @@ const onPointerMove = useCallback((e: ThreeEvent<PointerEvent>) => {
 
             (isActive ? 1.5 : isSecondary ? -1.0 : 0);
 
+<<<<<<< HEAD
 
 
         outerRef.current.position.x = THREE.MathUtils.damp(outerRef.current.position.x, targetX, 12, frameDelta);
@@ -651,6 +712,14 @@ const onPointerMove = useCallback((e: ThreeEvent<PointerEvent>) => {
         pointerTilt.current.x = THREE.MathUtils.damp(pointerTilt.current.x, pointerTiltTarget.current.x, 18, frameDelta);
         pointerTilt.current.y = THREE.MathUtils.damp(pointerTilt.current.y, pointerTiltTarget.current.y, 18, frameDelta);
 
+=======
+        outerRef.current.position.x = THREE.MathUtils.damp(outerRef.current.position.x, targetX, 12, frameDelta);
+        outerRef.current.position.y = THREE.MathUtils.damp(outerRef.current.position.y, targetY, 12, frameDelta);
+        outerRef.current.position.z = THREE.MathUtils.damp(outerRef.current.position.z, targetZ, 15, frameDelta);
+
+        pointerTilt.current.x = THREE.MathUtils.damp(pointerTilt.current.x, pointerTiltTarget.current.x, 18, frameDelta);
+        pointerTilt.current.y = THREE.MathUtils.damp(pointerTilt.current.y, pointerTiltTarget.current.y, 18, frameDelta);
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
 
         const targetRotX = initialRotation[0] + Math.sin(t * 0.5 + floatOffset) * 0.04 + pointerTilt.current.x;
 
@@ -658,8 +727,11 @@ const onPointerMove = useCallback((e: ThreeEvent<PointerEvent>) => {
 
         const targetRotZ = Math.sin(t * 0.3 + floatOffset * 2) * 0.02;
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
         outerRef.current.rotation.x = THREE.MathUtils.damp(outerRef.current.rotation.x, targetRotX, 12, frameDelta);
         outerRef.current.rotation.y = THREE.MathUtils.damp(outerRef.current.rotation.y, targetRotY, 12, frameDelta);
         outerRef.current.rotation.z = THREE.MathUtils.damp(outerRef.current.rotation.z, targetRotZ, 15, frameDelta);
@@ -690,7 +762,10 @@ const hoverScale = hovered ? 1.06 : 1;
             // While dragging, direct 1:1 rotation is handled perfectly in onPointerMove.
 
             // Gradually bleed out the momentum so holding still doesn't release with huge velocity.
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
             velocity.current.x = THREE.MathUtils.lerp(velocity.current.x, 0, frameDelta * 15);
             velocity.current.y = THREE.MathUtils.lerp(velocity.current.y, 0, frameDelta * 15);
         } else {
@@ -713,7 +788,10 @@ const hoverScale = hovered ? 1.06 : 1;
 
 
             // Extra dampening to ensure absolute and smooth return to 0
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
             dragRot.current.x = THREE.MathUtils.damp(dragRot.current.x, 0, reducedMotion ? 12.0 : 16.0, frameDelta);
             dragRot.current.y = THREE.MathUtils.damp(dragRot.current.y, 0, reducedMotion ? 12.0 : 16.0, frameDelta);
         }
@@ -726,6 +804,7 @@ const hoverScale = hovered ? 1.06 : 1;
 
 
         if (bodyMaterialRef.current) {
+<<<<<<< HEAD
 
 bodyMaterialRef.current.opacity = THREE.MathUtils.damp(
         bodyMaterialRef.current.opacity,
@@ -737,6 +816,17 @@ bodyMaterialRef.current.opacity = THREE.MathUtils.damp(
 
   });
 
+=======
+bodyMaterialRef.current.opacity = THREE.MathUtils.damp(
+        bodyMaterialRef.current.opacity,
+        isSecondary ? 0.86 : 0.97,
+        8,
+        frameDelta,
+      );
+    }
+
+  });
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
 
     return (
 
@@ -747,9 +837,13 @@ bodyMaterialRef.current.opacity = THREE.MathUtils.damp(
                 <mesh
 
                     position={[0, 0, 0.3]}
+<<<<<<< HEAD
 
                     onPointerEnter={(e) => {
                         if (!sceneAnimating) return;
+=======
+                    onPointerEnter={(e) => {
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
                         if (draggingCardId !== null && draggingCardId !== id) return;
                         e.stopPropagation();
                         setHovered((prev) => (prev ? prev : true));
@@ -757,7 +851,10 @@ bodyMaterialRef.current.opacity = THREE.MathUtils.damp(
                         setCursor(isDragging.current ? "grabbing" : "grab");
                     }}
                     onPointerLeave={(e) => {
+<<<<<<< HEAD
                         if (!sceneAnimating) return;
+=======
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
                         if (draggingCardId !== null && draggingCardId !== id) return;
                         e.stopPropagation();
                         setHovered((prev) => (prev ? false : prev));
@@ -845,7 +942,10 @@ bodyMaterialRef.current.opacity = THREE.MathUtils.damp(
                     )}
                 </RoundedBox>
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
                 <CardFrame
                     color={color}
                     reducedMotion={reducedMotion || lowQuality}
@@ -854,12 +954,19 @@ bodyMaterialRef.current.opacity = THREE.MathUtils.damp(
                 />
 
 
+<<<<<<< HEAD
 
 
 {type === "code" && <CodeCardContent reducedDetail={lowQuality} animateDetails={shouldAnimateCardDetails} />}
       {type === "preview" && <PreviewCardContent reducedDetail={lowQuality} animateDetails={shouldAnimateCardDetails} />}
       {type === "flow" && <FlowCardContent baseColor={color} reducedDetail={lowQuality} animateDetails={shouldAnimateCardDetails} />}
 
+=======
+{type === "code" && <CodeCardContent reducedDetail={lowQuality} animateDetails={shouldAnimateCardDetails} />}
+      {type === "preview" && <PreviewCardContent reducedDetail={lowQuality} animateDetails={shouldAnimateCardDetails} />}
+      {type === "flow" && <FlowCardContent baseColor={color} reducedDetail={lowQuality} animateDetails={shouldAnimateCardDetails} />}
+
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
       {title && (
                     <Html
 
@@ -982,7 +1089,10 @@ bodyMaterialRef.current.opacity = THREE.MathUtils.damp(
                                         boxShadow: `0 0 2px ${color}, 0 0 4px ${color}20`,
 
                                         flexShrink: 0,
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
                                         animation: shouldRunConnectorPulse ? 'pulse 2s ease-in-out infinite' : 'none',
                                     }} />
                                 </div>
@@ -1024,7 +1134,10 @@ bodyMaterialRef.current.opacity = THREE.MathUtils.damp(
 
 
                         {/* Pulse orb traveling along the bezier */}
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
                         {shouldRunConnectorPulse && (
                             <PulseOrb
                                 start={resolvedConnector.start}
@@ -1054,7 +1167,10 @@ bodyMaterialRef.current.opacity = THREE.MathUtils.damp(
 
 
 // High-intensity "Sparkle" pulse that travels along a curve
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
 function PulseOrb({
     start,
     end,
@@ -1070,6 +1186,7 @@ function PulseOrb({
     qualityTier?: "high" | "medium" | "low";
     active?: boolean;
 }) {
+<<<<<<< HEAD
     const lightRef = useRef<THREE.PointLight>(null!);
     const meshRef = useRef<THREE.Mesh>(null!);
     const lastUpdateRef = useRef(0);
@@ -1077,6 +1194,19 @@ function PulseOrb({
 
     const curve = useMemo(() => {
 
+=======
+  const lightRef = useRef<THREE.PointLight>(null!);
+  const meshRef = useRef<THREE.Mesh>(null!);
+  const lastUpdateRef = useRef(0);
+
+  // Reset timestamp when orb becomes active to prevent position jump
+  useEffect(() => {
+    if (!active) return;
+    lastUpdateRef.current = 0;
+  }, [active]);
+
+  const curve = useMemo(() => {
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
         return new THREE.QuadraticBezierCurve3(
 
             new THREE.Vector3(...start),
@@ -1096,6 +1226,13 @@ function PulseOrb({
 
         const time = state.clock.getElapsedTime();
         const minStep = qualityTier === "low" ? 1 / 24 : qualityTier === "medium" ? 1 / 36 : 1 / 60;
+<<<<<<< HEAD
+=======
+        if (time - lastUpdateRef.current < 0) {
+            lastUpdateRef.current = time;
+            return;
+        }
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
         if (time - lastUpdateRef.current < minStep) return;
         lastUpdateRef.current = time;
 
@@ -1107,13 +1244,19 @@ function PulseOrb({
 
         meshRef.current.position.copy(point);
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
         if (lightRef.current && qualityTier === "high") {
             lightRef.current.position.copy(point);
             lightRef.current.intensity = 1.6 + Math.sin(time * 25) * 0.4;
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
 
         // Random-ish scale jitter to break the "geometric sphere" look
 
@@ -1130,7 +1273,11 @@ function PulseOrb({
         <group>
 
             {/* The "Spark" - tiny and jittery */}
+<<<<<<< HEAD
             <mesh ref={meshRef}>
+=======
+            <mesh ref={meshRef} position={start} scale={[0.02, 0.02, 0.02]}>
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
                 <sphereGeometry args={[1, qualityTier === "low" ? 6 : 8, qualityTier === "low" ? 6 : 8]} />
                 <meshBasicMaterial color="#ffffff" />
             </mesh>

@@ -56,6 +56,7 @@ const gateways: GatewayItem[] = [
 const marqueeItems = [...gateways, ...gateways, ...gateways];
 
 export default function GatewayCarousel() {
+<<<<<<< HEAD
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [isInView, setIsInView] = useState(true);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
@@ -68,6 +69,98 @@ export default function GatewayCarousel() {
         setIsInView(entry.isIntersecting);
       },
       { root: null, rootMargin: "120px 0px 120px 0px", threshold: 0.02 }
+=======
+    return (
+        <div className="relative w-full py-2 bg-black overflow-hidden flex flex-col items-center group">
+            {/* Expanded Track Container with Integrated Title */}
+            <div className="w-full max-w-5xl mx-auto relative flex flex-col overflow-x-hidden">
+
+                {/* Top Border with Integrated Title */}
+                <div className="absolute top-0 inset-x-0 outline-none flex items-center justify-center z-30 pt-1 pointer-events-none">
+                    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-blue-500/30 to-blue-500/10" />
+                    <motion.span
+                        initial={{ opacity: 0, letterSpacing: '0.1em' }}
+                        whileInView={{ opacity: 1, letterSpacing: '0.25em' }}
+                        viewport={{ once: true }}
+                        className="px-6 text-[9px] md:text-[10px] font-black text-white/50 uppercase tracking-[0.25em]"
+                    >
+                        Tecnologias Integradas
+                    </motion.span>
+                    <div className="flex-1 h-px bg-gradient-to-r from-blue-500/10 via-blue-500/30 to-transparent" />
+                </div>
+                {/* Secondary line just below the title for that "track" feel */}
+                <div className="absolute top-[2px] inset-x-0 h-px w-full bg-gradient-to-r from-transparent via-white/5 to-transparent z-10 pointer-events-none" />
+
+
+                {/* Harmonious Bottom Border */}
+                <div className="absolute bottom-0 inset-x-0 flex flex-col items-center z-10 pointer-events-none">
+                    <div className="h-px w-[95%] bg-gradient-to-r from-transparent via-white/10 to-transparent mb-[1px]" />
+                    <div className="h-px w-full bg-gradient-to-r from-transparent via-blue-500/30 to-transparent" />
+                    {/* Subtle bottom glow */}
+                    <div className="absolute bottom-0 h-4 w-full bg-gradient-to-t from-blue-500/5 to-transparent pointer-events-none" />
+                </div>
+
+                {/* Fixed Fades */}
+                <div className="absolute left-0 top-0 bottom-0 w-24 md:w-32 bg-gradient-to-r from-black via-black/80 to-transparent z-20 pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-0 w-24 md:w-32 bg-gradient-to-l from-black via-black/80 to-transparent z-20 pointer-events-none" />
+
+                <motion.div
+                    className="flex shrink-0 w-max items-center py-8 mt-4"
+                    animate={{
+                        x: [0, "-50%"] // Translate exactly half of the multiplied sets
+                    }}
+                    transition={{
+                        x: {
+                            repeat: Infinity,
+                            repeatType: "loop",
+                            duration: 35, // Slowed down from 20 for a smoother, relaxed pace
+                            ease: "linear",
+                        },
+                    }}
+                >
+                    {marqueeItems.map((item, idx) => {
+                        return (
+                            // Perfect math sizing block: includes gap and right padding to seamlessly repeat without parent gap math drift
+                            <div key={idx} className="flex items-center gap-10 md:gap-14 pr-10 md:pr-14">
+                                <div
+                                    className="relative flex flex-col items-center gap-2.5 transition-all duration-300 group/item cursor-default"
+                                    style={{ '--hover-color': item.brandColor } as React.CSSProperties}
+                                >
+                                    <div className="transition-all duration-300 group-hover/item:text-[var(--hover-color)] text-white/80 group-hover/item:scale-110 group-hover/item:drop-shadow-[0_0_15px_var(--hover-color)]">
+                                        {item.CustomIcon ? (
+                                            <item.CustomIcon />
+                                        ) : (
+                                            <div
+                                                className="h-5 w-8 bg-current transition-colors duration-300"
+                                                style={{
+                                                    maskImage: `url(${item.logo})`,
+                                                    maskSize: 'contain',
+                                                    maskRepeat: 'no-repeat',
+                                                    maskPosition: 'center',
+                                                    WebkitMaskImage: `url(${item.logo})`,
+                                                    WebkitMaskSize: 'contain',
+                                                    WebkitMaskRepeat: 'no-repeat',
+                                                    WebkitMaskPosition: 'center',
+                                                }}
+                                            />
+                                        )}
+                                    </div>
+                                    <span
+                                        style={montserrat}
+                                        className="text-[9px] md:text-[10px] text-white/60 font-bold whitespace-nowrap uppercase transition-all duration-300 group-hover/item:text-white"
+                                    >
+                                        {item.name}
+                                    </span>
+                                </div>
+                                {/* Discrete Vertical Separator */}
+                                <div className="w-[1px] h-6 bg-white/10" />
+                            </div>
+                        );
+                    })}
+                </motion.div>
+            </div>
+        </div>
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
     );
 
     observer.observe(rootRef.current);

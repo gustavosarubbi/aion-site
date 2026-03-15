@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client";
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
@@ -112,6 +113,88 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
         return [0.85, 1.15];
     }, [mobileBand, mobileOptimized]);
 
+=======
+"use client";
+
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Canvas } from "@react-three/fiber";
+
+import { SignalProvider } from "./hero/SignalContext";
+import { Scene } from "./hero/Scene";
+
+type Hero3DVizProps = {
+    quality?: "desktop" | "mobile";
+};
+
+export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mobileOptimized = quality === "mobile";
+  const [isTabVisible, setIsTabVisible] = useState(true);
+  const [isInView, setIsInView] = useState(true);
+  const [viewportWidth, setViewportWidth] = useState(1600);
+  const [isAnyCardDragging, setIsAnyCardDragging] = useState(false);
+
+    useEffect(() => {
+        if (typeof document === "undefined") return;
+
+        const onVisibilityChange = () => {
+            setIsTabVisible(document.visibilityState === "visible");
+        };
+
+        onVisibilityChange();
+        document.addEventListener("visibilitychange", onVisibilityChange);
+
+        return () => document.removeEventListener("visibilitychange", onVisibilityChange);
+    }, []);
+
+    useEffect(() => {
+        if (!containerRef.current || typeof window === "undefined") return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsInView(entry.isIntersecting);
+            },
+            { rootMargin: "200px 0px 200px 0px", threshold: 0.02 }
+        );
+
+        observer.observe(containerRef.current);
+        return () => observer.disconnect();
+    }, []);
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        const onResize = () => setViewportWidth(window.innerWidth);
+        onResize();
+        window.addEventListener("resize", onResize, { passive: true });
+        return () => window.removeEventListener("resize", onResize);
+    }, []);
+
+  const shouldRenderScene = isTabVisible && isInView;
+  const shouldAnimateEffects = shouldRenderScene;
+    const mobileBand = viewportWidth < 768 ? "phone" : viewportWidth < 1024 ? "tablet" : viewportWidth < 1280 ? "laptop" : "desktop";
+
+    const dprRange = useMemo<[number, number]>(() => {
+        if (typeof navigator === "undefined") {
+            return mobileOptimized ? [0.6, 0.9] : [0.8, 1.1];
+        }
+
+        const cores = navigator.hardwareConcurrency ?? 8;
+        const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 8;
+        const lowEnd = cores <= 4 || memory <= 4;
+        const midTier = !lowEnd && (cores <= 8 || memory <= 8);
+
+        if (mobileOptimized) {
+            if (mobileBand === "laptop") return lowEnd ? [0.58, 0.82] : [0.65, 0.95];
+            if (mobileBand === "tablet") return lowEnd ? [0.55, 0.78] : [0.62, 0.9];
+            return [0.5, 0.78];
+        }
+
+        if (lowEnd) return [0.6, 0.9];
+        if (midTier) return [0.72, 1.0];
+        return [0.85, 1.15];
+    }, [mobileBand, mobileOptimized]);
+
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
   const desktopGlow = useMemo(() => {
     if (viewportWidth <= 1366) {
       return { left: "47%", size: 320, opacity: "bg-[#379cfd]/4", blur: "blur-[44px]" };
@@ -156,6 +239,7 @@ export default function Hero3DViz({ quality = "desktop" }: Hero3DVizProps) {
 
             <div className="w-full h-full absolute inset-0 !overflow-visible pointer-events-auto">
                 <Canvas
+<<<<<<< HEAD
                     frameloop={shouldRenderScene ? (shouldRunContinuousLoop ? "always" : "demand") : "never"}
                     dpr={dprRange}
                     gl={{
@@ -187,3 +271,35 @@ performance={{ min: mobileOptimized ? (mobileBand === "laptop" ? 0.38 : mobileBa
         </div>
     );
 }
+=======
+                    frameloop="always"
+                    dpr={dprRange}
+                    gl={{
+                        antialias: !mobileOptimized && dprRange[1] >= 1.05,
+                        alpha: true,
+                        powerPreference: mobileOptimized ? "low-power" : "high-performance",
+                        stencil: false,
+                    }}
+performance={{ min: mobileOptimized ? (mobileBand === "laptop" ? 0.38 : mobileBand === "tablet" ? 0.34 : 0.3) : 0.45 }}
+        camera={{ near: 0.1, far: 90 }}
+        style={{
+          background: "transparent",
+          overflow: "visible",
+          touchAction: isAnyCardDragging ? "none" : "pan-y",
+        }}
+      >
+                    <Suspense fallback={null}>
+<SignalProvider>
+          <Scene 
+            mobileOptimized={mobileOptimized} 
+            onAnyCardDraggingChange={setIsAnyCardDragging}
+            shouldAnimate={shouldAnimateEffects}
+          />
+        </SignalProvider>
+                    </Suspense>
+                </Canvas>
+            </div>
+        </div>
+    );
+}
+>>>>>>> 5b6aedce9124892d2e483ddd898ec8debdddf6f1
